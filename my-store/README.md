@@ -12,10 +12,22 @@ Stack:
 Create `.env.local` with:
 
 ```
+# Database (required for login/register/admin)
+# Get a free PostgreSQL from: https://supabase.com, https://neon.tech, or https://railway.app
 DATABASE_URL="postgresql://user:password@host:5432/db"
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="public-anon-key"
-SUPABASE_SERVICE_ROLE_KEY="service-role-key"
+
+# Admin Configuration
+ADMIN_EMAIL="nascode.dev@gmail.com"
+ADMIN_PASSWORD="your-strong-admin-password"
+
+# AI Configuration
+OPENAI_API_KEY="sk-proj-..."
+ANTHROPIC_API_KEY="sk-ant-..."
+
+# Email Configuration (Resend)
+RESEND_API_KEY="re_..."
+SUPPORT_TO_EMAIL="nascode.dev@gmail.com"
+SUPPORT_FROM_EMAIL="support@your-domain.com"
 
 # PayFast Configuration
 PAYFAST_MERCHANT_ID="29096901"
@@ -27,7 +39,7 @@ PAYFAST_SANDBOX="true"  # Set to "false" for production
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 ```
 
-> Add real values from Supabase + PayFast dashboard before deploying.
+> **Important:** See `DATABASE_SETUP.md` for detailed database setup instructions.
 > 
 > **Important:** After hosting your web app, update `NEXT_PUBLIC_SITE_URL` with your production URL. Also update the notify URL in your PayFast dashboard to point to `https://yourdomain.com/api/payfast/notify`.
 
@@ -35,9 +47,15 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 
 ```bash
 npm install
-npx prisma db push   # or migrate dev when ready
+npx prisma generate  # Generate Prisma client
+npx prisma db push   # Create database tables
 npm run dev
 ```
+
+> **Note:** If you see "Database is not configured", make sure:
+> 1. `DATABASE_URL` is set in `.env.local`
+> 2. You've run `npx prisma generate`
+> 3. You've run `npx prisma db push` to create the tables
 
 Visit `http://localhost:3000` to browse the demo catalog, add items to the cart, then head to `/checkout` to trigger the PayFast payment flow.
 
