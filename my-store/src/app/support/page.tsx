@@ -36,21 +36,31 @@ export default function SupportPage() {
               Reach our stylists, check status, or schedule fittings. We respond
               within 2 hours during business days.
             </p>
-            <form className="mt-6 space-y-4">
+            <form
+              className="mt-6 space-y-4"
+              action="/api/support"
+              method="POST"
+            >
               <input
+                name="name"
                 type="text"
                 placeholder="Full name"
                 className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-500"
+                required
               />
               <input
+                name="email"
                 type="email"
                 placeholder="Email address"
                 className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-500"
+                required
               />
               <textarea
+                name="message"
                 placeholder="How can we assist?"
                 rows={4}
                 className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-500"
+                required
               />
               <button className="w-full rounded-full bg-black px-6 py-3 text-xs font-semibold uppercase tracking-[0.4em] text-white">
                 Send request
