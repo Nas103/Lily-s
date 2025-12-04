@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/stores/authStore";
 
 type User = {
   id: string;
@@ -11,20 +13,34 @@ type User = {
 };
 
 export default function AdminUsersPage() {
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
+  const router = useRouter();
+  const user = useAuth((state) => state.user);
+  const isAdmin = useAuth((state) => state.isAdmin);
+  const logout = useAuth((state) => state.logout);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Redirect if not admin
+  useEffect(() => {
+    if (user && !isAdmin()) {
+      router.push("/");
+    } else if (!user) {
+      router.push("/login");
+    }
+  }, [user, isAdmin, router]);
+
   const fetchUsers = async () => {
+    if (!user || !isAdmin()) return;
+    
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/admin/users", {
         headers: {
-          "x-admin-email": adminEmail,
-          "x-admin-password": adminPassword,
+          "Content-Type": "application/json",
+          "x-user-id": user.id,
+          "x-user-email": user.email,
         },
       });
       if (!res.ok) {
@@ -45,6 +61,7 @@ export default function AdminUsersPage() {
   };
 
   const handleDelete = async (id: string) => {
+    if (!user || !isAdmin()) return;
     if (!confirm("Remove this user permanently?")) return;
 
     try {
@@ -52,8 +69,8 @@ export default function AdminUsersPage() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-email": adminEmail,
-          "x-admin-password": adminPassword,
+          "x-user-id": user.id,
+          "x-user-email": user.email,
         },
         body: JSON.stringify({ userId: id }),
       });
@@ -64,19 +81,18 @@ export default function AdminUsersPage() {
         return;
       }
 
-      setUsers((prev) => prev.filter((user) => user.id !== id));
+      setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (error) {
       alert("Unable to delete user. Please try again.");
     }
   };
 
   useEffect(() => {
-    // Optionally fetch once if creds are already filled (e.g. from browser autofill).
-    if (adminEmail && adminPassword) {
+    if (user && isAdmin()) {
       void fetchUsers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
@@ -86,41 +102,21 @@ export default function AdminUsersPage() {
       <h1 className="mt-2 text-3xl font-semibold tracking-tight">
         User administration
       </h1>
-      <p className="mt-2 text-sm text-zinc-500">
-        Protected by admin credentials. Do not share this page with shoppers.
-      </p>
-
-      <form
-        className="mt-8 grid gap-4 rounded-3xl border border-zinc-200 bg-white p-6 md:grid-cols-[2fr,2fr,auto]"
-        onSubmit={(event) => {
-          event.preventDefault();
-          void fetchUsers();
-        }}
-      >
-        <input
-          type="email"
-          placeholder="Admin email"
-          className="rounded-2xl border border-zinc-200 px-4 py-2 text-sm"
-          value={adminEmail}
-          onChange={(event) => setAdminEmail(event.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Admin password"
-          className="rounded-2xl border border-zinc-200 px-4 py-2 text-sm"
-          value={adminPassword}
-          onChange={(event) => setAdminPassword(event.target.value)}
-          required
-        />
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-sm text-zinc-500">
+          Admin dashboard. Logged in as <span className="font-medium text-zinc-900">{user?.email}</span>
+        </p>
         <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-black px-6 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-white disabled:opacity-60"
+          type="button"
+          onClick={() => {
+            logout();
+            router.push("/");
+          }}
+          className="rounded-full border border-zinc-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-600 hover:border-zinc-900 hover:text-zinc-900"
         >
-          {loading ? "Loading…" : "Authenticate"}
+          Logout
         </button>
-      </form>
+      </div>
 
       {error ? (
         <p className="mt-4 text-xs text-red-500" role="alert">

@@ -28,7 +28,7 @@ export function AddToCartButton({
     "inline-flex items-center justify-center rounded-full border uppercase tracking-[0.2em] transition";
   const variantClasses =
     variant === "pill"
-      ? "w-full border-zinc-900 px-4 py-2 text-xs font-medium text-zinc-900 hover:bg-zinc-900 hover:text-white"
+      ? "flex-1 md:w-full border-zinc-900 px-4 py-2.5 md:py-2 text-xs font-medium text-zinc-900 hover:bg-zinc-900 hover:text-white"
       : "border-zinc-200 px-3 py-2 text-[10px] font-semibold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900";
 
   return (

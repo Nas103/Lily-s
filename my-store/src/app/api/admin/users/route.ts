@@ -1,11 +1,30 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Simple admin guard using environment variables.
-function isAdminRequest(request: Request) {
+// Check if request is from an authenticated admin user
+async function isAdminRequest(request: Request): Promise<boolean> {
+  // Method 1: Session-based auth (from auth store)
+  const userId = request.headers.get("x-user-id");
+  const userEmail = request.headers.get("x-user-email");
+
+  if (userId && userEmail && prisma) {
+    try {
+      const user = await (prisma as any).user.findUnique({
+        where: { id: userId },
+        select: { email: true, role: true },
+      });
+
+      if (user && user.email === userEmail && user.role === "ADMIN") {
+        return true;
+      }
+    } catch (error) {
+      // Fall through to method 2
+    }
+  }
+
+  // Method 2: Legacy header-based auth (for backwards compatibility)
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
-
   const headerEmail = request.headers.get("x-admin-email") ?? "";
   const headerPassword = request.headers.get("x-admin-password") ?? "";
 
@@ -22,7 +41,7 @@ export async function GET(request: Request) {
     );
   }
 
-  if (!isAdminRequest(request)) {
+  if (!(await isAdminRequest(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -47,7 +66,7 @@ export async function DELETE(request: Request) {
     );
   }
 
-  if (!isAdminRequest(request)) {
+  if (!(await isAdminRequest(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

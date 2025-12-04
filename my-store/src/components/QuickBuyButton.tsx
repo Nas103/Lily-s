@@ -29,7 +29,7 @@ export function QuickBuyButton(props: QuickBuyButtonProps) {
           router.push("/checkout");
         })
       }
-      className="inline-flex items-center justify-center rounded-full border border-zinc-900 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-900 hover:bg-zinc-900 hover:text-white"
+      className="inline-flex flex-1 items-center justify-center rounded-full border border-zinc-900 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900 hover:bg-zinc-900 hover:text-white md:flex-none md:px-3 md:py-2 md:text-[10px]"
       disabled={pending}
     >
       {pending ? "..." : "Bag"}

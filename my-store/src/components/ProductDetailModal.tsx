@@ -30,10 +30,10 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
   }, [product.id, trackView]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-10 backdrop-blur-sm">
-      <div className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-[36px] bg-white shadow-2xl">
-        <div className="flex flex-col md:flex-row">
-          <div className="relative flex-1">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 px-0 md:px-4 py-0 md:py-10 backdrop-blur-sm">
+      <div className="flex h-[95vh] md:h-auto md:max-h-[90vh] w-full md:max-w-4xl flex-col overflow-hidden rounded-t-[36px] md:rounded-[36px] bg-white shadow-2xl">
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+          <div className="relative flex-1 min-h-[40vh] md:min-h-0">
             {/* TODO: Swap modal hero image with final asset. */}
             <Image
               src={product.imageUrl}
@@ -51,7 +51,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
               <X size={18} />
             </button>
           </div>
-          <div className="flex flex-1 flex-col gap-4 p-8">
+          <div className="flex flex-1 flex-col gap-4 p-6 md:p-8 overflow-y-auto">
             <div className="space-y-2">
               <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
                 {product.category ?? "Drop"}
@@ -130,23 +130,25 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
               </div>
             </div>
 
-            <div className="mt-4 flex flex-col gap-3">
-              <AddToCartButton
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                imageUrl={product.imageUrl}
-                size={activeSize}
-                color={activeColor}
-              />
-              <QuickBuyButton
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                imageUrl={product.imageUrl}
-                size={activeSize}
-                color={activeColor}
-              />
+            <div className="mt-4 flex flex-col gap-3 pb-2 md:pb-0">
+              <div className="flex gap-2 md:flex-col">
+                <AddToCartButton
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  imageUrl={product.imageUrl}
+                  size={activeSize}
+                  color={activeColor}
+                />
+                <QuickBuyButton
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  imageUrl={product.imageUrl}
+                  size={activeSize}
+                  color={activeColor}
+                />
+              </div>
               <AddToWishlistButton
                 id={product.id}
                 name={product.name}

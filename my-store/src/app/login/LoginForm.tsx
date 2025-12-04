@@ -1,11 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/stores/authStore";
 
 export function LoginForm() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const setUser = useAuth((state) => state.setUser);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,14 +36,22 @@ export function LoginForm() {
         return;
       }
 
-      // For now we just show success; you can add redirects or session handling later.
-      form.reset();
-      setError(null);
-      alert(
-        mode === "login"
-          ? "Signed in successfully."
-          : "Account created successfully."
-      );
+      const user = await res.json();
+      
+      // Store user in auth store
+      setUser({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      });
+
+      // Redirect based on role
+      if (user.role === "ADMIN") {
+        router.push("/admin/users");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Unable to submit. Please try again."
