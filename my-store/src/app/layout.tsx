@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { AiChatWidget } from "@/components/AiChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,8 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        {/* AI chat-based shopping assistant, ready to connect to your LLM provider. */}
+        <AiChatWidget />
       </body>
     </html>
   );

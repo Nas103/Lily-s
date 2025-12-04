@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
+import { RecommendationsRail } from "@/components/RecommendationsRail";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -160,6 +161,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* AI-ready recommendations, powered by browsing and add-to-cart events. */}
+      <RecommendationsRail />
     </div>
   );
 }

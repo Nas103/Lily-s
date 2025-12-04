@@ -4,6 +4,7 @@ import {
   getPayFastUrl,
   PAYFAST_CONFIG,
 } from "@/lib/payfast";
+import { getDynamicPrice } from "@/lib/aiPricing";
 
 type CheckoutItem = {
   name: string;
@@ -30,11 +31,20 @@ export async function POST(request: Request) {
     );
   }
 
-  // Calculate total amount
-  const totalAmount = (items as CheckoutItem[]).reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  // Calculate total amount with optional Vertex AI dynamic pricing.
+  const currency = "ZAR";
+  const ipAddress = request.headers.get("x-forwarded-for") ?? undefined;
+
+  let totalAmount = 0;
+
+  for (const item of items as CheckoutItem[]) {
+    const { price } = await getDynamicPrice({
+      basePrice: item.price,
+      currency,
+      ipAddress,
+    });
+    totalAmount += price * item.quantity;
+  }
 
   // Create item description from cart items
   const itemNames = (items as CheckoutItem[])

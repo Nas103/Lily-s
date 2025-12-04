@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useCart } from "@/stores/cartStore";
+import { useRecommendationStore } from "@/stores/recommendationStore";
 
 type AddToCartButtonProps = {
   id: string;
@@ -19,6 +20,9 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const addItem = useCart((state) => state.addItem);
   const [pending, startTransition] = useTransition();
+  const trackAddToCart = useRecommendationStore(
+    (state) => state.trackAddToCart
+  );
 
   const baseClasses =
     "inline-flex items-center justify-center rounded-full border uppercase tracking-[0.2em] transition";
@@ -39,6 +43,10 @@ export function AddToCartButton({
       }
       className={`${baseClasses} ${variantClasses}`}
       disabled={pending}
+      onMouseUp={() => {
+        // Lightweight behavior tracking for AI recommendations.
+        trackAddToCart(props.id);
+      }}
     >
       {pending ? "Adding…" : "Add"}
     </button>

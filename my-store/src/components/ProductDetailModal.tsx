@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { AddToCartButton } from "./AddToCartButton";
 import { AddToWishlistButton } from "./AddToWishlistButton";
 import { QuickBuyButton } from "./QuickBuyButton";
 import type { ProductCardProps } from "./ProductCard";
+import { useRecommendationStore } from "@/stores/recommendationStore";
 
 type ProductDetailModalProps = {
   product: (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[] }) | null;
@@ -21,6 +22,12 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
 
   const [activeSize, setActiveSize] = useState<string | undefined>(sizes?.[0]);
   const [activeColor, setActiveColor] = useState<string | undefined>(colors[0]);
+  const trackView = useRecommendationStore((state) => state.trackView);
+
+  useEffect(() => {
+    // Track deep product views for AI personalization.
+    trackView(product.id);
+  }, [product.id, trackView]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-10 backdrop-blur-sm">

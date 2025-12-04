@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generatePayFastSignature, PAYFAST_CONFIG } from "@/lib/payfast";
+import { assessOrderRisk } from "@/lib/aiPricing";
 
 /**
  * PayFast ITN (Instant Transaction Notification) handler
@@ -38,6 +39,8 @@ export async function POST(request: Request) {
     const nameFirst = data.name_first;
     const nameLast = data.name_last;
     const emailAddress = data.email_address;
+    const ipAddress =
+      request.headers.get("x-forwarded-for") ?? data["ip_address"] ?? undefined;
 
     // Log the payment notification
     console.log("PayFast ITN received:", {
@@ -48,11 +51,30 @@ export async function POST(request: Request) {
       nameFirst,
       nameLast,
       emailAddress,
+      ipAddress,
     });
 
     // Handle payment status
     if (paymentStatus === "COMPLETE") {
       // Payment was successful
+      // Evaluate fraud risk with Vertex AI before fulfilling.
+      const risk = await assessOrderRisk({
+        orderId: mPaymentId,
+        total: amount,
+        currency: "ZAR",
+        ipAddress,
+        countryCode: data["country"] ?? undefined,
+        // TODO: Wire real attempt counters from your database.
+        attemptsFromIp: undefined,
+        cardLast4: data["card_last4"] ?? undefined,
+      });
+
+      console.log("Fraud assessment for order:", {
+        mPaymentId,
+        risk,
+      });
+
+      // TODO: Use `risk.recommendReview` / `risk.recommendBlock` to gate fulfillment.
       // TODO: Update order status in database
       // TODO: Send confirmation email
       // TODO: Fulfill order (update inventory, etc.)
