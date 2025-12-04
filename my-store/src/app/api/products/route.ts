@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const search = searchParams.get('search') ?? undefined
   const category = searchParams.get('category') ?? undefined
 
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.DATABASE_URL || !prisma) {
     const filtered = staticProducts.filter((product) => {
       const matchesCategory = category ? product.category === category : true
       const matchesSearch = search
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     return NextResponse.json(mapStaticProduct(filtered))
   }
 
-  const products = await prisma.product.findMany({
+  const products = await (prisma as any).product.findMany({
     where: {
       ...(search && {
         OR: [
