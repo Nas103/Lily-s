@@ -16,7 +16,7 @@ export function AiChatWidget() {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    const nextMessages = [...messages, { role: "user", content: input }];
+    const nextMessages: ChatMessage[] = [...messages, { role: "user" as const, content: input }];
     setMessages(nextMessages);
     setInput("");
     setLoading(true);

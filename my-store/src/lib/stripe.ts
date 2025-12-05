@@ -1,12 +1,11 @@
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not set");
-}
-
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-11-17.clover",
-  typescript: true,
-});
+// Stripe is optional - only initialize if key is provided
+export const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-11-17.clover",
+      typescript: true,
+    })
+  : null;
 
 
