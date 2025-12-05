@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       await resend.emails.send({
         from: fromEmail,
         to: toEmail,
-        reply_to: email || undefined,
+        replyTo: email || undefined,
         subject: `Support request from ${name || "customer"}`,
         text: `From: ${name} <${email}>\n\n${message}`,
       });
