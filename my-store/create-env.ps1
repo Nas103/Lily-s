@@ -6,8 +6,8 @@ $envContent = @"
 DATABASE_URL="postgresql://user:password@host:5432/db"
 
 # Admin Configuration
-ADMIN_EMAIL="your-admin@email.com"
-ADMIN_PASSWORD="your-strong-admin-password"
+ADMIN_EMAIL="nascode.dev@gmail.com"
+ADMIN_PASSWORD="nas|script|1999;richZA"
 
 # AI Configuration
 OPENAI_API_KEY="sk-proj-..."

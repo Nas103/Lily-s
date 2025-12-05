@@ -1,7 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Mic, X } from "lucide-react";
+
+// Type definitions for Web Speech API
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onend: () => void;
+}
+
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
+  message: string;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
+  }
+}
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -13,6 +61,8 @@ export function AiChatWidget() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -47,10 +97,92 @@ export function AiChatWidget() {
     }
   };
 
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (SpeechRecognition) {
+        const recognitionInstance = new SpeechRecognition();
+        recognitionInstance.continuous = false;
+        recognitionInstance.interimResults = false;
+        recognitionInstance.lang = "en-US";
+
+        recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript = event.results[event.resultIndex][0].transcript;
+          setInput(transcript.trim());
+          setIsListening(false);
+        };
+
+        recognitionInstance.onerror = (event: SpeechRecognitionErrorEvent) => {
+          console.error("Speech recognition error:", event.error);
+          setIsListening(false);
+          
+          let errorMessage = "Speech recognition error. Please try again.";
+          if (event.error === "no-speech") {
+            errorMessage = "No speech detected. Please try again.";
+          } else if (event.error === "not-allowed") {
+            errorMessage = "Microphone permission denied. Please allow microphone access.";
+          }
+          
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: errorMessage,
+            },
+          ]);
+        };
+
+        recognitionInstance.onend = () => {
+          setIsListening(false);
+        };
+
+        setRecognition(recognitionInstance);
+      }
+    }
+  }, []);
+
   const handleVoice = () => {
-    // TODO: Integrate Web Speech API or a cloud speech-to-text service.
-    // This button is a visual affordance for future voice shopping.
-    alert("Voice shopping will be available once speech integration is wired.");
+    if (!recognition) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.",
+        },
+      ]);
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognition.start();
+        setIsListening(true);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "🎤 Listening... Speak your question now.",
+          },
+        ]);
+      } catch (error) {
+        console.error("Error starting speech recognition:", error);
+        setIsListening(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "Could not start voice recognition. Please try again.",
+          },
+        ]);
+      }
+    }
   };
 
   return (
@@ -117,10 +249,15 @@ export function AiChatWidget() {
             <button
               type="button"
               onClick={handleVoice}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 hover:border-zinc-900 md:h-8 md:w-8"
-              aria-label="Voice shopping"
+              className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border md:h-8 md:w-8 transition-colors ${
+                isListening
+                  ? "border-red-500 bg-red-50 text-red-600 animate-pulse"
+                  : "border-zinc-200 text-zinc-600 hover:border-zinc-900"
+              }`}
+              aria-label={isListening ? "Stop listening" : "Start voice shopping"}
+              title={isListening ? "Click to stop listening" : "Click to speak"}
             >
-              <Mic size={16} />
+              <Mic size={16} className={isListening ? "animate-pulse" : ""} />
             </button>
             <input
               value={input}
