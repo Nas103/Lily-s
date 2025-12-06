@@ -18,11 +18,30 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClientInstance;
 };
 
+// Helper to add pgbouncer parameter for Connection Pooling
+function getDatabaseUrl(): string | undefined {
+  const url = process.env.DATABASE_URL;
+  if (!url) return undefined;
+  
+  // If using Connection Pooling (has "pooler" in URL), add pgbouncer parameter
+  if (url.includes("pooler") && !url.includes("pgbouncer=true")) {
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}pgbouncer=true&connect_timeout=15`;
+  }
+  
+  return url;
+}
+
 export const prisma =
   PrismaClientConstructor && process.env.DATABASE_URL
     ? (globalForPrisma.prisma ??
         new PrismaClientConstructor({
           log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+          datasources: {
+            db: {
+              url: getDatabaseUrl(),
+            },
+          },
         }))
     : undefined;
 
