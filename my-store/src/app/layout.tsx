@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AiChatWidget } from "@/components/AiChatWidget";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
         <Footer />
         {/* AI chat-based shopping assistant, ready to connect to your LLM provider. */}
         <AiChatWidget />
+        <SpeedInsights />
       </body>
     </html>
   );
