@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "Can I alter an abaya purchase?",
     answer:
-      "Complimentary tailoring is available within 30 days. Book an appointment through the support form below.",
+      "Complimentary tailoring is available within 2-5 days. Book an appointment through the support form below.",
   },
 ];
 
@@ -73,7 +73,7 @@ export default function SupportPage() {
             </h2>
             {faqs.map((faq) => (
               <div key={faq.question}>
-                <p className="text-base font-semibold">{faq.question}</p>
+                <p className="text-base font-semibold h1-gradient">{faq.question}</p>
                 <p className="mt-2 text-sm text-zinc-600">{faq.answer}</p>
               </div>
             ))}
