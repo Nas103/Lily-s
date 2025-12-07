@@ -10,11 +10,12 @@
     "postinstall": "prisma generate",
     "db:verify": "node scripts/verify-db.js",
     "db:push": "prisma db push",
-    "db:studio": "dotenv-cli -e .env.local -- prisma studio"
+    "db:studio": "npx dotenv-cli -e .env.local -- prisma studio",
+    "db:check-tables": "node scripts/verify-tables.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
-    "@prisma/client": "^6.0.0",
+    "@prisma/client": "^6.19.0",
     "@stripe/stripe-js": "^8.5.3",
     "@types/crypto-js": "^4.2.2",
     "@vercel/analytics": "^1.6.1",
