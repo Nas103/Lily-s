@@ -8,13 +8,26 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  passwordHash String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  orders    Order[]
+  id              String   @id @default(uuid())
+  email           String   @unique
+  name            String?
+  passwordHash    String
+  role            UserRole @default(USER)
+  phone           String?
+  dateOfBirth     DateTime?
+  country         String?
+  city            String?
+  postcode        String?
+  addressLine1    String?
+  addressLine2    String?
+  profileVisibility String? @default("PRIVATE") // PRIVATE, SOCIAL, PUBLIC
+  locationSharing Boolean  @default(false)
+  emailNotifications Boolean @default(true)
+  smsNotifications Boolean @default(false)
+  marketingEmails Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  orders          Order[]
 }
 
 enum UserRole {

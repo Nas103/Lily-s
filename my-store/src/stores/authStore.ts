@@ -8,6 +8,7 @@ export type User = {
   email: string;
   name?: string | null;
   role: "USER" | "ADMIN";
+  createdAt?: string;
 };
 
 type AuthStore = {

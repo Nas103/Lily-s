@@ -52,6 +52,7 @@ export async function POST(request: Request) {
         email: user.email,
         name: user.name,
         role: (user as any).role,
+        createdAt: (user as any).createdAt?.toISOString() || new Date().toISOString(),
       },
       { status: 200 }
     );

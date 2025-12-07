@@ -10,15 +10,17 @@
     "postinstall": "prisma generate",
     "db:verify": "node scripts/verify-db.js",
     "db:push": "prisma db push",
-    "db:studio": "dotenv -e .env.local -- prisma studio"
+    "db:studio": "dotenv-cli -e .env.local -- prisma studio"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
     "@prisma/client": "^6.0.0",
     "@stripe/stripe-js": "^8.5.3",
+    "@types/crypto-js": "^4.2.2",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.2.0",
     "lucide-react": "^0.555.0",
     "next": "^16.0.7",
     "openai": "^4.0.0",

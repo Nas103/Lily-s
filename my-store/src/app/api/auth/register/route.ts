@@ -57,7 +57,10 @@ export async function POST(request: Request) {
     },
   });
 
-    return NextResponse.json(user, { status: 201 });
+    return NextResponse.json({
+      ...user,
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString(),
+    }, { status: 201 });
   } catch (error: any) {
     console.error("[auth/register] Error:", error);
     

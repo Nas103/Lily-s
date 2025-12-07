@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, ShoppingBag, User, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { Heart, ShoppingBag, User, Menu, X, LogOut } from "lucide-react";
 import { useAuth } from "@/stores/authStore";
+import { getGravatarUrlSync } from "@/lib/gravatar-client";
 
 const navLinks = [
   { href: "/men", label: "Men" },
@@ -73,7 +75,22 @@ export function Header() {
           </Link>
           {user ? (
             <div className="flex items-center gap-3">
-              <span className="text-xs text-zinc-600">{user.email}</span>
+              <Link
+                href="/profile"
+                className="inline-flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] hover:border-zinc-900"
+              >
+                <div className="h-6 w-6 rounded-full overflow-hidden bg-zinc-100">
+                  <Image
+                    src={getGravatarUrlSync(user.email, 48)}
+                    alt={user.name || user.email}
+                    width={24}
+                    height={24}
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+                <span className="logo-gradient">Profile</span>
+              </Link>
               {isAdmin() && (
                 <Link
                   href="/admin/users"
@@ -152,7 +169,14 @@ export function Header() {
               </Link>
               {user ? (
                 <div className="space-y-3 pt-1">
-                  <p className="text-xs text-zinc-500">{user.email}</p>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="inline-flex items-center gap-3 text-sm font-medium text-zinc-600 transition hover:text-black"
+                  >
+                    <User size={16} />
+                    <span>Profile</span>
+                  </Link>
                   <button
                     onClick={() => {
                       handleLogout();
@@ -160,7 +184,7 @@ export function Header() {
                     }}
                     className="inline-flex items-center gap-3 text-sm font-medium text-zinc-600 transition hover:text-black"
                   >
-                    <User size={16} />
+                    <LogOut size={16} />
                     <span>Sign out</span>
                   </button>
                 </div>
