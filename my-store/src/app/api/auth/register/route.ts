@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-      name = nameValidation.sanitized || null;
+      name = nameValidation.sanitized || undefined;
     }
 
     let existing;
