@@ -36,7 +36,7 @@ async function verifyUser(request: NextRequest): Promise<string | null> {
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const response = NextResponse.next();
   
@@ -67,7 +67,7 @@ export async function PATCH(
       );
     }
 
-    const addressId = params.id;
+    const { id: addressId } = await params;
     const body = await request.json();
 
     // Verify address belongs to user
@@ -203,7 +203,7 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const response = NextResponse.next();
   
@@ -234,7 +234,7 @@ export async function DELETE(
       );
     }
 
-    const addressId = params.id;
+    const { id: addressId } = await params;
 
     // Verify address belongs to user
     const existingAddress = await (prisma as any).deliveryAddress.findUnique({
