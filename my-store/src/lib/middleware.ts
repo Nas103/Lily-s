@@ -20,7 +20,13 @@ export function getClientIp(request: NextRequest): string {
     return realIp;
   }
   
-  return request.ip || "unknown";
+  // Try to get IP from CF-Connecting-IP (Cloudflare) or other headers
+  const cfIp = request.headers.get("cf-connecting-ip");
+  if (cfIp) {
+    return cfIp;
+  }
+  
+  return "unknown";
 }
 
 /**
