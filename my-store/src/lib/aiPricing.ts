@@ -33,7 +33,7 @@ export async function getDynamicPrice(
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-4o-mini",
       temperature: 0.2,
       messages: [
         {
@@ -118,7 +118,7 @@ export async function assessOrderRisk(
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-4o-mini",
       temperature: 0.1,
       messages: [
         {

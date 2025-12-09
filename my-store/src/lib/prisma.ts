@@ -24,9 +24,27 @@ function getDatabaseUrl(): string | undefined {
   if (!url) return undefined;
   
   // If using Connection Pooling (has "pooler" in URL), add pgbouncer parameter
-  if (url.includes("pooler") && !url.includes("pgbouncer=true")) {
-    const separator = url.includes("?") ? "&" : "?";
-    return `${url}${separator}pgbouncer=true&connect_timeout=15`;
+  if (url.includes("pooler")) {
+    try {
+      // Parse existing query params
+      const urlObj = new URL(url);
+      const params = new URLSearchParams(urlObj.search);
+      
+      // Add/update connection pool parameters
+      params.set("pgbouncer", "true");
+      params.set("connect_timeout", "30"); // Increased from 15 to 30 seconds
+      params.set("pool_timeout", "30"); // Connection pool timeout
+      params.set("connection_limit", "20"); // Increase pool size (Supabase allows up to 200)
+      
+      // Reconstruct URL with updated params
+      urlObj.search = params.toString();
+      return urlObj.toString();
+    } catch (error) {
+      // If URL parsing fails, fall back to simple string manipulation
+      console.warn("[prisma] Failed to parse DATABASE_URL, using simple string manipulation");
+      const separator = url.includes("?") ? "&" : "?";
+      return `${url}${separator}pgbouncer=true&connect_timeout=30&pool_timeout=30&connection_limit=20`;
+    }
   }
   
   return url;
@@ -42,6 +60,9 @@ export const prisma =
               url: getDatabaseUrl(),
             },
           },
+          // Connection pool configuration
+          // Note: Prisma uses connection pooling via the DATABASE_URL parameters
+          // For serverless environments, we rely on Supabase's connection pooler
         }))
     : undefined;
 

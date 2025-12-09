@@ -68,7 +68,16 @@ export async function PATCH(
     }
 
     const { id: addressId } = await params;
-    const body = await request.json();
+    
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      return NextResponse.json(
+        { error: "Invalid request body. Please check your input." },
+        { status: 400 }
+      );
+    }
 
     // Verify address belongs to user
     const existingAddress = await (prisma as any).deliveryAddress.findUnique({

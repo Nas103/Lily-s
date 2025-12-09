@@ -8,6 +8,7 @@ import { AddToWishlistButton } from "./AddToWishlistButton";
 import { QuickBuyButton } from "./QuickBuyButton";
 import type { ProductCardProps } from "./ProductCard";
 import { useRecommendationStore } from "@/stores/recommendationStore";
+import { useCurrency } from "@/hooks/useCurrency";
 
 type ProductDetailModalProps = {
   product: (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[] }) | null;
@@ -15,7 +16,15 @@ type ProductDetailModalProps = {
 };
 
 export function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
+  const { formatPrice, convertPrice, loading } = useCurrency();
+  
   if (!product) return null;
+  
+  // Use converted price if available
+  const converted = loading ? null : (convertPrice ? convertPrice(product.price) : null);
+  const formattedPrice = loading 
+    ? `R${product.price.toFixed(2)}` 
+    : (converted ? converted.formatted : formatPrice(product.price));
 
   const sizes = product.sizes; // Only use sizes if they exist (not for perfumes)
   const colors = product.colors ?? ["Onyx", "Sand", "Oat", "Shadow", "Fog"];
@@ -64,7 +73,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
             </div>
             {/* TODO: Lock in final retail price. */}
             <p className="text-3xl font-semibold text-zinc-900">
-              ${product.price.toFixed(2)}
+              {formattedPrice}
             </p>
             <p className="text-sm leading-relaxed text-zinc-600">
               {product.description ??

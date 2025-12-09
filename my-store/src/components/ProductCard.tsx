@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { AddToCartButton } from "./AddToCartButton";
 import { AddToWishlistButton } from "./AddToWishlistButton";
 import { QuickBuyButton } from "./QuickBuyButton";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export type ProductCardProps = {
   id: string;
@@ -26,6 +29,13 @@ export function ProductCard({
   badge,
   onPreview,
 }: ProductCardProps) {
+  const { formatPrice, convertPrice, loading } = useCurrency();
+  
+  // Use converted price if available, otherwise use original price
+  const converted = loading ? null : (convertPrice ? convertPrice(price) : null);
+  const formattedPrice = loading 
+    ? `R${price.toFixed(2)}` 
+    : (converted ? converted.formatted : formatPrice(price));
   return (
     <article className="group overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-lg ring-1 ring-black/5 transition hover:-translate-y-1 hover:ring-black/10">
       <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100">
@@ -78,7 +88,7 @@ export function ProductCard({
         <div className="mt-3 flex items-center justify-between gap-3">
           {/* TODO: Confirm pricing before launch. */}
           <p className="text-lg font-semibold text-zinc-900">
-            ${price.toFixed(2)}
+            {formattedPrice}
           </p>
           <div className="flex gap-2">
             <AddToCartButton

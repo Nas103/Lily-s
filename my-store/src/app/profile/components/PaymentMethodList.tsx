@@ -2,41 +2,41 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/stores/authStore";
-import { Plus, Edit, Trash2, MapPin, Loader2 } from "lucide-react";
-import { DeliveryAddressForm } from "./DeliveryAddressForm";
+import { Plus, Edit, Trash2, CreditCard, Loader2, Shield } from "lucide-react";
+import { PaymentMethodForm } from "./PaymentMethodForm";
+import { maskCardNumber } from "@/lib/paymentSecurity";
 
-interface DeliveryAddress {
+// PaymentMethodList component for managing user payment methods
+
+interface PaymentMethod {
   id: string;
-  label: string;
-  fullName: string;
-  phone?: string | null;
-  addressLine1: string;
-  addressLine2?: string | null;
-  city: string;
-  state?: string | null;
-  postcode: string;
-  country: string;
+  type: string;
+  cardLast4: string;
+  cardBrand: string;
+  expiryMonth: number;
+  expiryYear: number;
+  holderName: string | null;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export function DeliveryAddressList() {
+export function PaymentMethodList() {
   const user = useAuth((state) => state.user);
-  const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<DeliveryAddress | null>(null);
+  const [editingMethod, setEditingMethod] = useState<PaymentMethod | null>(null);
 
-  const fetchAddresses = async () => {
+  const fetchPaymentMethods = async () => {
     if (!user) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/delivery-addresses", {
+      const res = await fetch("/api/payment-methods", {
         headers: {
           "x-user-id": user.id,
           "x-user-email": user.email,
@@ -45,14 +45,14 @@ export function DeliveryAddressList() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to fetch addresses");
+        throw new Error(errorData.error || "Failed to fetch payment methods");
       }
 
       const data = await res.json();
-      setAddresses(data);
+      setPaymentMethods(data);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load addresses";
-      console.error("[DeliveryAddressList] Error fetching addresses:", err);
+      const message = err instanceof Error ? err.message : "Failed to load payment methods";
+      console.error("[PaymentMethodList] Error fetching payment methods:", err);
       setError(message);
     } finally {
       setLoading(false);
@@ -60,14 +60,14 @@ export function DeliveryAddressList() {
   };
 
   useEffect(() => {
-    fetchAddresses();
+    fetchPaymentMethods();
   }, [user]);
 
   const handleDelete = async (id: string) => {
-    if (!user || !confirm("Are you sure you want to delete this address?")) return;
+    if (!user || !confirm("Are you sure you want to delete this payment method?")) return;
 
     try {
-      const res = await fetch(`/api/delivery-addresses/${id}`, {
+      const res = await fetch(`/api/payment-methods/${id}`, {
         method: "DELETE",
         headers: {
           "x-user-id": user.id,
@@ -77,12 +77,12 @@ export function DeliveryAddressList() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to delete address");
+        throw new Error(errorData.error || "Failed to delete payment method");
       }
 
-      await fetchAddresses();
+      await fetchPaymentMethods();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete address");
+      alert(err instanceof Error ? err.message : "Failed to delete payment method");
     }
   };
 
@@ -90,7 +90,7 @@ export function DeliveryAddressList() {
     if (!user) return;
 
     try {
-      const res = await fetch(`/api/delivery-addresses/${id}`, {
+      const res = await fetch(`/api/payment-methods/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -102,34 +102,42 @@ export function DeliveryAddressList() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to set default address");
+        throw new Error(errorData.error || "Failed to set default payment method");
       }
 
-      await fetchAddresses();
+      await fetchPaymentMethods();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to set default address");
+      alert(err instanceof Error ? err.message : "Failed to set default payment method");
     }
   };
 
   const handleFormSuccess = () => {
     setShowForm(false);
-    setEditingAddress(null);
-    fetchAddresses();
+    setEditingMethod(null);
+    fetchPaymentMethods();
   };
 
   const handleFormCancel = () => {
     setShowForm(false);
-    setEditingAddress(null);
+    setEditingMethod(null);
   };
 
-  const handleEdit = (address: DeliveryAddress) => {
-    setEditingAddress(address);
+  const handleEdit = (method: PaymentMethod) => {
+    // Convert to form-compatible format
+    setEditingMethod({
+      ...method,
+      type: method.type as "CARD",
+    });
     setShowForm(true);
   };
 
   const handleAddNew = () => {
-    setEditingAddress(null);
+    setEditingMethod(null);
     setShowForm(true);
+  };
+
+  const formatExpiry = (month: number, year: number) => {
+    return `${String(month).padStart(2, "0")}/${String(year).slice(-2)}`;
   };
 
   if (loading) {
@@ -144,9 +152,9 @@ export function DeliveryAddressList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-900 mb-2">Delivery Addresses</h2>
+          <h2 className="text-2xl font-bold text-zinc-900 mb-2">Payment Methods</h2>
           <p className="text-zinc-600">
-            Manage your delivery addresses for faster checkout.
+            Securely manage your payment methods. Card numbers are never fully stored.
           </p>
         </div>
         {!showForm && (
@@ -155,7 +163,7 @@ export function DeliveryAddressList() {
             className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition flex items-center gap-2"
           >
             <Plus size={18} />
-            Add Address
+            Add Payment Method
           </button>
         )}
       </div>
@@ -168,66 +176,79 @@ export function DeliveryAddressList() {
 
       {showForm ? (
         <div className="rounded-2xl border border-zinc-200 bg-white p-8">
-          <DeliveryAddressForm
-            address={editingAddress || undefined}
+          <PaymentMethodForm
+            paymentMethod={editingMethod || undefined}
             onSuccess={handleFormSuccess}
             onCancel={handleFormCancel}
           />
         </div>
       ) : (
         <>
-          {addresses.length === 0 ? (
+          {paymentMethods.length === 0 ? (
             <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
-              <MapPin className="mx-auto text-zinc-400 mb-4" size={48} />
+              <CreditCard className="mx-auto text-zinc-400 mb-4" size={48} />
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">
-                No delivery addresses
+                No payment methods
               </h3>
               <p className="text-zinc-600 mb-6">
-                Add your first delivery address to get started.
+                Add a payment method for faster checkout.
               </p>
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 mb-6">
+                <Shield size={14} />
+                <span>Your payment information is encrypted and secure</span>
+              </div>
               <button
                 onClick={handleAddNew}
                 className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition inline-flex items-center gap-2"
               >
                 <Plus size={18} />
-                Add Your First Address
+                Add Your First Payment Method
               </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {addresses.map((address) => (
+              {paymentMethods.map((method) => (
                 <div
-                  key={address.id}
+                  key={method.id}
                   className={`rounded-2xl border p-6 ${
-                    address.isDefault
+                    method.isDefault
                       ? "border-zinc-900 bg-zinc-50"
                       : "border-zinc-200 bg-white"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-zinc-900">{address.label}</h3>
-                        {address.isDefault && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-zinc-900 text-white rounded">
-                            Default
-                          </span>
-                        )}
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-zinc-100 rounded-lg">
+                        <CreditCard className="text-zinc-600" size={24} />
                       </div>
-                      <p className="text-sm text-zinc-600">{address.fullName}</p>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-zinc-900">
+                            {method.cardBrand}
+                          </h3>
+                          {method.isDefault && (
+                            <span className="px-2 py-0.5 text-xs font-medium bg-zinc-900 text-white rounded">
+                              Default
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-zinc-600">
+                          {maskCardNumber("****" + method.cardLast4)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => handleEdit(address)}
+                        onClick={() => handleEdit(method)}
                         className="p-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
-                        title="Edit address"
+                        title="Edit payment method"
                       >
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => handleDelete(address.id)}
+                        onClick={() => handleDelete(method.id)}
                         className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
-                        title="Delete address"
+                        title="Delete payment method"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -235,20 +256,13 @@ export function DeliveryAddressList() {
                   </div>
 
                   <div className="space-y-1 text-sm text-zinc-600">
-                    <p>{address.addressLine1}</p>
-                    {address.addressLine2 && <p>{address.addressLine2}</p>}
-                    <p>
-                      {address.city}
-                      {address.state && `, ${address.state}`}
-                      {` ${address.postcode}`}
-                    </p>
-                    <p>{address.country}</p>
-                    {address.phone && <p className="mt-2">Phone: {address.phone}</p>}
+                    {method.holderName && <p>Name: {method.holderName}</p>}
+                    <p>Expires: {formatExpiry(method.expiryMonth, method.expiryYear)}</p>
                   </div>
 
-                  {!address.isDefault && (
+                  {!method.isDefault && (
                     <button
-                      onClick={() => handleSetDefault(address.id)}
+                      onClick={() => handleSetDefault(method.id)}
                       className="mt-4 text-sm text-zinc-600 hover:text-zinc-900 underline"
                     >
                       Set as default
@@ -263,4 +277,3 @@ export function DeliveryAddressList() {
     </div>
   );
 }
-

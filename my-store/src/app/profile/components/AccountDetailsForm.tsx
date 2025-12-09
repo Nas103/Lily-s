@@ -51,7 +51,8 @@ export function AccountDetailsForm() {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch profile");
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || "Failed to fetch profile");
         }
 
         const data = await res.json();
@@ -69,7 +70,9 @@ export function AccountDetailsForm() {
           profileImageUrl: data.profileImageUrl || "",
         });
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load profile");
+        const message = err instanceof Error ? err.message : "Failed to load profile";
+        console.error("[AccountDetailsForm] Error fetching profile:", err);
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -98,8 +101,8 @@ export function AccountDetailsForm() {
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to update profile");
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to update profile");
       }
 
       const updatedData = await res.json();

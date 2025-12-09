@@ -3,11 +3,20 @@
 import Link from "next/link";
 import { useCart } from "@/stores/cartStore";
 import { CheckoutButton } from "./CheckoutButton";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export function CartSummary() {
   const items = useCart((state) => state.items);
   const subtotal = useCart((state) => state.total());
   const removeItem = useCart((state) => state.removeItem);
+  const { formatPrice, convertPrice, loading } = useCurrency();
+  
+  const convertedSubtotal = loading 
+    ? subtotal 
+    : (convertPrice ? convertPrice(subtotal).amount : subtotal);
+  const formattedSubtotal = loading 
+    ? `R${subtotal.toFixed(2)}` 
+    : (convertPrice ? convertPrice(subtotal).formatted : formatPrice(subtotal));
 
   if (!items.length) {
     return (
@@ -33,7 +42,9 @@ export function CartSummary() {
               <p className="font-medium text-zinc-900">{item.name}</p>
               <p className="text-xs text-zinc-500">
                 Qty {item.quantity} · {/* TODO: Confirm the price for this SKU. */}
-                ${item.price.toFixed(2)}
+                {loading 
+                  ? `R${item.price.toFixed(2)}` 
+                  : (convertPrice ? convertPrice(item.price).formatted : formatPrice(item.price))}
                 {item.size ? ` · Size ${item.size}` : ""}
                 {item.color ? ` · ${item.color}` : ""}
               </p>
@@ -41,7 +52,11 @@ export function CartSummary() {
             <div className="flex flex-col items-end gap-2">
               {/* TODO: Update subtotal display once final pricing tiers are set. */}
               <p className="text-sm font-semibold text-zinc-900">
-                ${(item.price * item.quantity).toFixed(2)}
+                {loading 
+                  ? `R${(item.price * item.quantity).toFixed(2)}` 
+                  : (convertPrice 
+                      ? convertPrice(item.price * item.quantity).formatted 
+                      : formatPrice(item.price * item.quantity))}
               </p>
               <button
                 type="button"
@@ -57,7 +72,7 @@ export function CartSummary() {
       <div className="flex items-center justify-between border-t border-zinc-100 pt-4 text-sm">
         <p className="text-zinc-500">Subtotal</p>
         <p className="text-base font-semibold text-zinc-900">
-          ${subtotal.toFixed(2)}
+          {formattedSubtotal}
         </p>
       </div>
       <CheckoutButton />

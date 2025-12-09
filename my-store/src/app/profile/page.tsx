@@ -14,6 +14,7 @@ import { getGravatarUrlSync } from "@/lib/gravatar-client";
 import { getProfileImageUrl } from "@/lib/getProfileImage";
 import { AccountDetailsForm } from "./components/AccountDetailsForm";
 import { DeliveryAddressList } from "./components/DeliveryAddressList";
+import { PaymentMethodList } from "./components/PaymentMethodList";
 
 type SettingsSection = 
   | "profile" 
@@ -76,8 +77,10 @@ export default function ProfilePage() {
     return null;
   }
 
-  const profilePictureUrl = getProfileImageUrl(user.email, profileImageUrl, 200);
-  const memberSince = user.createdAt 
+  const profilePictureUrl = user?.email 
+    ? getProfileImageUrl(user.email, profileImageUrl, 200)
+    : "/placeholder-avatar.png";
+  const memberSince = user?.createdAt 
     ? new Date(user.createdAt).toLocaleDateString("en-US", {
         month: "long",
         year: "numeric",
@@ -134,12 +137,19 @@ export default function ProfilePage() {
                     <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0">
                       <Image
                         src={profilePictureUrl}
-                        alt={user.name || user.email}
+                        alt={user?.name || user?.email || "Profile"}
                         width={96}
                         height={96}
                         className="object-cover w-full h-full"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         unoptimized
+                        onError={(e) => {
+                          // Fallback to Gravatar if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          if (user?.email) {
+                            target.src = getGravatarUrlSync(user.email, 200);
+                          }
+                        }}
                       />
                     </div>
                     <button className="absolute bottom-0 right-0 p-2 bg-zinc-900 text-white rounded-full hover:bg-zinc-800 transition">
@@ -204,17 +214,8 @@ export default function ProfilePage() {
 
           {/* Payment Methods Section */}
           {activeSection === "payment" && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">Payment Methods</h2>
-                <p className="text-zinc-600">Manage your payment methods</p>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
-                <p className="text-zinc-600 mb-4">No payment methods saved</p>
-                <button className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition">
-                  Add Payment Method
-                </button>
-              </div>
+            <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+              <PaymentMethodList />
             </div>
           )}
 

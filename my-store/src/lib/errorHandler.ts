@@ -39,6 +39,14 @@ export function getSafeErrorMessage(error: any, defaultMessage: string = "Someth
   // Handle error messages
   const errorMessage = error?.message || String(error || "");
 
+  // Handle connection pool timeout errors
+  if (
+    errorMessage.includes("connection pool") ||
+    errorMessage.includes("Timed out fetching a new connection")
+  ) {
+    return "Service is temporarily busy. Please try again in a moment.";
+  }
+
   // Check for common database connection errors
   if (
     errorMessage.includes("Tenant or user not found") ||

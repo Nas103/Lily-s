@@ -30,6 +30,7 @@ model User {
   updatedAt       DateTime @updatedAt
   orders          Order[]
   deliveryAddresses DeliveryAddress[]
+  paymentMethods  PaymentMethod[]
 }
 
 model DeliveryAddress {
@@ -96,6 +97,32 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id])
   quantity  Int
   price     Decimal  @db.Decimal(10, 2)
+}
+
+model PaymentMethod {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          PaymentType
+  cardLast4     String?  // Last 4 digits only (e.g., "1234")
+  cardBrand     String?  // e.g., "Visa", "Mastercard", "American Express"
+  expiryMonth   Int?     // 1-12
+  expiryYear    Int?     // YYYY format
+  holderName    String?  // Cardholder name
+  isDefault     Boolean  @default(false)
+  // Payment processor token (e.g., PayFast token, Stripe payment method ID)
+  // Never store full card numbers or CVV
+  processorToken String? // Encrypted token from payment processor
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum PaymentType {
+  CARD
+  BANK_ACCOUNT
+  E_WALLET
 }
 
 

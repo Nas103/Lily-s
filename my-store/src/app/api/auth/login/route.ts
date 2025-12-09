@@ -58,18 +58,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Use parameterized query (Prisma handles this, but we ensure email is sanitized)
-    let user;
-    try {
-      user = await (prisma as any).user.findUnique({
-        where: { email }, // Prisma uses parameterized queries - SQL injection protected
-      });
-    } catch (dbError: any) {
-      // Database connection error - return user-friendly message
-      return NextResponse.json(
-        { error: getSafeErrorMessage(dbError, "Unable to sign in. Please try again later.") },
-        { status: 503 }
-      );
-    }
+    const user = await (prisma as any).user.findUnique({
+      where: { email }, // Prisma uses parameterized queries - SQL injection protected
+    });
 
     if (!user) {
       return NextResponse.json(

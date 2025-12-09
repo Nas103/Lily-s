@@ -11,7 +11,13 @@ async function verifyUser(request: NextRequest): Promise<string | null> {
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 
-  if (!userId || !userEmail || !prisma) {
+  if (!userId || !userEmail) {
+    console.warn("[profile] Missing auth headers:", { hasUserId: !!userId, hasUserEmail: !!userEmail });
+    return null;
+  }
+
+  if (!prisma) {
+    console.error("[profile] Prisma client not available");
     return null;
   }
 
@@ -23,6 +29,11 @@ async function verifyUser(request: NextRequest): Promise<string | null> {
 
     if (user && user.email === userEmail) {
       return userId;
+    } else {
+      console.warn("[profile] User verification failed:", { 
+        found: !!user, 
+        emailMatch: user?.email === userEmail 
+      });
     }
   } catch (error) {
     console.error("[profile] Auth verification error:", error);
@@ -50,8 +61,8 @@ export async function GET(request: NextRequest) {
 
   if (!prisma) {
     return NextResponse.json(
-      { error: "Database is not configured." },
-      { status: 500 }
+      { error: "Service temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 
@@ -132,8 +143,8 @@ export async function PATCH(request: NextRequest) {
 
   if (!prisma) {
     return NextResponse.json(
-      { error: "Database is not configured." },
-      { status: 500 }
+      { error: "Service temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 
@@ -147,7 +158,15 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      return NextResponse.json(
+        { error: "Invalid request body. Please check your input." },
+        { status: 400 }
+      );
+    }
     
     // Validate and sanitize all input data
     const validation = validateProfileUpdate(body);

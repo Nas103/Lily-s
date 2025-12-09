@@ -11,7 +11,13 @@ async function verifyUser(request: NextRequest): Promise<string | null> {
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 
-  if (!userId || !userEmail || !prisma) {
+  if (!userId || !userEmail) {
+    console.warn("[delivery-addresses] Missing auth headers");
+    return null;
+  }
+
+  if (!prisma) {
+    console.error("[delivery-addresses] Prisma client not available");
     return null;
   }
 
@@ -120,7 +126,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      return NextResponse.json(
+        { error: "Invalid request body. Please check your input." },
+        { status: 400 }
+      );
+    }
+
     const {
       label,
       fullName,

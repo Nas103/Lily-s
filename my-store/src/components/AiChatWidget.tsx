@@ -269,7 +269,7 @@ export function AiChatWidget() {
                 }
               }}
               placeholder="Ask a question..."
-              className="flex-1 border-none bg-transparent text-xs outline-none placeholder:text-zinc-400 md:text-sm"
+              className="flex-1 border-none bg-transparent text-xs text-zinc-900 outline-none placeholder:text-zinc-400 md:text-sm"
             />
             <button
               type="button"
