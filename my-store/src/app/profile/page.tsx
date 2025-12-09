@@ -11,7 +11,9 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { getGravatarUrlSync } from "@/lib/gravatar-client";
+import { getProfileImageUrl } from "@/lib/getProfileImage";
 import { AccountDetailsForm } from "./components/AccountDetailsForm";
+import { DeliveryAddressList } from "./components/DeliveryAddressList";
 
 type SettingsSection = 
   | "profile" 
@@ -40,18 +42,41 @@ export default function ProfilePage() {
   const router = useRouter();
   const user = useAuth((state) => state.user);
   const [activeSection, setActiveSection] = useState<SettingsSection>("profile");
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
       router.push("/login");
+      return;
     }
+
+    // Fetch profile image
+    const fetchProfileImage = async () => {
+      try {
+        const res = await fetch("/api/profile", {
+          headers: {
+            "x-user-id": user.id,
+            "x-user-email": user.email,
+          },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setProfileImageUrl(data.profileImageUrl || null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile image:", err);
+      }
+    };
+
+    fetchProfileImage();
   }, [user, router]);
 
   if (!user) {
     return null;
   }
 
-  const profilePictureUrl = getGravatarUrlSync(user.email, 200);
+  const profilePictureUrl = getProfileImageUrl(user.email, profileImageUrl, 200);
   const memberSince = user.createdAt 
     ? new Date(user.createdAt).toLocaleDateString("en-US", {
         month: "long",
@@ -106,13 +131,14 @@ export default function ProfilePage() {
               <div className="rounded-2xl border border-zinc-200 bg-white p-8">
                 <div className="flex items-center gap-6 mb-8">
                   <div className="relative">
-                    <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-100">
+                    <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0">
                       <Image
                         src={profilePictureUrl}
                         alt={user.name || user.email}
                         width={96}
                         height={96}
-                        className="object-cover"
+                        className="object-cover w-full h-full"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         unoptimized
                       />
                     </div>
@@ -194,16 +220,8 @@ export default function ProfilePage() {
 
           {/* Delivery Addresses Section */}
           {activeSection === "address" && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">Saved Delivery Addresses</h2>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
-                <p className="text-zinc-600 mb-4">No delivery addresses saved</p>
-                <button className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition">
-                  Add Address
-                </button>
-              </div>
+            <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+              <DeliveryAddressList />
             </div>
           )}
 

@@ -1,19 +1,34 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { isValidEmail, sanitizeInput } from "@/lib/security";
+import { applySecurityMiddleware } from "@/lib/middleware";
+import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Apply security middleware - strict rate limiting for login
+  const securityResponse = applySecurityMiddleware(request, response, {
+    rateLimit: { maxRequests: 5, windowMs: 900000 }, // 5 attempts per 15 minutes
+    csrf: true,
+    securityHeaders: true,
+  });
+  
+  if (securityResponse) {
+    return securityResponse;
+  }
   if (!prisma) {
     console.error("[auth/login] Prisma client is not available");
     return NextResponse.json(
-      { error: "Database is not configured." },
-      { status: 500 }
+      { error: "Service temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 
   try {
     const body = await request.json();
-    const { email, password } = body as {
+    let { email, password } = body as {
       email?: string;
       password?: string;
     };
@@ -25,25 +40,52 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await (prisma as any).user.findUnique({
-      where: { email },
-    });
+    // Validate and sanitize email
+    email = sanitizeInput(email).toLowerCase();
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format." },
+        { status: 400 }
+      );
+    }
 
-  if (!user) {
-    return NextResponse.json(
-      { error: "Invalid email or password." },
-      { status: 401 }
-    );
-  }
+    // Validate password length
+    if (password.length < 8 || password.length > 128) {
+      return NextResponse.json(
+        { error: "Password must be between 8 and 128 characters." },
+        { status: 400 }
+      );
+    }
 
-  const ok = await bcrypt.compare(password, (user as any).passwordHash);
+    // Use parameterized query (Prisma handles this, but we ensure email is sanitized)
+    let user;
+    try {
+      user = await (prisma as any).user.findUnique({
+        where: { email }, // Prisma uses parameterized queries - SQL injection protected
+      });
+    } catch (dbError: any) {
+      // Database connection error - return user-friendly message
+      return NextResponse.json(
+        { error: getSafeErrorMessage(dbError, "Unable to sign in. Please try again later.") },
+        { status: 503 }
+      );
+    }
 
-  if (!ok) {
-    return NextResponse.json(
-      { error: "Invalid email or password." },
-      { status: 401 }
-    );
-  }
+    if (!user) {
+      return NextResponse.json(
+        { error: "Invalid email or password." },
+        { status: 401 }
+      );
+    }
+
+    const ok = await bcrypt.compare(password, (user as any).passwordHash);
+
+    if (!ok) {
+      return NextResponse.json(
+        { error: "Invalid email or password." },
+        { status: 401 }
+      );
+    }
 
     // For now we just return user info; sessions/tokens can be added later.
     return NextResponse.json(
@@ -57,12 +99,11 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("[auth/login] Error:", error);
-    return NextResponse.json(
-      { 
-        error: error.message || "Database error occurred. Please check if tables exist." 
-      },
-      { status: 500 }
+    return await handleApiError(
+      error,
+      "auth/login",
+      "Unable to sign in. Please try again later.",
+      503
     );
   }
 }

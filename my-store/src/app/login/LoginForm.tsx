@@ -31,8 +31,25 @@ export function LoginForm() {
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data.error || "Something went wrong.");
+        let errorMessage = "Something went wrong. Please try again.";
+        try {
+          const data = await res.json();
+          errorMessage = data.error || errorMessage;
+        } catch {
+          // If response is not JSON, use status-based message
+          if (res.status === 503) {
+            errorMessage = "Service temporarily unavailable. Please try again later.";
+          } else if (res.status === 429) {
+            errorMessage = "Too many attempts. Please wait a moment and try again.";
+          } else if (res.status === 401) {
+            errorMessage = mode === "login" 
+              ? "Invalid email or password." 
+              : "Unable to create account. Please check your information.";
+          } else if (res.status === 409) {
+            errorMessage = "This email is already registered. Please sign in instead.";
+          }
+        }
+        setError(errorMessage);
         return;
       }
 
@@ -54,9 +71,9 @@ export function LoginForm() {
         router.push("/");
       }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Unable to submit. Please try again."
-      );
+      // Network errors or other client-side errors
+      console.error("[LoginForm] Error:", err);
+      setError("Unable to connect to the server. Please check your internet connection and try again.");
     } finally {
       setLoading(false);
     }

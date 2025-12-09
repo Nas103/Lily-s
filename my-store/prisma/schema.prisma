@@ -20,6 +20,7 @@ model User {
   postcode        String?
   addressLine1    String?
   addressLine2    String?
+  profileImageUrl String?  // URL to user's profile image
   profileVisibility String? @default("PRIVATE") // PRIVATE, SOCIAL, PUBLIC
   locationSharing Boolean  @default(false)
   emailNotifications Boolean @default(true)
@@ -28,6 +29,27 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   orders          Order[]
+  deliveryAddresses DeliveryAddress[]
+}
+
+model DeliveryAddress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String   // e.g., "Home", "Work", "Office"
+  fullName    String   // Recipient full name
+  phone       String?  // Phone number for delivery
+  addressLine1 String
+  addressLine2 String?
+  city        String
+  state       String?  // State/Province
+  postcode    String
+  country     String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 enum UserRole {

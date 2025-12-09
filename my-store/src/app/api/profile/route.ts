@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { validateProfileUpdate } from "@/lib/security";
+import { applySecurityMiddleware } from "@/lib/middleware";
+import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 
 /**
  * Verify user authentication from headers
  */
-async function verifyUser(request: Request): Promise<string | null> {
+async function verifyUser(request: NextRequest): Promise<string | null> {
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 
@@ -31,7 +34,20 @@ async function verifyUser(request: Request): Promise<string | null> {
 /**
  * GET /api/profile - Get user profile
  */
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Apply security middleware
+  const securityResponse = applySecurityMiddleware(request, response, {
+    rateLimit: { maxRequests: 30, windowMs: 60000 }, // 30 requests per minute
+    csrf: false, // GET requests don't need CSRF
+    securityHeaders: true,
+  });
+  
+  if (securityResponse) {
+    return securityResponse;
+  }
+
   if (!prisma) {
     return NextResponse.json(
       { error: "Database is not configured." },
@@ -63,6 +79,7 @@ export async function GET(request: Request) {
         postcode: true,
         addressLine1: true,
         addressLine2: true,
+        profileImageUrl: true,
         profileVisibility: true,
         locationSharing: true,
         emailNotifications: true,
@@ -87,10 +104,11 @@ export async function GET(request: Request) {
       dateOfBirth: user.dateOfBirth?.toISOString(),
     });
   } catch (error: any) {
-    console.error("[profile/GET] Error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to fetch profile." },
-      { status: 500 }
+    return await handleApiError(
+      error,
+      "profile/GET",
+      "Unable to load profile. Please try again later.",
+      503
     );
   }
 }
@@ -98,7 +116,20 @@ export async function GET(request: Request) {
 /**
  * PATCH /api/profile - Update user profile
  */
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Apply security middleware
+  const securityResponse = applySecurityMiddleware(request, response, {
+    rateLimit: { maxRequests: 10, windowMs: 60000 }, // 10 updates per minute
+    csrf: true,
+    securityHeaders: true,
+  });
+  
+  if (securityResponse) {
+    return securityResponse;
+  }
+
   if (!prisma) {
     return NextResponse.json(
       { error: "Database is not configured." },
@@ -117,65 +148,105 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const {
-      name,
-      phone,
-      dateOfBirth,
-      country,
-      city,
-      postcode,
-      addressLine1,
-      addressLine2,
-      profileVisibility,
-      locationSharing,
-      emailNotifications,
-      smsNotifications,
-      marketingEmails,
-    } = body;
+    
+    // Validate and sanitize all input data
+    const validation = validateProfileUpdate(body);
+    
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: "Validation failed", errors: validation.errors },
+        { status: 400 }
+      );
+    }
 
-    // Build update object with only provided fields
+    // Build update object with validated and sanitized data
     const updateData: any = {};
     
-    if (name !== undefined) updateData.name = name;
-    if (phone !== undefined) updateData.phone = phone;
-    if (dateOfBirth !== undefined) {
-      updateData.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : null;
+    if (validation.sanitized.name !== undefined) updateData.name = validation.sanitized.name;
+    if (validation.sanitized.phone !== undefined) updateData.phone = validation.sanitized.phone;
+    if (validation.sanitized.dateOfBirth !== undefined) {
+      updateData.dateOfBirth = validation.sanitized.dateOfBirth 
+        ? new Date(validation.sanitized.dateOfBirth) 
+        : null;
     }
-    if (country !== undefined) updateData.country = country;
-    if (city !== undefined) updateData.city = city;
-    if (postcode !== undefined) updateData.postcode = postcode;
-    if (addressLine1 !== undefined) updateData.addressLine1 = addressLine1;
-    if (addressLine2 !== undefined) updateData.addressLine2 = addressLine2;
-    if (profileVisibility !== undefined) updateData.profileVisibility = profileVisibility;
-    if (locationSharing !== undefined) updateData.locationSharing = locationSharing;
-    if (emailNotifications !== undefined) updateData.emailNotifications = emailNotifications;
-    if (smsNotifications !== undefined) updateData.smsNotifications = smsNotifications;
-    if (marketingEmails !== undefined) updateData.marketingEmails = marketingEmails;
+    if (validation.sanitized.country !== undefined) updateData.country = validation.sanitized.country;
+    if (validation.sanitized.city !== undefined) updateData.city = validation.sanitized.city;
+    if (validation.sanitized.postcode !== undefined) updateData.postcode = validation.sanitized.postcode;
+    if (validation.sanitized.addressLine1 !== undefined) updateData.addressLine1 = validation.sanitized.addressLine1;
+    if (validation.sanitized.addressLine2 !== undefined) updateData.addressLine2 = validation.sanitized.addressLine2;
+    if (validation.sanitized.profileImageUrl !== undefined) updateData.profileImageUrl = validation.sanitized.profileImageUrl;
+    if (validation.sanitized.profileVisibility !== undefined) updateData.profileVisibility = validation.sanitized.profileVisibility;
+    if (validation.sanitized.locationSharing !== undefined) updateData.locationSharing = validation.sanitized.locationSharing;
+    if (validation.sanitized.emailNotifications !== undefined) updateData.emailNotifications = validation.sanitized.emailNotifications;
+    if (validation.sanitized.smsNotifications !== undefined) updateData.smsNotifications = validation.sanitized.smsNotifications;
+    if (validation.sanitized.marketingEmails !== undefined) updateData.marketingEmails = validation.sanitized.marketingEmails;
 
-    const updatedUser = await (prisma as any).user.update({
-      where: { id: userId },
-      data: updateData,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        phone: true,
-        dateOfBirth: true,
-        country: true,
-        city: true,
-        postcode: true,
-        addressLine1: true,
-        addressLine2: true,
-        profileVisibility: true,
-        locationSharing: true,
-        emailNotifications: true,
-        smsNotifications: true,
-        marketingEmails: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    // Remove profileImageUrl from updateData if the column doesn't exist in database
+    // This prevents errors when the schema hasn't been pushed yet
+    const updateDataSafe = { ...updateData };
+    
+    // Try to update, but handle case where profileImageUrl column doesn't exist
+    let updatedUser;
+    try {
+      updatedUser = await (prisma as any).user.update({
+        where: { id: userId },
+        data: updateDataSafe,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          phone: true,
+          dateOfBirth: true,
+          country: true,
+          city: true,
+          postcode: true,
+          addressLine1: true,
+          addressLine2: true,
+          profileImageUrl: true,
+          profileVisibility: true,
+          locationSharing: true,
+          emailNotifications: true,
+          smsNotifications: true,
+          marketingEmails: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (updateError: any) {
+      // If profileImageUrl column doesn't exist, retry without it
+      if (updateError?.message?.includes("Unknown argument `profileImageUrl`")) {
+        delete updateDataSafe.profileImageUrl;
+        updatedUser = await (prisma as any).user.update({
+          where: { id: userId },
+          data: updateDataSafe,
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            phone: true,
+            dateOfBirth: true,
+            country: true,
+            city: true,
+            postcode: true,
+            addressLine1: true,
+            addressLine2: true,
+            profileVisibility: true,
+            locationSharing: true,
+            emailNotifications: true,
+            smsNotifications: true,
+            marketingEmails: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+        // Add null for profileImageUrl since column doesn't exist
+        updatedUser.profileImageUrl = null;
+      } else {
+        throw updateError;
+      }
+    }
 
     return NextResponse.json({
       ...updatedUser,
@@ -184,10 +255,11 @@ export async function PATCH(request: Request) {
       dateOfBirth: updatedUser.dateOfBirth?.toISOString(),
     });
   } catch (error: any) {
-    console.error("[profile/PATCH] Error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to update profile." },
-      { status: 500 }
+    return await handleApiError(
+      error,
+      "profile/PATCH",
+      "Unable to update profile. Please try again later.",
+      503
     );
   }
 }

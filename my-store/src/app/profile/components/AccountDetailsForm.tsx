@@ -13,6 +13,7 @@ interface ProfileData {
   postcode?: string | null;
   addressLine1?: string | null;
   addressLine2?: string | null;
+  profileImageUrl?: string | null;
 }
 
 export function AccountDetailsForm() {
@@ -31,6 +32,7 @@ export function AccountDetailsForm() {
     postcode: "",
     addressLine1: "",
     addressLine2: "",
+    profileImageUrl: "",
   });
 
   // Fetch profile data
@@ -64,6 +66,7 @@ export function AccountDetailsForm() {
           postcode: data.postcode || "",
           addressLine1: data.addressLine1 || "",
           addressLine2: data.addressLine2 || "",
+          profileImageUrl: data.profileImageUrl || "",
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load profile");
@@ -101,11 +104,36 @@ export function AccountDetailsForm() {
 
       const updatedData = await res.json();
       
-      // Update auth store
+      // Update auth store with all updated data
       setUser({
         ...user,
         name: updatedData.name,
       });
+
+      // Reload profile data to ensure everything is synced
+      const refreshRes = await fetch("/api/profile", {
+        headers: {
+          "x-user-id": user.id,
+          "x-user-email": user.email,
+        },
+      });
+      
+      if (refreshRes.ok) {
+        const refreshedData = await refreshRes.json();
+        setFormData({
+          name: refreshedData.name || "",
+          phone: refreshedData.phone || "",
+          dateOfBirth: refreshedData.dateOfBirth 
+            ? new Date(refreshedData.dateOfBirth).toISOString().split("T")[0]
+            : "",
+          country: refreshedData.country || "",
+          city: refreshedData.city || "",
+          postcode: refreshedData.postcode || "",
+          addressLine1: refreshedData.addressLine1 || "",
+          addressLine2: refreshedData.addressLine2 || "",
+          profileImageUrl: refreshedData.profileImageUrl || "",
+        });
+      }
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -255,6 +283,22 @@ export function AccountDetailsForm() {
           placeholder="Apartment, suite, etc. (optional)"
           className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-zinc-900 mb-2">
+          Profile Image URL
+        </label>
+        <input
+          type="url"
+          value={formData.profileImageUrl || ""}
+          onChange={(e) => setFormData({ ...formData, profileImageUrl: e.target.value })}
+          placeholder="https://example.com/your-image.jpg"
+          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+        />
+        <p className="mt-1 text-xs text-zinc-500">
+          Enter a URL to your profile image. Leave empty to use Gravatar.
+        </p>
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-zinc-200">

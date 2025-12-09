@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, ShoppingBag, User, Menu, X, LogOut } from "lucide-react";
 import { useAuth } from "@/stores/authStore";
 import { getGravatarUrlSync } from "@/lib/gravatar-client";
+import { getProfileImageUrl } from "@/lib/getProfileImage";
 
 const navLinks = [
   { href: "/men", label: "Men" },
@@ -23,6 +24,32 @@ export function Header() {
   const logout = useAuth((state) => state.logout);
   const isAdmin = useAuth((state) => state.isAdmin);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Fetch profile image
+    const fetchProfileImage = async () => {
+      try {
+        const res = await fetch("/api/profile", {
+          headers: {
+            "x-user-id": user.id,
+            "x-user-email": user.email,
+          },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setProfileImageUrl(data.profileImageUrl || null);
+        }
+      } catch (err) {
+        // Silently fail - will use Gravatar fallback
+      }
+    };
+
+    fetchProfileImage();
+  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -79,13 +106,14 @@ export function Header() {
                 href="/profile"
                 className="inline-flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] hover:border-zinc-900"
               >
-                <div className="h-6 w-6 rounded-full overflow-hidden bg-zinc-100">
+                <div className="h-6 w-6 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0">
                   <Image
-                    src={getGravatarUrlSync(user.email, 48)}
+                    src={getProfileImageUrl(user.email, profileImageUrl, 48)}
                     alt={user.name || user.email}
                     width={24}
                     height={24}
-                    className="object-cover"
+                    className="object-cover w-full h-full"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     unoptimized
                   />
                 </div>

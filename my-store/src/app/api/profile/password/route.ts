@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 
 /**
  * PATCH /api/profile/password - Update user password
  */
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   if (!prisma) {
     return NextResponse.json(
-      { error: "Database is not configured." },
-      { status: 500 }
+      { error: "Service temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 
@@ -42,26 +43,27 @@ export async function PATCH(request: Request) {
     }
 
     // Get user with password hash and verify email
-    const user = await (prisma as any).user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        passwordHash: true,
-      },
-    });
-
-    if (!user || user.email !== userEmail) {
+    let user;
+    try {
+      user = await (prisma as any).user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          passwordHash: true,
+        },
+      });
+    } catch (dbError: any) {
       return NextResponse.json(
-        { error: "Unauthorized." },
-        { status: 401 }
+        { error: getSafeErrorMessage(dbError, "Unable to update password. Please try again later.") },
+        { status: 503 }
       );
     }
 
-    if (!user) {
+    if (!user || user.email !== userEmail) {
       return NextResponse.json(
-        { error: "User not found." },
-        { status: 404 }
+        { error: "Unauthorized. Please log in." },
+        { status: 401 }
       );
     }
 
@@ -79,19 +81,27 @@ export async function PATCH(request: Request) {
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
     // Update password
-    await (prisma as any).user.update({
-      where: { id: userId },
-      data: {
-        passwordHash: newPasswordHash,
-      },
-    });
+    try {
+      await (prisma as any).user.update({
+        where: { id: userId },
+        data: {
+          passwordHash: newPasswordHash,
+        },
+      });
+    } catch (dbError: any) {
+      return NextResponse.json(
+        { error: getSafeErrorMessage(dbError, "Unable to update password. Please try again later.") },
+        { status: 503 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("[profile/password/PATCH] Error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to update password." },
-      { status: 500 }
+    return await handleApiError(
+      error,
+      "profile/password/PATCH",
+      "Unable to update password. Please try again later.",
+      503
     );
   }
 }
