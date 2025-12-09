@@ -139,17 +139,18 @@ export function applySecurityMiddleware(
   request: NextRequest,
   response: NextResponse,
   options: {
-    rateLimit?: { maxRequests?: number; windowMs?: number };
+    rateLimit?: { maxRequests?: number; windowMs?: number } | false;
     csrf?: boolean;
     securityHeaders?: boolean;
   } = {}
 ): NextResponse | null {
   // Rate limiting
-  if (options.rateLimit !== false) {
+  if (options.rateLimit !== false && options.rateLimit !== undefined) {
+    const rateLimitConfig = options.rateLimit as { maxRequests?: number; windowMs?: number };
     const rateLimitResponse = rateLimitMiddleware(
       request,
-      options.rateLimit?.maxRequests,
-      options.rateLimit?.windowMs
+      rateLimitConfig.maxRequests,
+      rateLimitConfig.windowMs
     );
     if (rateLimitResponse) return rateLimitResponse;
   }
