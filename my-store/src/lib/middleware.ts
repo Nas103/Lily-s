@@ -84,11 +84,11 @@ export function csrfMiddleware(request: NextRequest): NextResponse | null {
   
   // In production, verify origin matches your domain
   if (process.env.NODE_ENV === "production") {
-    const allowedOrigins = [
+    const allowedOrigins: string[] = [
       process.env.NEXT_PUBLIC_SITE_URL,
-      `https://${host}`,
-      `http://${host}`,
-    ].filter(Boolean);
+      host ? `https://${host}` : undefined,
+      host ? `http://${host}` : undefined,
+    ].filter((origin): origin is string => Boolean(origin));
     
     if (origin && !allowedOrigins.some(allowed => origin.startsWith(allowed))) {
       return NextResponse.json(
