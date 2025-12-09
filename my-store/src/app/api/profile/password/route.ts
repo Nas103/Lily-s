@@ -24,19 +24,6 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Verify user exists
-    const user = await (prisma as any).user.findUnique({
-      where: { id: userId },
-      select: { id: true, email: true },
-    });
-
-    if (!user || user.email !== userEmail) {
-      return NextResponse.json(
-        { error: "Unauthorized." },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
     const { currentPassword, newPassword } = body;
 
@@ -54,13 +41,22 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Get user with password hash
+    // Get user with password hash and verify email
     const user = await (prisma as any).user.findUnique({
       where: { id: userId },
       select: {
+        id: true,
+        email: true,
         passwordHash: true,
       },
     });
+
+    if (!user || user.email !== userEmail) {
+      return NextResponse.json(
+        { error: "Unauthorized." },
+        { status: 401 }
+      );
+    }
 
     if (!user) {
       return NextResponse.json(
