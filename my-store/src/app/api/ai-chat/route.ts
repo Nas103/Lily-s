@@ -6,9 +6,10 @@ type ChatMessage = {
   content: string;
 };
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Only create OpenAI client if API key is available
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null;
 
 export async function POST(request: Request) {
   const { messages, context } = (await request.json()) as {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     };
   };
 
-  if (!process.env.OPENAI_API_KEY) {
+  if (!openai || !process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       {
         reply:
