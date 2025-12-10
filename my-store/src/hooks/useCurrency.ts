@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/stores/authStore";
-import { getUserCurrency, convertPrice, formatPrice } from "@/lib/currency";
+import { getUserCurrencySync, convertPriceSync, formatPrice, initializeExchangeRates } from "@/lib/currency";
 
 /**
  * Hook to get user's currency based on their saved address
@@ -61,14 +61,19 @@ export function useCurrency() {
     fetchUserCountry();
   }, [user]);
 
-  const currency = getUserCurrency(userCountry);
+  // Initialize exchange rates on mount
+  useEffect(() => {
+    initializeExchangeRates();
+  }, []);
+
+  const currency = getUserCurrencySync(userCountry);
 
   return {
     country: userCountry,
     currency: currency.code,
     symbol: currency.symbol,
     rate: currency.rate,
-    convertPrice: (priceInZAR: number) => convertPrice(priceInZAR, userCountry),
+    convertPrice: (priceInUSD: number) => convertPriceSync(priceInUSD, userCountry),
     formatPrice: (amount: number) => formatPrice(amount, currency.symbol),
     loading,
   };

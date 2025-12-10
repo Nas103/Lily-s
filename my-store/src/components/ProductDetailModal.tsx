@@ -20,10 +20,10 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
   
   if (!product) return null;
   
-  // Use converted price if available
+  // Use converted price if available, otherwise use USD
   const converted = loading ? null : (convertPrice ? convertPrice(product.price) : null);
   const formattedPrice = loading 
-    ? `R${product.price.toFixed(2)}` 
+    ? `$${product.price.toFixed(2)}` 
     : (converted ? converted.formatted : formatPrice(product.price));
 
   const sizes = product.sizes; // Only use sizes if they exist (not for perfumes)

@@ -15,7 +15,7 @@ export function CartSummary() {
     ? subtotal 
     : (convertPrice ? convertPrice(subtotal).amount : subtotal);
   const formattedSubtotal = loading 
-    ? `R${subtotal.toFixed(2)}` 
+    ? `$${subtotal.toFixed(2)}` 
     : (convertPrice ? convertPrice(subtotal).formatted : formatPrice(subtotal));
 
   if (!items.length) {

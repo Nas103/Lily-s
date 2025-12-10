@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const currency = getUserCurrency(userCountry);
+  const currency = await getUserCurrency(userCountry);
 
   if (!process.env.DATABASE_URL || !prisma) {
     const filtered = staticProducts.filter((product) => {
@@ -75,18 +75,20 @@ export async function GET(request: NextRequest) {
     })
     
     // Add currency conversion to static products
-    const productsWithCurrency = mapStaticProduct(filtered).map((product: any) => {
-      const priceInZAR = typeof product.price === 'number' ? product.price : parseFloat(product.price);
-      const converted = convertPrice(priceInZAR, userCountry);
-      return {
-        ...product,
-        price: priceInZAR, // Keep original price
-        convertedPrice: converted.amount,
-        currency: converted.currency,
-        currencySymbol: converted.symbol,
-        formattedPrice: converted.formatted,
-      };
-    });
+    const productsWithCurrency = await Promise.all(
+      mapStaticProduct(filtered).map(async (product: any) => {
+        const priceInZAR = typeof product.price === 'number' ? product.price : parseFloat(product.price);
+        const converted = await convertPrice(priceInZAR, userCountry);
+        return {
+          ...product,
+          price: priceInZAR, // Keep original price
+          convertedPrice: converted.amount,
+          currency: converted.currency,
+          currencySymbol: converted.symbol,
+          formattedPrice: converted.formatted,
+        };
+      })
+    );
     
     return NextResponse.json(productsWithCurrency);
   }
@@ -124,35 +126,52 @@ export async function GET(request: NextRequest) {
       return matchesCategory && matchesSearch
     });
     
-    const productsWithCurrency = mapStaticProduct(filtered).map((product: any) => {
-      const priceInZAR = typeof product.price === 'number' ? product.price : parseFloat(product.price);
-      const converted = convertPrice(priceInZAR, userCountry);
-      return {
-        ...product,
-        price: priceInZAR,
-        convertedPrice: converted.amount,
-        currency: converted.currency,
-        currencySymbol: converted.symbol,
-        formattedPrice: converted.formatted,
-      };
-    });
+    const productsWithCurrency = await Promise.all(
+      mapStaticProduct(filtered).map(async (product: any) => {
+        const priceInUSD = typeof product.price === 'number' ? product.price : parseFloat(product.price);
+        // Only convert if user has a country set
+        const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
+          amount: priceInUSD,
+          currency: "USD",
+          symbol: "$",
+          formatted: `$${priceInUSD.toFixed(2)}`,
+        };
+        return {
+          ...product,
+          price: priceInUSD,
+          convertedPrice: converted.amount,
+          currency: converted.currency,
+          currencySymbol: converted.symbol,
+          formattedPrice: converted.formatted,
+        };
+      })
+    );
     
     return NextResponse.json(productsWithCurrency);
   }
 
   // Add currency conversion to database products
-  const productsWithCurrency = products.map((product: any) => {
-    const priceInZAR = parseFloat(product.price.toString());
-    const converted = convertPrice(priceInZAR, userCountry);
-    return {
-      ...product,
-      price: priceInZAR, // Keep original price in ZAR
-      convertedPrice: converted.amount,
-      currency: converted.currency,
-      currencySymbol: converted.symbol,
-      formattedPrice: converted.formatted,
-    };
-  });
+  // Prices are stored in USD, convert only if user has country set
+  const productsWithCurrency = await Promise.all(
+    products.map(async (product: any) => {
+      const priceInUSD = parseFloat(product.price.toString());
+      // Only convert if user has a country set
+      const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
+        amount: priceInUSD,
+        currency: "USD",
+        symbol: "$",
+        formatted: `$${priceInUSD.toFixed(2)}`,
+      };
+      return {
+        ...product,
+        price: priceInUSD, // Keep original price in USD
+        convertedPrice: converted.amount,
+        currency: converted.currency,
+        currencySymbol: converted.symbol,
+        formattedPrice: converted.formatted,
+      };
+    })
+  );
 
   return NextResponse.json(productsWithCurrency);
 }
