@@ -5,12 +5,12 @@ import { ProductCard, ProductCardProps } from "./ProductCard";
 import { ProductDetailModal } from "./ProductDetailModal";
 
 type ProductGridProps = {
-  products: (ProductCardProps & { description?: string; tags?: string[] })[];
+  products: (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[]; colorImages?: Record<string, string[]> })[];
 };
 
 export function ProductGrid({ products }: ProductGridProps) {
   const [selected, setSelected] = useState<
-    (ProductCardProps & { description?: string; tags?: string[] }) | null
+    (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[]; colorImages?: Record<string, string[]> }) | null
   >(null);
 
   return (

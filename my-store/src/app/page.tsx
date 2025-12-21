@@ -23,6 +23,7 @@ export default function Home() {
     tags: item.tags,
     sizes: item.sizes,
     colors: item.colors,
+    colorImages: item.colorImages,
   }));
 
   const icons = products.slice(20, 28);

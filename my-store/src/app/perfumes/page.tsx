@@ -18,6 +18,7 @@ export default function PerfumesPage() {
     tags: product.tags,
     sizes: product.sizes,
     colors: product.colors,
+    colorImages: product.colorImages,
   }));
 
   return (

@@ -14,6 +14,7 @@ export type ProductRecord = {
   imageUrl: string;
   sizes?: string[];
   colors?: string[];
+  colorImages?: Record<string, string[]>; // Maps color name to array of 4 image URLs
 };
 
 const adjectives = [
@@ -46,8 +47,22 @@ const nouns = [
   "Harvest",
 ];
 
-// Individual product images - Update each URL to match the specific product
-// Format: Product ID - Product Name - Category
+// ============================================================================
+// BASE PRODUCT IMAGES - UPDATE INDIVIDUAL PRODUCT IMAGES HERE
+// ============================================================================
+// This is the base image for each product (used as fallback and for generating
+// color variations). Each product should have a unique base image URL.
+//
+// TO UPDATE INDIVIDUAL PRODUCT BASE IMAGES:
+// Simply replace the URL for the specific product ID below.
+// Example:
+//   "prod-1": "https://your-cdn.com/aurora-run-base.jpg",
+//   "prod-2": "https://your-cdn.com/lumen-forma-base.jpg",
+//   etc.
+//
+// Note: These base images are used to generate 4 color variations per color.
+// For more control, see generateColorImages() function below.
+// ============================================================================
 const productImages: Record<string, string> = {
   // Men's Products
   "prod-1": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518", // Aurora Run - Men
@@ -184,6 +199,66 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 
+// ============================================================================
+// IMAGE GENERATION FUNCTION - UPDATE INDIVIDUAL IMAGES HERE
+// ============================================================================
+// Helper function to generate 4 image variations for a color
+// 
+// TO UPDATE INDIVIDUAL IMAGES:
+// Replace this function to return actual image URLs for each color.
+// Example structure:
+//   return [
+//     "https://your-cdn.com/product-123-color-onyx-view1.jpg",  // Image 1
+//     "https://your-cdn.com/product-123-color-onyx-view2.jpg",  // Image 2
+//     "https://your-cdn.com/product-123-color-onyx-view3.jpg",  // Image 3
+//     "https://your-cdn.com/product-123-color-onyx-view4.jpg",  // Image 4
+//   ];
+//
+// Or create a mapping object like:
+//   const colorImageMap: Record<string, Record<string, string[]>> = {
+//     "prod-1": {
+//       "Onyx": ["url1", "url2", "url3", "url4"],
+//       "Sand": ["url1", "url2", "url3", "url4"],
+//       ...
+//     },
+//     ...
+//   };
+// ============================================================================
+const generateColorImages = (baseImageUrl: string, color: string, productId: string): string[] => {
+  // Create a simple hash from productId and color to generate consistent variations
+  const hash = (productId + color).split('').reduce((acc, char) => {
+    return ((acc << 5) - acc) + char.charCodeAt(0);
+  }, 0);
+  
+  // Generate 4 unique image variations per color
+  // Using different crop positions and sizes to simulate different product views
+  // TODO: Replace these with actual product image URLs for each color
+  const variations = [
+    { w: 900, h: 1200, fit: 'crop', position: 'center' },  // Image 1 of 4
+    { w: 900, h: 1200, fit: 'crop', position: 'top' },     // Image 2 of 4
+    { w: 900, h: 1200, fit: 'crop', position: 'bottom' },  // Image 3 of 4
+    { w: 900, h: 1200, fit: 'crop', position: 'center', sat: 10 }, // Image 4 of 4
+  ];
+  
+  return variations.map((variation, index) => {
+    const params = new URLSearchParams({
+      auto: 'format',
+      fit: variation.fit,
+      w: variation.w.toString(),
+      h: variation.h.toString(),
+      q: '80',
+      color: encodeURIComponent(color),
+      v: (Math.abs(hash) + index).toString(),
+    });
+    if (variation.position) params.set('crop', variation.position);
+    if (variation.sat) params.set('sat', variation.sat.toString());
+    
+    // TODO: Replace this line with actual image URL for this specific color and view
+    // Format: productId-color-index (e.g., "prod-1-Onyx-0", "prod-1-Onyx-1", etc.)
+    return `${baseImageUrl}?${params.toString()}`;
+  });
+};
+
 export const products: ProductRecord[] = Array.from({ length: 60 }).map(
   (_, index) => {
     const adjective = adjectives[index % adjectives.length];
@@ -205,6 +280,39 @@ export const products: ProductRecord[] = Array.from({ length: 60 }).map(
     const productId = `prod-${index + 1}`;
     const baseImageUrl = productImages[productId] || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2";
     
+    // ========================================================================
+    // COLOR-BASED IMAGES - 4 IMAGES PER COLOR
+    // ========================================================================
+    // This generates 4 images for each color option of the product.
+    // 
+    // TO UPDATE INDIVIDUAL PRODUCT COLOR IMAGES:
+    // Replace the generateColorImages() function above, or directly modify
+    // the colorImages object here for specific products:
+    //
+    // Example:
+    //   const colorImages: Record<string, string[]> = {
+    //     "Onyx": [
+    //       "https://your-cdn.com/prod-1-onyx-1.jpg",
+    //       "https://your-cdn.com/prod-1-onyx-2.jpg",
+    //       "https://your-cdn.com/prod-1-onyx-3.jpg",
+    //       "https://your-cdn.com/prod-1-onyx-4.jpg",
+    //     ],
+    //     "Sand": [
+    //       "https://your-cdn.com/prod-1-sand-1.jpg",
+    //       "https://your-cdn.com/prod-1-sand-2.jpg",
+    //       "https://your-cdn.com/prod-1-sand-3.jpg",
+    //       "https://your-cdn.com/prod-1-sand-4.jpg",
+    //     ],
+    //     // ... repeat for each color
+    //   };
+    // ========================================================================
+    const colorImages: Record<string, string[]> = {};
+    colors.forEach((color) => {
+      // TODO: Replace generateColorImages() call with actual image URLs
+      // Format: 4 images per color, e.g., ["url1", "url2", "url3", "url4"]
+      colorImages[color] = generateColorImages(baseImageUrl, color, productId);
+    });
+    
     return {
       id: productId,
       name,
@@ -222,6 +330,7 @@ export const products: ProductRecord[] = Array.from({ length: 60 }).map(
       imageUrl: `${baseImageUrl}?auto=format&fit=crop&w=900&q=80`,
       sizes,
       colors,
+      colorImages, // 4 images per color
     };
   }
 );
