@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Lily Atelier",
+    "slug": "lily-atelier",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lilyatelier.app",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We use your location to provide currency conversion and personalized shopping experiences.",
+        "NSCameraUsageDescription": "Allow access to camera to upload profile pictures.",
+        "NSPhotoLibraryUsageDescription": "Allow access to photo library to select profile pictures."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/Android-Adaptive-Icon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.lilyatelier.app",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Lily Atelier to use your location for currency conversion."
+        }
+      ]
+    ],
+    "scheme": "lilyatelier",
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id-here"
+      }
+    }
+  }
+}
+

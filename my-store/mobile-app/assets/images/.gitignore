@@ -1,0 +1,10 @@
+# Ignore all image files - you'll upload them manually
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+
+# But keep the folder structure
+!.gitkeep
+

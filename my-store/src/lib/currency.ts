@@ -174,7 +174,11 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
   }
 
   try {
-    const response = await fetch("/api/currency", {
+    // Use absolute URL for server-side fetch
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const currencyUrl = `${baseUrl}/api/currency`;
+    
+    const response = await fetch(currencyUrl, {
       next: { revalidate: 3600 }, // Revalidate every hour
     });
 

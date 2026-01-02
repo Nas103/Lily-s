@@ -26,12 +26,73 @@ export function isValidEmail(email: string): boolean {
 
 /**
  * Validate phone number (basic validation)
+ * Supports international format: +27 65944319, +1 234567890, etc.
+ * When country code is present, leading 0 should be removed from the number
  */
 export function isValidPhone(phone: string): boolean {
   if (!phone || typeof phone !== "string") return false;
-  // Allow international format: +1234567890 or 1234567890
-  const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
-  return phoneRegex.test(phone) && phone.length <= 20;
+  
+  const normalized = phone.trim();
+  
+  // Check if it starts with + (international format)
+  if (normalized.startsWith('+')) {
+    // International format: +[country code] [number]
+    // Remove the + and split by space
+    const withoutPlus = normalized.substring(1).trim();
+    const parts = withoutPlus.split(/\s+/);
+    
+    if (parts.length < 1) return false;
+    
+    // First part is country code
+    const countryCode = parts[0];
+    // Rest is the phone number
+    const numberPart = parts.length > 1 ? parts.slice(1).join(' ') : '';
+    
+    // Validate country code (1-4 digits)
+    if (!/^[0-9]{1,4}$/.test(countryCode)) return false;
+    
+    // If no number part provided, try to extract from first part
+    let phoneDigits = '';
+    if (numberPart) {
+      // Get digits from number part
+      phoneDigits = numberPart.replace(/\D/g, '');
+    } else {
+      // No space: try to split country code from number
+      // Assume country code is 1-3 digits, rest is number
+      const allDigits = withoutPlus.replace(/\D/g, '');
+      if (allDigits.length < 7) return false;
+      
+      // Try common lengths: 1, 2, or 3 digit country codes
+      for (let len = 1; len <= 3 && len < allDigits.length - 5; len++) {
+        const possibleCode = allDigits.substring(0, len);
+        const possibleNumber = allDigits.substring(len);
+        
+        if (possibleNumber.length >= 6 && possibleNumber.length <= 15 && !possibleNumber.startsWith('0')) {
+          phoneDigits = possibleNumber;
+          break;
+        }
+      }
+      
+      if (!phoneDigits) {
+        // Fallback: use remaining digits after country code
+        phoneDigits = allDigits.substring(countryCode.length);
+      }
+    }
+    
+    // Phone number should be 6-15 digits
+    if (phoneDigits.length < 6 || phoneDigits.length > 15) return false;
+    
+    // Should not start with 0 when country code is present (leading 0 should be removed)
+    if (phoneDigits.startsWith('0')) return false;
+    
+    return true;
+  }
+  
+  // Local format: just digits, allow leading 0
+  const digitsOnly = normalized.replace(/\D/g, '');
+  if (digitsOnly.length < 6 || digitsOnly.length > 15) return false;
+  
+  return true;
 }
 
 /**

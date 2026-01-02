@@ -71,6 +71,7 @@ export function rateLimitMiddleware(
 /**
  * CSRF protection middleware
  * For API routes, we verify the origin header
+ * Mobile apps don't send origin/referer, so we allow them through
  */
 export function csrfMiddleware(request: NextRequest): NextResponse | null {
   // Skip for GET requests
@@ -81,6 +82,19 @@ export function csrfMiddleware(request: NextRequest): NextResponse | null {
   const origin = request.headers.get("origin");
   const referer = request.headers.get("referer");
   const host = request.headers.get("host");
+  const userAgent = request.headers.get("user-agent") || "";
+  
+  // Allow mobile app requests (they don't have origin/referer)
+  const isMobileApp = !origin && !referer && (
+    userAgent.includes("Expo") || 
+    userAgent.includes("ReactNative") ||
+    userAgent.includes("okhttp") || // Android
+    userAgent.includes("CFNetwork") // iOS
+  );
+  
+  if (isMobileApp) {
+    return null; // Allow mobile app requests
+  }
   
   // In production, verify origin matches your domain
   if (process.env.NODE_ENV === "production") {

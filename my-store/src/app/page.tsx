@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Crown } from "lucide-react";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
+import { LiquidMetalButton } from "@/components/LiquidMetalButton";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -48,12 +50,17 @@ export default function Home() {
                 statement fits land here first.
               </p>
             </div>
-            <Link
+            <LiquidMetalButton
+              theme="gold"
+              textured={true}
+              className="rounded-lg relative bg-background"
               href="/women"
-              className="inline-flex w-fit items-center justify-center rounded-full border border-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.4em]"
             >
-              Shop the edit
-            </Link>
+              <div className="flex items-center">
+                <Crown className="mr-2 h-4 w-4" />
+                <span>Shop the edit</span>
+              </div>
+            </LiquidMetalButton>
           </div>
 
           <div className="grid flex-1 gap-4 md:grid-cols-3">

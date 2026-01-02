@@ -90,8 +90,15 @@ export async function POST(request: NextRequest) {
     .map((item) => `${item.name} (x${item.quantity})`)
     .join(", ");
 
-  // Generate unique payment ID
-  const mPaymentId = `ORDER-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+  // Generate unique order number for tracking (format: ORD-YYYYMMDD-HHMMSS-XXXXX)
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
+  const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
+  const orderNumber = `ORD-${dateStr}-${timeStr}-${randomStr}`;
+  
+  // Generate unique payment ID (using order number)
+  const mPaymentId = orderNumber;
 
   // Create PayFast payment data
   const paymentData = createPayFastPaymentData({
@@ -108,6 +115,7 @@ export async function POST(request: NextRequest) {
   const payfastUrl = getPayFastUrl();
 
   return NextResponse.json({
+    orderNumber, // Unique order number for tracking
     paymentUrl: payfastUrl,
     paymentData,
   });
