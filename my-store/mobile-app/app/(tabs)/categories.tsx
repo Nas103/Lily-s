@@ -22,12 +22,18 @@ export default function CategoriesScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>(category || 'all');
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('clothing'); // For BoxRaw and Electronics sub-categories
+  // Initialize subCategory based on initial category
+  const getInitialSubCategory = (cat: string | undefined) => {
+    if (cat === 'boxraw') return 'clothing';
+    if (cat === 'electronics') return 'apple';
+    return 'clothing'; // Default
+  };
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>(getInitialSubCategory(category));
   const [previousCategory, setPreviousCategory] = useState<string>(category || 'all');
   const [showAddToCartConfirmation, setShowAddToCartConfirmation] = useState<string | null>(null);
   const [showWishlistConfirmation, setShowWishlistConfirmation] = useState<string | null>(null);
   const { addItem } = useCart();
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlist();
 
   const categories = [
     { id: 'all', label: 'All' },
@@ -40,6 +46,19 @@ export default function CategoriesScreen() {
     { id: 'boxraw', label: 'BoxRaw' },
     { id: 'electronics', label: 'Electronics' },
   ];
+
+  // Sync selectedCategory with URL parameter when it changes
+  useEffect(() => {
+    if (category && category !== selectedCategory) {
+      setSelectedCategory(category);
+      // Also update subCategory when category changes from URL
+      if (category === 'boxraw') {
+        setSelectedSubCategory('clothing');
+      } else if (category === 'electronics') {
+        setSelectedSubCategory('apple');
+      }
+    }
+  }, [category]);
 
   useEffect(() => {
     // Reset subCategory only when switching between different categories
@@ -55,6 +74,20 @@ export default function CategoriesScreen() {
 
   useEffect(() => {
     // Load products when category, subCategory, or country changes
+    // Ensure subCategory is set correctly for electronics and boxraw before loading
+    if (selectedCategory === 'electronics') {
+      // If subCategory is not one of the valid electronics sub-categories, set to 'apple'
+      if (selectedSubCategory !== 'apple' && selectedSubCategory !== 'samsung' && selectedSubCategory !== 'flagship') {
+        setSelectedSubCategory('apple');
+        return; // Wait for subCategory to update before loading
+      }
+    } else if (selectedCategory === 'boxraw') {
+      // If subCategory is not one of the valid boxraw sub-categories, set to 'clothing'
+      if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment') {
+        setSelectedSubCategory('clothing');
+        return; // Wait for subCategory to update before loading
+      }
+    }
     loadProducts();
   }, [selectedCategory, selectedSubCategory, country]);
 
@@ -65,8 +98,23 @@ export default function CategoriesScreen() {
       if (selectedCategory !== 'all') {
         params.category = selectedCategory;
         // Add subCategory for BoxRaw and Electronics
-        if ((selectedCategory === 'boxraw' || selectedCategory === 'electronics') && selectedSubCategory) {
-          params.subCategory = selectedSubCategory;
+        if (selectedCategory === 'boxraw' || selectedCategory === 'electronics') {
+          // Ensure we have a valid subCategory for these categories
+          let validSubCategory = selectedSubCategory;
+          if (selectedCategory === 'electronics') {
+            // If subCategory is not valid for electronics, default to 'apple'
+            if (selectedSubCategory !== 'apple' && selectedSubCategory !== 'samsung' && selectedSubCategory !== 'flagship') {
+              validSubCategory = 'apple';
+              setSelectedSubCategory('apple'); // Update state for next render
+            }
+          } else if (selectedCategory === 'boxraw') {
+            // If subCategory is not valid for boxraw, default to 'clothing'
+            if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment') {
+              validSubCategory = 'clothing';
+              setSelectedSubCategory('clothing'); // Update state for next render
+            }
+          }
+          params.subCategory = validSubCategory;
         }
       }
       if (country) {

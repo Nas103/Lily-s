@@ -26,3 +26,6 @@ export { boxrawProducts } from '../../mobile-app/src/data/boxrawProducts';
 // Re-export electronics products
 export { electronicsProducts } from '../../mobile-app/src/data/electronicsProducts';
 
+// Re-export perfumes products
+export { perfumesProducts } from '../../mobile-app/src/data/perfumesProducts';
+

@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, LayoutChangeEvent } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
@@ -17,9 +17,11 @@ export default function GlowingGoldPrice({
   fontWeight = '600' 
 }: GlowingGoldPriceProps) {
   const shineAnim = useRef(new Animated.Value(0)).current;
+  const [textWidth, setTextWidth] = useState(0);
+  const [textHeight, setTextHeight] = useState(0);
 
   useEffect(() => {
-    // Create continuous left-to-right and right-to-left animation
+    // Create continuous shimmer animation
     const animate = () => {
       Animated.sequence([
         Animated.timing(shineAnim, {
@@ -39,50 +41,60 @@ export default function GlowingGoldPrice({
 
   const translateX = shineAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [-200, 200],
+    outputRange: [-textWidth, textWidth],
   });
+
+  const onTextLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setTextWidth(width);
+    setTextHeight(height);
+  };
 
   const priceString = typeof price === 'number' ? price.toFixed(2) : price;
 
   return (
     <View style={[styles.container, style]}>
-      {/* Use MaskedView to apply gradient only to text */}
       <MaskedView
         style={styles.maskedView}
         maskElement={
-          <View style={styles.textContainer}>
-            <Text style={[styles.priceText, { fontSize, fontWeight }]}>
-              {priceString}
-            </Text>
-          </View>
+          <Text 
+            style={[styles.maskText, { fontSize, fontWeight }]}
+            onLayout={onTextLayout}
+          >
+            {priceString}
+          </Text>
         }
       >
-        {/* Gold gradient background - only visible through text mask */}
-        <LinearGradient
-          colors={['#FFD700', '#FFA500', '#FFD700', '#FFA500', '#FFD700']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientBackground}
-        >
-          {/* Animated shine overlay - moves left to right and back */}
-          <Animated.View
-            style={[
-              styles.shineOverlay,
-              {
-                transform: [{ translateX }],
-              },
-            ]}
-            pointerEvents="none"
+        {/* Gold gradient - only visible through text mask */}
+        <View style={[styles.gradientContainer, { width: textWidth || 100, height: textHeight || 24 }]}>
+          <LinearGradient
+            colors={['#FFD700', '#FFA500', '#FFD700']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
           >
-            <LinearGradient
-              colors={['transparent', 'rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0.8)', 'transparent']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              locations={[0, 0.3, 0.5, 0.7, 1]}
-              style={styles.shineGradient}
-            />
-          </Animated.View>
-        </LinearGradient>
+            {/* Shimmer overlay */}
+            {textWidth > 0 && (
+              <Animated.View
+                style={[
+                  styles.shimmer,
+                  {
+                    transform: [{ translateX }],
+                    width: textWidth * 0.5,
+                  },
+                ]}
+                pointerEvents="none"
+              >
+                <LinearGradient
+                  colors={['transparent', 'rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 0.6)', 'transparent']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.shimmerGradient}
+                />
+              </Animated.View>
+            )}
+          </LinearGradient>
+        </View>
       </MaskedView>
     </View>
   );
@@ -91,33 +103,31 @@ export default function GlowingGoldPrice({
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    alignSelf: 'flex-start',
+    backgroundColor: 'transparent',
   },
   maskedView: {
     flexDirection: 'row',
-  },
-  textContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  gradientBackground: {
-    flex: 1,
-    minWidth: 60,
-    minHeight: 20,
-  },
-  priceText: {
+    alignItems: 'center',
     backgroundColor: 'transparent',
-    color: 'white', // This will be masked, so color doesn't matter - white areas show gradient
   },
-  shineOverlay: {
+  maskText: {
+    backgroundColor: 'transparent',
+    color: '#FFFFFF', // White for mask - gold will show through
+  },
+  gradientContainer: {
+    backgroundColor: 'transparent',
+  },
+  gradient: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  shimmer: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    width: '60%',
     height: '100%',
-    opacity: 1,
   },
-  shineGradient: {
+  shimmerGradient: {
     flex: 1,
     width: '100%',
     height: '100%',

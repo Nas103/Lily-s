@@ -37,9 +37,9 @@ export default function PerfumesScreen() {
       const data = await productsAPI.getAll({ country: country || undefined, category: 'perfumes' });
       const products = data.products || data || [];
       
-      // Filter and limit to 15 each
+      // Filter and limit: 15 for men, 20 for women
       const menProducts = products.filter((p: Product) => p.gender === 'men' || p.category === 'men').slice(0, 15);
-      const womenProducts = products.filter((p: Product) => p.gender === 'women' || p.category === 'women').slice(0, 15);
+      const womenProducts = products.filter((p: Product) => p.gender === 'women' || p.category === 'women').slice(0, 20);
       
       setMenPerfumes(menProducts);
       setWomenPerfumes(womenProducts);
@@ -174,7 +174,7 @@ export default function PerfumesScreen() {
         <>
           {/* Men's Perfumes Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>For Men</Text>
+            <Text style={styles.sectionTitle}>MEN</Text>
             {menPerfumes.length > 0 ? (
               <FlatList
                 data={menPerfumes}
@@ -192,7 +192,7 @@ export default function PerfumesScreen() {
 
           {/* Women's Perfumes Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>For Women</Text>
+            <Text style={styles.sectionTitle}>WOMEN</Text>
             {womenPerfumes.length > 0 ? (
               <FlatList
                 data={womenPerfumes}

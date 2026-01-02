@@ -72,8 +72,13 @@ export default function ImageSlideshow({
   const nextIndex = (currentIndex + 1) % images.length;
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.9}>
-      <View style={styles.imageWrapper}>
+    <TouchableOpacity 
+      style={styles.container} 
+      onPress={onPress} 
+      activeOpacity={0.9}
+      disabled={!onPress}
+    >
+      <View style={styles.imageWrapper} pointerEvents="box-none">
         {/* Current image sliding out to the left */}
         <Animated.View 
           style={[

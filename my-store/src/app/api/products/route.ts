@@ -11,11 +11,13 @@ try {
   const { runningProducts } = await import('../../../../mobile-app/src/data/runningProducts');
   const { boxrawProducts } = await import('../../../../mobile-app/src/data/boxrawProducts');
   const { electronicsProducts } = await import('../../../../mobile-app/src/data/electronicsProducts');
+  const { perfumesProducts } = await import('../../../../mobile-app/src/data/perfumesProducts');
   newProducts = [
     ...(lifestyleProducts || []),
     ...(runningProducts || []),
     ...(boxrawProducts || []),
     ...(electronicsProducts || []),
+    ...(perfumesProducts || []),
   ];
 } catch (error) {
   console.warn('[products] Could not load new product data files:', error);
