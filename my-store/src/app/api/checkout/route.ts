@@ -7,12 +7,19 @@ import {
 import { getDynamicPrice } from "@/lib/aiPricing";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { sanitizeInput } from "@/lib/security";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth-middleware";
+import { generateOrderNumber } from "@/lib/orders";
 
 type CheckoutItem = {
+  id?: string;
+  productId?: string;
   name: string;
   imageUrl: string;
   price: number;
   quantity: number;
+  size?: string;
+  color?: string;
 };
 
 export async function POST(request: NextRequest) {
@@ -29,7 +36,7 @@ export async function POST(request: NextRequest) {
     return securityResponse;
   }
   const body = await request.json();
-  const { items } = body;
+  const { items, shipping = {} } = body;
 
   if (!Array.isArray(items) || !items.length) {
     return NextResponse.json(
@@ -91,12 +98,51 @@ export async function POST(request: NextRequest) {
     .join(", ");
 
   // Generate unique order number for tracking (format: ORD-YYYYMMDD-HHMMSS-XXXXX)
-  const now = new Date();
-  const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
-  const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
-  const orderNumber = `ORD-${dateStr}-${timeStr}-${randomStr}`;
-  
+  const orderNumber = generateOrderNumber();
+
+  // Persist the order when the shopper is authenticated so it appears in
+  // their history and can be reconciled by the PayFast webhook.
+  try {
+    const user = await getCurrentUser(request);
+    if (user && prisma) {
+      await (prisma as any).order.create({
+        data: {
+          orderNumber,
+          userId: user.id,
+          status: "PENDING",
+          paymentStatus: "PENDING",
+          subtotal: totalAmount,
+          shipping: 0,
+          total: totalAmount,
+          currency,
+          paymentMethod: "payfast",
+          shippingName: shipping.fullName || user.name || undefined,
+          shippingEmail: shipping.email || user.email,
+          shippingPhone: shipping.phone || undefined,
+          shippingAddressLine1: shipping.addressLine1 || shipping.street || undefined,
+          shippingAddressLine2: shipping.addressLine2 || undefined,
+          shippingCity: shipping.city || undefined,
+          shippingState: shipping.state || undefined,
+          shippingPostcode: shipping.postcode || shipping.zip || undefined,
+          shippingCountry: shipping.country || undefined,
+          orderItems: {
+            create: (items as CheckoutItem[]).map((item) => ({
+              productId: String(item.productId || item.id || ""),
+              name: sanitizeInput(item.name),
+              imageUrl: item.imageUrl,
+              size: item.size,
+              color: item.color,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+          },
+        },
+      });
+    }
+  } catch (persistError) {
+    console.error("checkout: failed to persist order", persistError);
+  }
+
   // Generate unique payment ID (using order number)
   const mPaymentId = orderNumber;
 
@@ -106,8 +152,11 @@ export async function POST(request: NextRequest) {
     amount: totalAmount,
     itemName: itemNames.length > 100 ? "Order Items" : itemNames,
     itemDescription: itemNames.length > 255 ? undefined : itemNames,
+    emailAddress: shipping.email || undefined,
+    nameFirst: shipping.firstName || undefined,
+    nameLast: shipping.lastName || undefined,
     customData: {
-      items: JSON.stringify(items),
+      orderNumber,
     },
   });
 

@@ -81,6 +81,32 @@ a {
   color: transparent;
 }
 
+/* Molten gold wordmark for the header hero */
+.molten-title {
+  background-image: linear-gradient(
+    100deg,
+    #7a4a00 0%,
+    #f5b301 22%,
+    #fff7e6 44%,
+    #ffd873 58%,
+    #b3760a 78%,
+    #7a4a00 100%
+  );
+  background-size: 260% auto;
+  animation: logo-shimmer 7s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.55));
+  text-shadow: 0 0 42px rgba(245, 179, 1, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .molten-title {
+    animation: none;
+  }
+}
+
 /* ============================================================================
    MODERN SCROLLBAR STYLING
    ============================================================================

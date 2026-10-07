@@ -6,9 +6,11 @@ import { X } from "lucide-react";
 import { AddToCartButton } from "./AddToCartButton";
 import { AddToWishlistButton } from "./AddToWishlistButton";
 import { QuickBuyButton } from "./QuickBuyButton";
+import { ProductReviews } from "./ProductReviews";
 import type { ProductCardProps } from "./ProductCard";
 import { useRecommendationStore } from "@/stores/recommendationStore";
 import { useCurrency } from "@/hooks/useCurrency";
+import { BRAND } from "@/lib/brand";
 
 type ProductDetailModalProps = {
   product: (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[]; colorImages?: Record<string, string[]> }) | null;
@@ -164,7 +166,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
             </p>
             <p className="text-sm leading-relaxed text-zinc-600">
               {product.description ??
-                "Designed for the Lily capsule: balanced cushioning, premium fabrics, and studio-grade finishing."}
+                `Designed for the ${BRAND.name} capsule: balanced cushioning, premium fabrics, and studio-grade finishing.`}
             </p>
             {product.tags?.length ? (
               <div className="flex flex-wrap gap-2">
@@ -252,6 +254,8 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                 imageUrl={mainImageUrl}
               />
             </div>
+
+            <ProductReviews productId={product.id} />
           </div>
         </div>
       </div>

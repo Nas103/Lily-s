@@ -1,19 +1,42 @@
-const columns = [
+import Link from "next/link";
+import { BRAND } from "@/lib/brand";
+
+const columns: { title: string; items: { label: string; href: string }[] }[] = [
   {
-    title: "Shoes",
-    items: ["White Run", "Luna Racer", "P-6000", "Nova Trail"],
+    title: "Shop",
+    items: [
+      { label: "Men", href: "/men" },
+      { label: "Women", href: "/women" },
+      { label: "Abaya", href: "/abaya" },
+      { label: "Perfumes", href: "/perfumes" },
+    ],
   },
   {
-    title: "Clothing",
-    items: ["Tech Fleece", "Studio Set", "Airy Layers", "City Tailor"],
+    title: "Collections",
+    items: [
+      { label: "Lifestyle", href: "/lifestyle" },
+      { label: "Running", href: "/running" },
+      { label: "BoxRaw", href: "/boxraw" },
+      { label: "Electronics", href: "/electronics" },
+    ],
   },
   {
-    title: "Kids",
-    items: ["Mini Run", "Future Sprint", "Nova Kid"],
+    title: "Account",
+    items: [
+      { label: "Orders", href: "/orders" },
+      { label: "Wishlist", href: "/wishlist" },
+      { label: "Preferences", href: "/preferences" },
+      { label: "Profile", href: "/profile" },
+    ],
   },
   {
-    title: "Featured",
-    items: ["Jordan Atelier", "Perfume Oils", "Modest Edit"],
+    title: "Service",
+    items: [
+      { label: "Stylist", href: "/assistant" },
+      { label: "Track order", href: "/track-order" },
+      { label: "Support", href: "/support" },
+      { label: "Sign in", href: "/login" },
+    ],
   },
 ];
 
@@ -29,14 +52,18 @@ export function Footer() {
               </p>
               <ul className="mt-4 space-y-2 text-sm text-zinc-600">
                 {column.items.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item.href}>
+                    <Link href={item.href} className="transition hover:text-black">
+                      {item.label}
+                    </Link>
+                  </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
         <div className="mt-10 flex flex-col gap-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Lily Atelier. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
           <div className="flex gap-4">
             <span>Privacy</span>
             <span>Cookies</span>
@@ -47,5 +74,3 @@ export function Footer() {
     </footer>
   );
 }
-
-

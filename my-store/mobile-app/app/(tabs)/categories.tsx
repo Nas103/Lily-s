@@ -258,7 +258,7 @@ export default function CategoriesScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.categoryFilter}
-        contentContainerStyle={[styles.categoryFilterContent, { paddingTop: insets.top + 8 }]}
+        contentContainerStyle={[styles.categoryFilterContent, { paddingTop: insets.top + 12 }]}
       >
         {categories.map((cat) => (
           <TouchableOpacity
@@ -382,7 +382,7 @@ export default function CategoriesScreen() {
       ) : selectedCategory === 'running' ? (
         <ScrollView 
           style={styles.scrollView}
-          contentContainerStyle={styles.runningContainer}
+          contentContainerStyle={[styles.runningContainer, { paddingBottom: insets.bottom + 96 }]}
           showsVerticalScrollIndicator={false}
         >
           {/* MEN Section */}
@@ -418,7 +418,7 @@ export default function CategoriesScreen() {
           data={selectedSubCategory === 'clothing' ? boxrawClothingProducts : boxrawEquipmentProducts}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.productsGrid}
+          contentContainerStyle={[styles.productsGrid, { paddingBottom: insets.bottom + 96 }]}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={({ item }) => renderProduct(item)}
         />
@@ -432,7 +432,7 @@ export default function CategoriesScreen() {
           }
           numColumns={2}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.productsGrid}
+          contentContainerStyle={[styles.productsGrid, { paddingBottom: insets.bottom + 96 }]}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={({ item }) => renderProduct(item)}
           ListEmptyComponent={
@@ -448,7 +448,7 @@ export default function CategoriesScreen() {
           data={products}
           numColumns={2}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.productsGrid}
+          contentContainerStyle={[styles.productsGrid, { paddingBottom: insets.bottom + 96 }]}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={({ item }) => renderProduct(item)}
         />
@@ -463,15 +463,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   categoryFilter: {
+    flexGrow: 0,
     borderBottomWidth: 1,
     borderBottomColor: '#e5e5e5',
-    maxHeight: 80,
   },
   categoryFilterContent: {
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 14,
     paddingTop: 8,
-    gap: 12,
+    gap: 14,
     alignItems: 'center',
   },
   subCategoryFilter: {

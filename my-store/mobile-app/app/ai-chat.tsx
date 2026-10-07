@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { aiChatAPI } from '../src/services/api';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../src/constants/colors';
+import { BRAND } from '../src/constants/brand';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -18,7 +19,7 @@ export default function AiChatScreen() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hello! I'm Lily Atelier's AI shopping assistant. How can I help you today?",
+      content: `Hello! I'm ${BRAND.name}'s AI shopping assistant. How can I help you today?`,
     },
   ]);
   const [input, setInput] = useState('');

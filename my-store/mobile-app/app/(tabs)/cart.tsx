@@ -43,12 +43,12 @@ export default function CartScreen() {
       
       // Get product details for cart items to extract categories
       const cartItemIds = items.map(item => item.id);
-      const allProductsResponse = await productsAPI.getAll({ country });
+      const allProductsResponse = await productsAPI.getAll({ country: country || undefined });
       const allProducts = allProductsResponse.products || [];
       
       // Map cart items with their product details
       const cartItemsWithDetails = items.map(cartItem => {
-        const product = allProducts.find(p => p.id === cartItem.id);
+        const product = allProducts.find((p: any) => p.id === cartItem.id);
         return {
           ...cartItem,
           category: product?.category || 'other',
@@ -74,7 +74,7 @@ export default function CartScreen() {
       // Fallback: try to get products from same categories
       try {
         const cartItemIds = items.map(item => item.id);
-        const allProductsResponse = await productsAPI.getAll({ country });
+        const allProductsResponse = await productsAPI.getAll({ country: country || undefined });
         const allProducts = allProductsResponse.products || [];
         
         // Get unique categories from cart items (if we can infer them)

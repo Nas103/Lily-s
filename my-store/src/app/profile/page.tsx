@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
 import { 
   User, Mail, Shield, CreditCard, MapPin, ShoppingBag, 
-  Bell, Lock, Eye, Link as LinkIcon, Settings, Edit, 
+  Bell, Lock, Link as LinkIcon, Settings, Edit, 
   Calendar, Phone, Globe
 } from "lucide-react";
 import Link from "next/link";
@@ -15,28 +15,31 @@ import { getProfileImageUrl } from "@/lib/getProfileImage";
 import { AccountDetailsForm } from "./components/AccountDetailsForm";
 import { DeliveryAddressList } from "./components/DeliveryAddressList";
 import { PaymentMethodList } from "./components/PaymentMethodList";
+import { OrderHistory } from "./components/OrderHistory";
+import { ProfileSettings } from "./settings/ProfileSettings";
+import { BRAND } from "@/lib/brand";
 
 type SettingsSection = 
   | "profile" 
   | "account" 
+  | "orders"
   | "payment" 
   | "address" 
-  | "preferences" 
-  | "communication" 
+  | "shop" 
+  | "notifications" 
   | "privacy" 
-  | "visibility" 
-  | "linked";
+  | "links";
 
 const settingsMenu = [
   { id: "profile" as SettingsSection, label: "Profile", icon: User },
   { id: "account" as SettingsSection, label: "Account Details", icon: User },
+  { id: "orders" as SettingsSection, label: "Order History", icon: ShoppingBag },
   { id: "payment" as SettingsSection, label: "Payment Methods", icon: CreditCard },
   { id: "address" as SettingsSection, label: "Delivery Addresses", icon: MapPin },
-  { id: "preferences" as SettingsSection, label: "Shop Preferences", icon: ShoppingBag },
-  { id: "communication" as SettingsSection, label: "Communication Preferences", icon: Bell },
-  { id: "privacy" as SettingsSection, label: "Privacy", icon: Lock },
-  { id: "visibility" as SettingsSection, label: "Profile Visibility", icon: Eye },
-  { id: "linked" as SettingsSection, label: "Linked Accounts", icon: LinkIcon },
+  { id: "shop" as SettingsSection, label: "Shop Preferences", icon: ShoppingBag },
+  { id: "notifications" as SettingsSection, label: "Communication", icon: Bell },
+  { id: "privacy" as SettingsSection, label: "Privacy & Security", icon: Lock },
+  { id: "links" as SettingsSection, label: "Linked Accounts", icon: LinkIcon },
 ];
 
 export default function ProfilePage() {
@@ -127,7 +130,7 @@ export default function ProfilePage() {
               <div>
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Profile</h2>
                 <p className="text-zinc-600">
-                  Your Lily Atelier profile represents you across the platform.
+                  Your {BRAND.name} profile represents you across the platform.
                 </p>
               </div>
 
@@ -162,7 +165,7 @@ export default function ProfilePage() {
                     </h3>
                     <p className="text-zinc-600">{user.email}</p>
                     <p className="text-sm text-zinc-500 mt-1">
-                      Lily Atelier Member Since {memberSince}
+                      {BRAND.name} Member Since {memberSince}
                     </p>
                   </div>
                 </div>
@@ -212,6 +215,21 @@ export default function ProfilePage() {
             </div>
           )}
 
+          {/* Order History Section */}
+          {activeSection === "orders" && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-zinc-900">Order History</h2>
+                <p className="text-zinc-600">
+                  Review past orders and track their delivery status.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+                <OrderHistory />
+              </div>
+            </div>
+          )}
+
           {/* Payment Methods Section */}
           {activeSection === "payment" && (
             <div className="rounded-2xl border border-zinc-200 bg-white p-8">
@@ -226,19 +244,10 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Other sections - placeholder */}
-          {!["profile", "account", "payment", "address"].includes(activeSection) && (
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">
-                  {settingsMenu.find(m => m.id === activeSection)?.label}
-                </h2>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
-                <p className="text-zinc-600">This section is coming soon.</p>
-              </div>
-            </div>
-          )}
+          {/* Preference / Privacy / Visibility / Linked sections */}
+          {["shop", "notifications", "privacy", "links"].includes(
+            activeSection
+          ) && <ProfileSettings section={activeSection} />}
         </main>
       </div>
     </div>

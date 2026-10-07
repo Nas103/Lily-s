@@ -1,22 +1,17 @@
 {
   "expo": {
-    "name": "Lily Atelier",
-    "slug": "lily-atelier",
+    "name": "NaSO",
+    "slug": "naso",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lilyatelier.app",
+      "bundleIdentifier": "com.naso.app",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We use your location to provide currency conversion and personalized shopping experiences.",
@@ -29,7 +24,7 @@
         "foregroundImage": "./assets/Android-Adaptive-Icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.lilyatelier.app",
+      "package": "com.naso.app",
       "versionCode": 1,
       "permissions": [
         "ACCESS_FINE_LOCATION",
@@ -47,11 +42,25 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow Lily Atelier to use your location for currency conversion."
+          "locationAlwaysAndWhenInUsePermission": "Allow NaSO to use your location for currency conversion."
+        }
+      ],
+      "expo-font",
+      "@react-native-community/datetimepicker",
+      "expo-image",
+      "expo-secure-store",
+      "expo-status-bar",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#000000"
         }
       ]
     ],
-    "scheme": "lilyatelier",
+    "scheme": "naso",
     "extra": {
       "eas": {
         "projectId": "your-project-id-here"
@@ -59,4 +68,3 @@
     }
   }
 }
-

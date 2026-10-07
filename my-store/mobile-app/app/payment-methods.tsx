@@ -125,7 +125,7 @@ export default function PaymentMethodsScreen() {
           </TouchableOpacity>
         </View>
       ) : (
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 40 }]}>
           {paymentMethods.map((method) => (
             <View key={method.id} style={styles.methodCard}>
               <View style={styles.methodHeader}>

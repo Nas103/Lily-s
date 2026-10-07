@@ -4,13 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { isValidEmail, sanitizeInput } from "@/lib/security";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
+import { createAuthResponse } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   const response = NextResponse.next();
   
-  // Apply security middleware - strict rate limiting for login
+  const isDev = process.env.NODE_ENV !== "production";
   const securityResponse = applySecurityMiddleware(request, response, {
-    rateLimit: { maxRequests: 5, windowMs: 900000 }, // 5 attempts per 15 minutes
+    rateLimit: {
+      maxRequests: isDev ? 50 : 5,
+      windowMs: isDev ? 60000 : 900000,
+    },
     csrf: true,
     securityHeaders: true,
   });
@@ -57,10 +61,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use parameterized query (Prisma handles this, but we ensure email is sanitized)
-    const user = await (prisma as any).user.findUnique({
-      where: { email }, // Prisma uses parameterized queries - SQL injection protected
+    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const isEnvAdmin =
+      Boolean(adminEmail && adminPassword) &&
+      email === adminEmail &&
+      password === adminPassword;
+
+    let user = await (prisma as any).user.findUnique({
+      where: { email },
     });
+
+    if (!user && isEnvAdmin) {
+      const passwordHash = await bcrypt.hash(password, 12);
+      user = await (prisma as any).user.create({
+        data: {
+          email,
+          passwordHash,
+          role: "ADMIN",
+          name: "Admin",
+        },
+      });
+    }
 
     if (!user) {
       return NextResponse.json(
@@ -69,7 +91,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const ok = await bcrypt.compare(password, (user as any).passwordHash);
+    let ok = await bcrypt.compare(password, (user as any).passwordHash);
+
+    if (!ok && isEnvAdmin) {
+      const passwordHash = await bcrypt.hash(password, 12);
+      user = await (prisma as any).user.update({
+        where: { id: user.id },
+        data: { passwordHash, role: "ADMIN" },
+      });
+      ok = true;
+    }
 
     if (!ok) {
       return NextResponse.json(
@@ -78,8 +109,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now we just return user info; sessions/tokens can be added later.
-    return NextResponse.json(
+    return await createAuthResponse(
       {
         id: user.id,
         email: user.email,
@@ -87,7 +117,11 @@ export async function POST(request: NextRequest) {
         role: (user as any).role,
         createdAt: (user as any).createdAt?.toISOString() || new Date().toISOString(),
       },
-      { status: 200 }
+      {
+        userId: user.id,
+        email: user.email,
+        role: (user as any).role,
+      }
     );
   } catch (error: any) {
     return await handleApiError(

@@ -49,6 +49,8 @@ export default function RootLayout() {
           <Stack.Screen name="profile" />
           <Stack.Screen name="wishlist" />
           <Stack.Screen name="orders" />
+          <Stack.Screen name="orders/[orderNumber]" />
+          <Stack.Screen name="preferences" />
           <Stack.Screen name="ai-chat" />
           <Stack.Screen name="delivery-addresses" />
           <Stack.Screen name="payment-methods" />

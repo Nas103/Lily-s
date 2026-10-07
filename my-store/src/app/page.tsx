@@ -3,8 +3,10 @@ import Link from "next/link";
 import { Crown } from "lucide-react";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
+import { CATEGORY_META } from "@/data/catalog";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
 import { LiquidMetalButton } from "@/components/LiquidMetalButton";
+import { MoltenHero } from "@/components/MoltenHero";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -32,6 +34,35 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white text-zinc-900">
+      <MoltenHero />
+
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
+              Shop by category
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+              Explore every edit
+            </h2>
+          </div>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {CATEGORY_META.map((category) => (
+            <Link
+              key={category.id}
+              href={category.href}
+              className="group rounded-2xl border border-zinc-200 bg-white px-5 py-4 transition hover:-translate-y-1 hover:border-black"
+            >
+              <p className="text-sm font-semibold tracking-tight">
+                {category.label}
+              </p>
+              <p className="mt-1 text-xs text-zinc-500">{category.blurb}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="relative overflow-hidden bg-black px-6 py-16 text-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-end">
           <div className="space-y-6">

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useAuth } from '../src/stores/authStore';
 import { Ionicons } from '@expo/vector-icons';
 import { API_BASE_URL } from '../src/config/api';
+import { BRAND } from '../src/constants/brand';
 
 const faqs = [
   {
@@ -13,7 +14,7 @@ const faqs = [
   },
   {
     question: "How do I request concierge styling?",
-    answer: "Email concierge@lilyatelier.com with your measurements, event date, and inspiration. A stylist will curate a rack within 24 hours.",
+    answer: `Email ${BRAND.conciergeEmail} with your measurements, event date, and inspiration. A stylist will curate a rack within 24 hours.`,
   },
   {
     question: "Can I alter an abaya purchase?",
@@ -76,7 +77,7 @@ export default function SupportScreen() {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 40 }]}>
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>CONCIERGE</Text>
           <Text style={styles.sectionTitle}>Support & care</Text>

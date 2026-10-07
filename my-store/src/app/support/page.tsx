@@ -1,3 +1,5 @@
+import { BRAND } from "@/lib/brand";
+
 const faqs = [
   {
     question: "Do you ship internationally?",
@@ -7,7 +9,7 @@ const faqs = [
   {
     question: "How do I request concierge styling?",
     answer:
-      "Email concierge@lilyatelier.com with your measurements, event date, and inspiration. A stylist will curate a rack within 24 hours.",
+      `Email ${BRAND.conciergeEmail} with your measurements, event date, and inspiration. A stylist will curate a rack within 24 hours.`,
   },
   {
     question: "Can I alter an abaya purchase?",
@@ -17,7 +19,7 @@ const faqs = [
 ];
 
 export const metadata = {
-  title: "Support | Lily Atelier",
+  title: "Support",
 };
 
 export default function SupportPage() {

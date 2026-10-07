@@ -1,6 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Dimensions, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { productsAPI } from '../../src/services/api';
 import { Product, getCategoryName } from '../../src/types';
@@ -10,11 +9,14 @@ import { useWishlist } from '../../src/stores/wishlistStore';
 import { useCurrency } from '../../src/hooks/useCurrency';
 import { Colors as ColorsImport } from '../../src/constants/colors';
 import { Theme } from '../../src/constants/theme';
+import { BRAND } from '../../src/constants/brand';
 import ImageSlideshow from '../../src/components/ImageSlideshow';
 import AddToCartConfirmation from '../../src/components/AddToCartConfirmation';
 import WishlistConfirmation from '../../src/components/WishlistConfirmation';
 import GlowingGoldPrice from '../../src/components/GlowingGoldPrice';
 import LiquidMetalButton from '../../src/components/LiquidMetalButton';
+import MoltenMetalGL from '../../src/components/MoltenMetalGL';
+import MoltenTitle from '../../src/components/MoltenTitle';
 import { Ionicons } from '@expo/vector-icons';
 
 // Ensure Colors is available (fallback if import fails)
@@ -182,17 +184,22 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 96 }}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Hero Section */}
-      <LinearGradient
-        colors={['#000000', '#1a1a1a']}
+      <View
         style={[styles.hero, { paddingTop: insets.top + Theme.spacing.lg }]}
       >
+        <MoltenMetalGL style={styles.heroGlow} />
+        <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <View style={styles.heroTitleRow}>
             <View style={styles.brandNameContainer}>
-              <Text style={styles.brandNameTop}>Lily</Text>
-              <Text style={styles.brandNameBottom}>Atelier</Text>
+              <MoltenTitle text={BRAND.name} />
+              <Text style={styles.brandNameBottom}>{BRAND.tagline}</Text>
             </View>
             <Image
               source={require('../../assets/home-icon.png')}
@@ -217,7 +224,7 @@ export default function HomeScreen() {
             <Text style={[styles.heroButtonText, { color: '#FCD34D', fontWeight: '600', fontSize: 10, letterSpacing: 2 }]}>SHOP THE EDIT</Text>
           </LiquidMetalButton>
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Featured Products */}
       <View style={styles.section}>
@@ -395,6 +402,23 @@ const styles = StyleSheet.create({
   hero: {
     padding: Theme.spacing.lg,
     paddingBottom: 40,
+    backgroundColor: '#000000',
+    overflow: 'hidden',
+  },
+  heroGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  heroOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   heroContent: {
     maxWidth: 400,
@@ -414,17 +438,13 @@ const styles = StyleSheet.create({
   brandNameContainer: {
     flexDirection: 'column',
   },
-  brandNameTop: {
-    fontSize: 40,
-    fontWeight: '300',
-    color: Colors.white,
-    lineHeight: 40,
-  },
   brandNameBottom: {
-    fontSize: 40,
-    fontWeight: '300',
-    color: Colors.white,
-    lineHeight: 40,
+    marginTop: 6,
+    fontSize: 11,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.7)',
+    letterSpacing: 4,
+    textTransform: 'uppercase',
   },
   heroTitle: {
     fontSize: 80,
@@ -560,6 +580,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  priceContainer: {
+    flexDirection: 'column',
+  },
+  productPriceOriginal: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    textDecorationLine: 'line-through',
   },
   productPrice: {
     fontSize: 16,

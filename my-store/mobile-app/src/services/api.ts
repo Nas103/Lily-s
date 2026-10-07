@@ -16,14 +16,20 @@ const api: AxiosInstance = axios.create({
 // Request interceptor to add auth headers
 api.interceptors.request.use(
   async (config) => {
+    const token = await SecureStore.getItemAsync('authToken');
     const userId = await SecureStore.getItemAsync('userId');
     const userEmail = await SecureStore.getItemAsync('userEmail');
-    
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    // Legacy header auth (kept for older backends)
     if (userId && userEmail) {
       config.headers['x-user-id'] = userId;
       config.headers['x-user-email'] = userEmail;
     }
-    
+
     return config;
   },
   (error) => {
@@ -36,7 +42,8 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear auth and redirect to login
+      // Unauthorized - clear auth
+      await SecureStore.deleteItemAsync('authToken');
       await SecureStore.deleteItemAsync('userId');
       await SecureStore.deleteItemAsync('userEmail');
     }
@@ -107,6 +114,19 @@ export const authAPI = {
         throw error;
       }
       throw new Error('Unable to connect to server');
+    }
+  },
+
+  me: async () => {
+    const response = await api.get(API_ENDPOINTS.AUTH_ME);
+    return response.data;
+  },
+
+  logout: async () => {
+    try {
+      await api.post(API_ENDPOINTS.LOGOUT);
+    } catch {
+      // Best-effort: local logout still proceeds
     }
   },
 };
@@ -293,6 +313,76 @@ export const recommendationsAPI = {
       categories,
       limit,
     });
+    return response.data;
+  },
+};
+
+// Profile preferences API
+export const preferencesAPI = {
+  get: async () => {
+    const response = await api.get(`${API_ENDPOINTS.PROFILE}/preferences`);
+    return response.data;
+  },
+
+  update: async (data: Record<string, unknown>) => {
+    const response = await api.patch(`${API_ENDPOINTS.PROFILE}/preferences`, data);
+    return response.data;
+  },
+};
+
+// Linked accounts API
+export const linksAPI = {
+  get: async () => {
+    const response = await api.get(`${API_ENDPOINTS.PROFILE}/links`);
+    return response.data;
+  },
+
+  set: async (provider: 'google' | 'apple', action: 'link' | 'unlink') => {
+    const response = await api.post(`${API_ENDPOINTS.PROFILE}/links`, {
+      provider,
+      action,
+    });
+    return response.data;
+  },
+};
+
+// Orders API
+export const ordersAPI = {
+  getAll: async () => {
+    const response = await api.get(API_ENDPOINTS.ORDERS);
+    return response.data;
+  },
+
+  get: async (orderNumber: string) => {
+    const response = await api.get(`${API_ENDPOINTS.ORDERS}/${orderNumber}`);
+    return response.data;
+  },
+
+  track: async (orderNumber: string, email: string) => {
+    const response = await api.post(`${API_ENDPOINTS.ORDERS}/track`, {
+      orderNumber,
+      email,
+    });
+    return response.data;
+  },
+};
+
+// Reviews API
+export const reviewsAPI = {
+  getForProduct: async (productId: string) => {
+    const response = await api.get(API_ENDPOINTS.REVIEWS, {
+      params: { productId },
+    });
+    return response.data;
+  },
+
+  submit: async (data: {
+    productId: string;
+    rating: number;
+    title?: string;
+    body?: string;
+  }) => {
+    const response = await api.post(API_ENDPOINTS.REVIEWS, data);
     return response.data;
   },
 };

@@ -28,8 +28,7 @@ export const useAuth = create<AuthStore>((set) => ({
   login: async (email: string, password: string) => {
     try {
       const user = await authAPI.login(email, password);
-      await SecureStore.setItemAsync('userId', user.id);
-      await SecureStore.setItemAsync('userEmail', user.email);
+      await persistSession(user);
       set({ user, isAuthenticated: true, isLoading: false });
     } catch (error: any) {
       set({ isLoading: false });
@@ -40,8 +39,7 @@ export const useAuth = create<AuthStore>((set) => ({
   register: async (email: string, password: string, name?: string) => {
     try {
       const user = await authAPI.register(email, password, name);
-      await SecureStore.setItemAsync('userId', user.id);
-      await SecureStore.setItemAsync('userEmail', user.email);
+      await persistSession(user);
       set({ user, isAuthenticated: true, isLoading: false });
     } catch (error: any) {
       set({ isLoading: false });
@@ -50,23 +48,39 @@ export const useAuth = create<AuthStore>((set) => ({
   },
   
   logout: async () => {
-    await SecureStore.deleteItemAsync('userId');
-    await SecureStore.deleteItemAsync('userEmail');
+    try {
+      await authAPI.logout();
+    } catch {
+      // ignore
+    }
+    await clearSession();
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
   
   loadUser: async () => {
     try {
+      const token = await SecureStore.getItemAsync('authToken');
       const userId = await SecureStore.getItemAsync('userId');
       const userEmail = await SecureStore.getItemAsync('userEmail');
       
       if (userId && userEmail) {
-        // Optionally fetch full user profile
         set({ 
           user: { id: userId, email: userEmail },
           isAuthenticated: true,
           isLoading: false 
         });
+        
+        // Validate the session in the background and refresh user data.
+        if (token) {
+          try {
+            const fresh = await authAPI.me();
+            set({ user: fresh, isAuthenticated: true });
+          } catch {
+            // Token invalid/expired - clear local session
+            await clearSession();
+            set({ user: null, isAuthenticated: false });
+          }
+        }
       } else {
         set({ isLoading: false });
       }
@@ -75,4 +89,18 @@ export const useAuth = create<AuthStore>((set) => ({
     }
   },
 }));
+
+async function persistSession(user: User & { token?: string }) {
+  if (user.token) {
+    await SecureStore.setItemAsync('authToken', user.token);
+  }
+  await SecureStore.setItemAsync('userId', user.id);
+  await SecureStore.setItemAsync('userEmail', user.email);
+}
+
+async function clearSession() {
+  await SecureStore.deleteItemAsync('authToken');
+  await SecureStore.deleteItemAsync('userId');
+  await SecureStore.deleteItemAsync('userEmail');
+}
 

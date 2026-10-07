@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CartSummary } from "@/components/CartSummary";
 
 export const metadata = {
-  title: "Cart | Lily Atelier",
+  title: "Cart",
 };
 
 export default function CartPage() {

@@ -85,7 +85,7 @@ export default function WishlistScreen() {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 40 }]}>
         <View style={styles.grid}>
           {items.map((item, index) => {
             const discountPercent = item.product.discountPercent || 0;

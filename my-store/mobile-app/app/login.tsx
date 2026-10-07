@@ -2,6 +2,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, KeyboardAvo
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuth } from '../src/stores/authStore';
+import { BRAND } from '../src/constants/brand';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>Lily Atelier</Text>
+          <Text style={styles.title}>{BRAND.name}</Text>
           <Text style={styles.subtitle}>
             {isLogin ? 'Welcome back' : 'Create your account'}
           </Text>

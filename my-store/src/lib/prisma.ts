@@ -50,6 +50,14 @@ function getDatabaseUrl(): string | undefined {
   return url;
 }
 
+if (!PrismaClientConstructor) {
+  console.error("[prisma] @prisma/client is not available. Run npm install in my-store.");
+} else if (!process.env.DATABASE_URL) {
+  console.error(
+    "[prisma] DATABASE_URL is not set. Add it to my-store/.env.local and restart the dev server."
+  );
+}
+
 export const prisma =
   PrismaClientConstructor && process.env.DATABASE_URL
     ? (globalForPrisma.prisma ??

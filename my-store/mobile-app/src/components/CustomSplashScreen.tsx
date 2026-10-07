@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet, Animated } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BRAND } from '../constants/brand';
 
 type CustomSplashScreenProps = {
   onFinish: () => void;
@@ -59,7 +60,7 @@ export default function CustomSplashScreen({ onFinish }: CustomSplashScreenProps
           style={styles.icon}
           resizeMode="contain"
         />
-        <Text style={styles.brandName}>Lily Atelier</Text>
+        <Text style={styles.brandName}>{BRAND.name}</Text>
       </Animated.View>
     </LinearGradient>
   );

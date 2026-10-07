@@ -38,7 +38,7 @@ export function rateLimitMiddleware(
   windowMs: number = 60000
 ): NextResponse | null {
   const ip = getClientIp(request);
-  const userId = request.headers.get("x-user-id") || ip;
+  const userId = `${request.headers.get("x-user-id") || ip}:${request.nextUrl.pathname}`;
   
   // Clean up old records periodically
   if (Math.random() < 0.1) {

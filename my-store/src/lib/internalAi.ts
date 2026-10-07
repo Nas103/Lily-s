@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { BRAND } from "@/lib/brand";
 
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({
@@ -15,7 +16,7 @@ export async function runInternalClaudeTooling(prompt: string) {
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 512,
     system:
-      "You are an internal operations assistant for Lily Atelier. " +
+      `You are an internal operations assistant for ${BRAND.name}. ` +
       "You help staff with analytics, dashboards, merchandising, and fraud-review workflows. " +
       "Never talk directly to customers.",
     messages: [

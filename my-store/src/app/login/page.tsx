@@ -1,7 +1,8 @@
 import { LoginForm } from "./LoginForm";
+import { BRAND } from "@/lib/brand";
 
 export const metadata = {
-  title: "Login | Lily Atelier",
+  title: "Login",
 };
 
 export default function LoginPage() {
@@ -10,7 +11,7 @@ export default function LoginPage() {
       <main className="mx-auto max-w-md px-6 py-16">
         <div className="space-y-3 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
-            Lily members
+            {BRAND.name} members
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
             Sign in

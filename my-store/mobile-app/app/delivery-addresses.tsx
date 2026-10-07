@@ -130,7 +130,7 @@ export default function DeliveryAddressesScreen() {
           </TouchableOpacity>
         </View>
       ) : (
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 40 }]}>
           {addresses.map((address) => (
             <View key={address.id} style={styles.addressCard}>
               <View style={styles.addressHeader}>

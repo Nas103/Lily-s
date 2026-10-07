@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { resolveUserId } from "@/lib/auth-middleware";
 import { prisma } from "@/lib/prisma";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError } from "@/lib/errorHandler";
@@ -18,6 +19,9 @@ import {
  * Verify user authentication
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
+  const sessionUserId = await resolveUserId(request);
+  if (sessionUserId) return sessionUserId;
+
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 

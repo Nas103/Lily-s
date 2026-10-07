@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { validateProfileUpdate, isValidUrl } from "@/lib/security";
 import { applySecurityMiddleware } from "@/lib/middleware";
+import { resolveUserId } from "@/lib/auth-middleware";
 
 /**
  * Verify user authentication
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
+  const sessionUserId = await resolveUserId(request);
+  if (sessionUserId) return sessionUserId;
+
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 

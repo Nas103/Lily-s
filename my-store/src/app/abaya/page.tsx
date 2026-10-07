@@ -2,7 +2,7 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { getProductsByCategory } from "@/data/products";
 
 export const metadata = {
-  title: "Abaya | Lily Atelier",
+  title: "Abaya",
 };
 
 export default function AbayaPage() {

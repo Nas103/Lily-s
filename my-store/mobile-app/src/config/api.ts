@@ -1,22 +1,51 @@
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 // API Configuration
-// Update this with your production API URL
-// For Android emulator, use: http://10.0.2.2:3000 (special IP that maps to host's localhost)
-// For iOS simulator, use: http://localhost:3000
-// For physical device (Expo Go), use your computer's IP: http://YOUR_IP:3000
-// To find your IP: Mac/Linux: ifconfig | grep "inet " | grep -v 127.0.0.1
-//                   Windows: ipconfig (look for IPv4 Address)
-// Your computer's IP: 192.168.151.240 (for physical devices - update if it changes)
-// Note: Android emulator uses 10.0.2.2, physical Android devices use computer's IP
+// Dev host is derived automatically from the Metro dev server address that
+// Expo Go connected to, so physical devices, simulators and the Android
+// emulator all reach the Next.js backend without editing this file.
+// Fallback (when hostUri is unavailable): Android emulator -> 10.0.2.2,
+// everything else -> FALLBACK_DEV_HOST.
+const FALLBACK_DEV_HOST = '192.168.8.37';
+
+function getDevHost(): string {
+  const hostUri =
+    Constants.expoConfig?.hostUri ??
+    (Constants as { manifest2?: { extra?: { expoGo?: { debuggerHost?: string } } } })
+      .manifest2?.extra?.expoGo?.debuggerHost ??
+    '';
+
+  if (hostUri) {
+    const host = hostUri.split('/')[0].split(':')[0];
+    if (host && host !== 'localhost' && host !== '127.0.0.1') {
+      return host;
+    }
+  }
+
+  if (Platform.OS === 'android') {
+    return '10.0.2.2';
+  }
+
+  return FALLBACK_DEV_HOST;
+}
+
 export const API_BASE_URL = __DEV__
-  ? (Platform.OS === 'android' ? 'http://192.168.151.240:3000' : 'http://localhost:3000')
+  ? `http://${getDevHost()}:3000`
   : 'https://your-production-domain.com'; // Production - update with your deployed Next.js URL
 
 export const API_ENDPOINTS = {
   // Auth
   LOGIN: '/api/auth/login',
   REGISTER: '/api/auth/register',
+  AUTH_ME: '/api/auth/me',
+  LOGOUT: '/api/auth/logout',
+
+  // Orders
+  ORDERS: '/api/orders',
+
+  // Reviews
+  REVIEWS: '/api/reviews',
   
   // Products
   PRODUCTS: '/api/products',

@@ -1,9 +1,11 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCart } from '../../src/stores/cartStore';
 
 export default function TabsLayout() {
   const { itemCount } = useCart();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -14,9 +16,9 @@ export default function TabsLayout() {
         tabBarStyle: {
           borderTopWidth: 1,
           borderTopColor: '#e5e5e5',
-          paddingTop: 5,
-          paddingBottom: 5,
-          height: 60,
+          paddingTop: 8,
+          paddingBottom: insets.bottom + 8,
+          height: 60 + insets.bottom,
         },
       }}
     >

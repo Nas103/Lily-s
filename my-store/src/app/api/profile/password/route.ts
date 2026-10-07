@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { resolveUserId } from "@/lib/auth-middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 
+const MIN_PASSWORD_LENGTH = 8;
+
 /**
- * PATCH /api/profile/password - Update user password
+ * PATCH /api/profile/password - Update the authenticated user's password
  */
 export async function PATCH(request: NextRequest) {
   if (!prisma) {
@@ -15,10 +18,9 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const userId = request.headers.get("x-user-id");
-    const userEmail = request.headers.get("x-user-email");
+    const userId = await resolveUserId(request);
 
-    if (!userId || !userEmail) {
+    if (!userId) {
       return NextResponse.json(
         { error: "Unauthorized. Please log in." },
         { status: 401 }
@@ -26,7 +28,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { currentPassword, newPassword } = body;
+    const { currentPassword, newPassword } = body ?? {};
 
     if (!currentPassword || !newPassword) {
       return NextResponse.json(
@@ -35,14 +37,20 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    if (newPassword.length < 8) {
+    if (typeof newPassword !== "string" || newPassword.length < MIN_PASSWORD_LENGTH) {
       return NextResponse.json(
-        { error: "New password must be at least 8 characters long." },
+        { error: `New password must be at least ${MIN_PASSWORD_LENGTH} characters long.` },
         { status: 400 }
       );
     }
 
-    // Get user with password hash and verify email
+    if (newPassword === currentPassword) {
+      return NextResponse.json(
+        { error: "New password must be different from your current password." },
+        { status: 400 }
+      );
+    }
+
     let user;
     try {
       user = await (prisma as any).user.findUnique({
@@ -60,16 +68,15 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    if (!user || user.email !== userEmail) {
+    if (!user) {
       return NextResponse.json(
         { error: "Unauthorized. Please log in." },
         { status: 401 }
       );
     }
 
-    // Verify current password
     const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
-    
+
     if (!isValid) {
       return NextResponse.json(
         { error: "Current password is incorrect." },
@@ -77,10 +84,8 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Hash new password
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
-    // Update password
     try {
       await (prisma as any).user.update({
         where: { id: userId },
@@ -105,4 +110,3 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
-

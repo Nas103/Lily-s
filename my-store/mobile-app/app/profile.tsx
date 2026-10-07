@@ -103,7 +103,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingTop: insets.top }]}>
+    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingTop: insets.top, paddingBottom: insets.bottom + 40 }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#000000" />
@@ -179,6 +179,28 @@ export default function ProfileScreen() {
         <Text style={styles.saveButtonText}>
           {loading ? 'Saving...' : 'Save Changes'}
         </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.menuRow}
+        onPress={() => router.push('/preferences')}
+      >
+        <View style={styles.menuLeft}>
+          <Ionicons name="options-outline" size={20} color="#000000" />
+          <Text style={styles.menuText}>Preferences</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color="#a1a1aa" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.menuRow}
+        onPress={() => router.push('/orders')}
+      >
+        <View style={styles.menuLeft}>
+          <Ionicons name="receipt-outline" size={20} color="#000000" />
+          <Text style={styles.menuText}>Order History</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color="#a1a1aa" />
       </TouchableOpacity>
     </ScrollView>
   );
@@ -278,6 +300,25 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  menuRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f4f4f5',
+  },
+  menuLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  menuText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#000000',
   },
 });
 

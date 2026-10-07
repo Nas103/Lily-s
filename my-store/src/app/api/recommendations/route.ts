@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { products as staticProducts } from "@/data/products";
 import { getUserCurrency, convertPrice } from "@/lib/currency";
 import OpenAI from "openai";
+import { BRAND } from "@/lib/brand";
 
 const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -86,7 +87,7 @@ export async function POST(request: NextRequest) {
             : item.category?.name || item.category?.slug,
         }));
 
-        const systemPrompt = `You are a product recommendation assistant for Lily Atelier, a premium fashion brand.
+        const systemPrompt = `You are a product recommendation assistant for ${BRAND.name}, a premium fashion brand.
 Given a user's cart items, recommend ${limit} related products that would complement their purchase.
 Consider:
 - Similar style or category

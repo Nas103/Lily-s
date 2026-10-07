@@ -1,14 +1,15 @@
 import { runInternalClaudeTooling } from "@/lib/internalAi";
+import { BRAND } from "@/lib/brand";
 
 export const metadata = {
-  title: "Risk Review | Lily Atelier",
+  title: "Risk Review",
 };
 
 async function getSummary() {
   // In a real app you would pull suspicious orders from your database
   // and pass a structured prompt. This keeps the template simple.
   const prompt =
-    "Summarise today's fraud risk posture for Lily Atelier in 5 bullet points. " +
+    `Summarise today's fraud risk posture for ${BRAND.name} in 5 bullet points. ` +
     "Highlight any patterns that staff should watch for (locations, order sizes, failed attempts). " +
     "End with 2 concrete actions for the fraud-review team.";
 

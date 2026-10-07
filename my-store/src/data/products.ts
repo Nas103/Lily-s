@@ -1,4 +1,12 @@
-export type ProductCategory = "men" | "women" | "perfumes" | "abaya";
+export type ProductCategory =
+  | "men"
+  | "women"
+  | "perfumes"
+  | "abaya"
+  | "lifestyle"
+  | "running"
+  | "boxraw"
+  | "electronics";
 
 export type ProductRecord = {
   id: string;

@@ -1,7 +1,7 @@
 import { WishlistGrid } from "@/components/WishlistGrid";
 
 export const metadata = {
-  title: "Wishlist | Lily Atelier",
+  title: "Wishlist",
 };
 
 export default function WishlistPage() {

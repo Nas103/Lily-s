@@ -4,13 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { isValidEmail, sanitizeInput, validateText } from "@/lib/security";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
+import { createAuthResponse } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   const response = NextResponse.next();
   
   // Apply security middleware - reasonable rate limiting for registration
   const securityResponse = applySecurityMiddleware(request, response, {
-    rateLimit: { maxRequests: 5, windowMs: 3600000 }, // 5 registrations per hour (allows legitimate users)
+    rateLimit: {
+      maxRequests: process.env.NODE_ENV !== "production" ? 50 : 5,
+      windowMs: process.env.NODE_ENV !== "production" ? 60000 : 3600000,
+    },
     csrf: true,
     securityHeaders: true,
   });
@@ -126,10 +130,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      ...user,
-      createdAt: user.createdAt?.toISOString() || new Date().toISOString(),
-    }, { status: 201 });
+    return await createAuthResponse(
+      {
+        ...user,
+        createdAt: user.createdAt?.toISOString() || new Date().toISOString(),
+      },
+      { userId: user.id, email: user.email, role: user.role },
+      201
+    );
   } catch (error: any) {
     return await handleApiError(
       error,

@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AiChatWidget } from "@/components/AiChatWidget";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { BRAND } from "@/lib/brand";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +19,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lily Atelier | High-End Retail",
-  description: "Premium e-commerce experience for elevated essentials.",
+  title: {
+    default: `${BRAND.name} | ${BRAND.tagline}`,
+    template: `%s | ${BRAND.name}`,
+  },
+  description: BRAND.description,
 };
 
 export default function RootLayout({

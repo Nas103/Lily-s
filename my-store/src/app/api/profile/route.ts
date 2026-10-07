@@ -3,16 +3,23 @@ import { prisma } from "@/lib/prisma";
 import { validateProfileUpdate } from "@/lib/security";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
+import { getCurrentUser } from "@/lib/auth-middleware";
 
 /**
- * Verify user authentication from headers
+ * Verify user authentication from the session cookie / bearer token,
+ * falling back to legacy x-user-id + x-user-email headers.
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
+  const sessionUser = await getCurrentUser(request);
+  if (sessionUser) {
+    return sessionUser.id;
+  }
+
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 
   if (!userId || !userEmail) {
-    console.warn("[profile] Missing auth headers:", { hasUserId: !!userId, hasUserEmail: !!userEmail });
+    console.warn("[profile] Missing auth credentials:", { hasUserId: !!userId, hasUserEmail: !!userEmail });
     return null;
   }
 

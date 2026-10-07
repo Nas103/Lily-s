@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generatePayFastSignature, PAYFAST_CONFIG } from "@/lib/payfast";
 import { assessOrderRisk } from "@/lib/aiPricing";
+import { prisma } from "@/lib/prisma";
 
 /**
  * PayFast ITN (Instant Transaction Notification) handler
@@ -13,8 +14,18 @@ export async function POST(request: Request) {
     const data: Record<string, string> = {};
 
     // Convert FormData to object
-    for (const [key, value] of formData.entries()) {
-      data[key] = String(value);
+    const fd: any = formData as any;
+    for (const [key, value] of Object.entries(fd)) {
+      if (key === 'forEach' || key === 'get' || key === 'getAll' || key === 'has') continue;
+    }
+    // Fallback: iterate properly
+    if (typeof fd.forEach === 'function') {
+      fd.forEach((value: any, key: string) => { data[key] = String(value); });
+    } else {
+      // Web API FormData is iterable
+      for (const [key, value] of Array.from(fd as Iterable<[string, FormDataEntryValue]>)) {
+        data[key] = String(value);
+      }
     }
 
     // Verify signature
@@ -75,17 +86,38 @@ export async function POST(request: Request) {
       });
 
       // TODO: Use `risk.recommendReview` / `risk.recommendBlock` to gate fulfillment.
-      // TODO: Update order status in database
       // TODO: Send confirmation email
-      // TODO: Fulfill order (update inventory, etc.)
+
+      if (prisma) {
+        await (prisma as any).order.updateMany({
+          where: { orderNumber: mPaymentId },
+          data: {
+            status: "PAID",
+            paymentStatus: "PAID",
+            paymentRef: pfPaymentId ? String(pfPaymentId) : undefined,
+            paymentMethod: data.payment_method || undefined,
+          },
+        });
+      }
 
       console.log(`Payment successful for order: ${mPaymentId}`);
     } else if (paymentStatus === "FAILED") {
-      // Payment failed
+      if (prisma) {
+        await (prisma as any).order.updateMany({
+          where: { orderNumber: mPaymentId },
+          data: { status: "FAILED", paymentStatus: "FAILED" },
+        });
+      }
       console.log(`Payment failed for order: ${mPaymentId}`);
     } else if (paymentStatus === "PENDING") {
-      // Payment is pending
       console.log(`Payment pending for order: ${mPaymentId}`);
+    } else if (paymentStatus === "CANCELLED") {
+      if (prisma) {
+        await (prisma as any).order.updateMany({
+          where: { orderNumber: mPaymentId },
+          data: { status: "CANCELLED", paymentStatus: "FAILED" },
+        });
+      }
     }
 
     // Return success to PayFast (they expect specific response format)

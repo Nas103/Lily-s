@@ -1,7 +1,7 @@
 import { CartSummary } from "@/components/CartSummary";
 
 export const metadata = {
-  title: "Checkout | Lily Atelier",
+  title: "Checkout",
 };
 
 export default function CheckoutPage() {

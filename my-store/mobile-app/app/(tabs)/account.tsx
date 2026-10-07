@@ -45,7 +45,7 @@ export default function AccountScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingTop: insets.top }]}>
+    <ScrollView style={styles.container} contentContainerStyle={[styles.content, { paddingTop: insets.top, paddingBottom: insets.bottom + 40 }]}>
       {/* Profile Header */}
       <View style={styles.profileHeader}>
         <View style={styles.avatar}>

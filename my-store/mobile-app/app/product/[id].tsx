@@ -9,6 +9,7 @@ import { useWishlist } from '../../src/stores/wishlistStore';
 import { useCurrency } from '../../src/hooks/useCurrency';
 import AddToCartConfirmation from '../../src/components/AddToCartConfirmation';
 import WishlistConfirmation from '../../src/components/WishlistConfirmation';
+import ProductReviews from '../../src/components/ProductReviews';
 import GlowingGoldPrice from '../../src/components/GlowingGoldPrice';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -169,7 +170,10 @@ export default function ProductDetailScreen() {
         />
       </TouchableOpacity>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+      >
         {/* TODO: Add comment here for product images editing - support multiple images per color (side, front, back, top) */}
         <View style={styles.productImageContainer}>
           <Image
@@ -337,6 +341,8 @@ export default function ProductDetailScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+        <ProductReviews productId={product.id} />
 
         <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
           <Text style={styles.addToCartButtonText}>Add to Cart</Text>

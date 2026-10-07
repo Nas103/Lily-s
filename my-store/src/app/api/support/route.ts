@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { BRAND } from "@/lib/brand";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  const name = String(formData.get("name") ?? "");
-  const email = String(formData.get("email") ?? "");
-  const message = String(formData.get("message") ?? "");
+  const name = String((formData as any).get?.("name") ?? "");
+  const email = String((formData as any).get?.("email") ?? "");
+  const message = String((formData as any).get?.("message") ?? "");
 
   const toEmail = process.env.SUPPORT_TO_EMAIL ?? "nascode.dev@gmail.com";
-  const fromEmail = process.env.SUPPORT_FROM_EMAIL ?? "support@lily-atelier.dev";
+  const fromEmail = process.env.SUPPORT_FROM_EMAIL ?? BRAND.supportEmail;
 
   const resendApiKey = process.env.RESEND_API_KEY;
 

@@ -3,11 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 import { sanitizeInput, validateText, isValidPhone } from "@/lib/security";
+import { resolveUserId } from "@/lib/auth-middleware";
 
 /**
  * Verify user authentication
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
+  const sessionUserId = await resolveUserId(request);
+  if (sessionUserId) return sessionUserId;
+
   const userId = request.headers.get("x-user-id");
   const userEmail = request.headers.get("x-user-email");
 
