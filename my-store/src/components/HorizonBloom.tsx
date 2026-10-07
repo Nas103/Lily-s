@@ -331,6 +331,9 @@ function HorizonBloom(
       const warm = hexToRgb(p.colors[0]);
       const cool = hexToRgb(p.colors[1]);
       const black: RGB = [0, 0, 0];
+      const bronze: RGB = mixRgb(cool, warm, 0.38);
+      const deep: RGB = mixRgb(cool, warm, 0.12);
+      const shine: RGB = mixRgb(warm, [255, 255, 255], 0.72);
 
       const introProgress = scene.reduced || !p.intro
         ? 1
@@ -404,9 +407,10 @@ function HorizonBloom(
       const skyBottom = Math.max(y0 + 1, h);
       const skyGrad = ctx.createLinearGradient(0, 0, 0, skyBottom);
       skyGrad.addColorStop(0, rgba(cool, 1));
-      skyGrad.addColorStop(0.5, rgba(mixRgb(cool, warm, 0.1), 1));
-      skyGrad.addColorStop(0.86, rgba(mixRgb(cool, warm, 0.34), 1));
-      skyGrad.addColorStop(1, rgba(mixRgb(cool, warm, 0.62), 1));
+      skyGrad.addColorStop(0.42, rgba(mixRgb(cool, warm, 0.16), 1));
+      skyGrad.addColorStop(0.68, rgba(mixRgb(cool, warm, 0.4), 1));
+      skyGrad.addColorStop(0.86, rgba(mixRgb(cool, warm, 0.72), 1));
+      skyGrad.addColorStop(1, rgba(warm, 1));
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, w, h);
 
@@ -447,17 +451,21 @@ function HorizonBloom(
         ctx.stroke(airPath);
       }
 
-      // atmosphere glow hugging the edge
-      const layers = 7;
+      // atmosphere glow hugging the edge, molten gold at the horizon
+      const layers = 8;
       for (let i = 0; i < layers; i++) {
         const f = i / (layers - 1);
-        const lw = p.thickness * h * (0.012 + f * 0.13);
-        const a = p.atmosphere * introProgress * 0.2 * Math.pow(1 - f, 1.7);
+        const lw = p.thickness * h * (0.008 + f * 0.11);
+        const a = p.atmosphere * introProgress * 0.3 * Math.pow(1 - f, 1.6);
         if (a <= 0.004) continue;
-        ctx.strokeStyle = rgba(warm, a);
+        ctx.strokeStyle = rgba(mixRgb(warm, shine, 0.25 * f), a);
         ctx.lineWidth = lw;
         ctx.stroke(curvePath);
       }
+      // hot specular core line at the edge
+      ctx.strokeStyle = rgba(mixRgb(shine, warm, 0.2), Math.min(1, 0.85 * p.atmosphere * introProgress));
+      ctx.lineWidth = Math.max(0.8, h * 0.0016);
+      ctx.stroke(curvePath);
 
       // sun bloom + flare
       const spreadW = Math.max(w * 0.05, p.spread * w);
@@ -537,11 +545,27 @@ function HorizonBloom(
       ctx.save();
       ctx.clip(planetPath);
       const bodyGrad = ctx.createLinearGradient(0, y0, 0, h);
-      bodyGrad.addColorStop(0, rgba(mixRgb(black, warm, 0.2), 1));
-      bodyGrad.addColorStop(0.18, rgba(mixRgb(black, warm, 0.05), 1));
+      bodyGrad.addColorStop(0, rgba(mixRgb(shine, warm, 0.35), 1));
+      bodyGrad.addColorStop(0.06, rgba(mixRgb(shine, warm, 0.6), 1));
+      bodyGrad.addColorStop(0.16, rgba(warm, 1));
+      bodyGrad.addColorStop(0.34, rgba(mixRgb(warm, bronze, 0.5), 1));
+      bodyGrad.addColorStop(0.56, rgba(bronze, 0.95));
+      bodyGrad.addColorStop(0.78, rgba(mixRgb(cool, black, 0.6), 0.98));
       bodyGrad.addColorStop(1, rgba(black, 1));
       ctx.fillStyle = bodyGrad;
       ctx.fillRect(0, 0, w, h);
+
+      // molten gold flows down the planet skin just below the horizon edge
+      const flowGrad = ctx.createLinearGradient(0, y0, 0, y0 + h * 0.2);
+      flowGrad.addColorStop(0, rgba(mixRgb(shine, warm, 0.2), 0.95));
+      flowGrad.addColorStop(0.18, rgba(mixRgb(warm, bronze, 0.45), 0.55));
+      flowGrad.addColorStop(0.45, rgba(bronze, 0.3));
+      flowGrad.addColorStop(1, rgba(deep, 0));
+      for (const fw of [h * 0.06, h * 0.12]) {
+        ctx.strokeStyle = flowGrad;
+        ctx.lineWidth = fw;
+        ctx.stroke(curvePath);
+      }
 
       ctx.globalCompositeOperation = "lighter";
 
