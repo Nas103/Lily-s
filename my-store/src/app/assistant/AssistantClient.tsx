@@ -4,11 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Mic, Send, Sparkles, Loader2 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import type {
-  SpeechRecognition,
-  SpeechRecognitionEvent,
-  SpeechRecognitionErrorEvent,
-} from "@/lib/speech";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -26,8 +22,6 @@ export function AssistantClient() {
   const [messages, setMessages] = useState<ChatMessage[]>([{ role: "assistant", content: `Hello! I'm ${BRAND.name}'s AI personal stylist. How can I help you today?` }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,32 +29,10 @@ export function AssistantClient() {
     if (container) container.scrollTop = container.scrollHeight;
   }, [messages, loading]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = "en-US";
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[event.resultIndex][0].transcript;
-      setInput(transcript.trim());
-      setIsListening(false);
-    };
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      setIsListening(false);
-      const message =
-        event.error === "not-allowed"
-          ? "Microphone permission denied. Please allow microphone access."
-          : "Speech recognition error. Please try again.";
-      setMessages((prev) => [...prev, { role: "assistant", content: message }]);
-    };
-    recognition.onend = () => setIsListening(false);
-    recognitionRef.current = recognition;
-  }, []);
+  const { listening, error: voiceError, supported, toggle, clearError } =
+    useSpeechRecognition({
+      onTranscript: (text) => setInput(text),
+    });
 
   const sendMessage = async (text?: string) => {
     const content = (text ?? input).trim();
@@ -95,8 +67,8 @@ export function AssistantClient() {
   };
 
   const handleVoice = () => {
-    const recognition = recognitionRef.current;
-    if (!recognition) {
+    clearError();
+    if (!supported) {
       setMessages((prev) => [
         ...prev,
         {
@@ -107,17 +79,7 @@ export function AssistantClient() {
       ]);
       return;
     }
-    if (isListening) {
-      recognition.stop();
-      setIsListening(false);
-      return;
-    }
-    try {
-      recognition.start();
-      setIsListening(true);
-    } catch {
-      setIsListening(false);
-    }
+    toggle();
   };
 
   return (
@@ -176,6 +138,12 @@ export function AssistantClient() {
         )}
       </div>
 
+      {voiceError ? (
+        <p className="mt-4 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-2.5 text-xs text-amber-800">
+          {voiceError}
+        </p>
+      ) : null}
+
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -186,16 +154,17 @@ export function AssistantClient() {
         <input
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          placeholder="Ask about styling, sizing or orders..."
+          placeholder={listening ? "Listening…" : "Ask about styling, sizing or orders..."}
           className="flex-1 bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
         />
         <button
           type="button"
           onClick={handleVoice}
-          aria-label="Voice input"
+          aria-label={listening ? "Stop listening" : "Voice input"}
+          title={listening ? "Click to stop listening" : "Click to speak"}
           className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
-            isListening
-              ? "bg-red-500 text-white"
+            listening
+              ? "bg-red-500 text-white animate-pulse"
               : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >

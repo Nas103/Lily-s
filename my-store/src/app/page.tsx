@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Crown } from "lucide-react";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
 import { CATEGORY_META } from "@/data/catalog";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
-import { LiquidMetalButton } from "@/components/LiquidMetalButton";
+import StarfieldButton from "@/components/StarfieldButton";
 import { MoltenHero } from "@/components/MoltenHero";
+import ReflectShader from "@/components/ReflectShader";
+import HorizonBloom from "@/components/HorizonBloom";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -64,7 +65,16 @@ export default function Home() {
       </section>
 
       <section className="relative overflow-hidden bg-black px-6 py-16 text-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-end">
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <ReflectShader
+            tint="#fcd34d"
+            brightness={70}
+            speed={40}
+            style={{ position: "absolute", inset: 0 }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/30" />
+        </div>
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-end">
           <div className="space-y-6">
             <p className="text-xs uppercase tracking-[0.6em] text-white/70">
               Cyber Week Capsule
@@ -81,17 +91,52 @@ export default function Home() {
                 statement fits land here first.
               </p>
             </div>
-            <LiquidMetalButton
-              theme="gold"
-              textured={true}
-              className="rounded-lg relative bg-background"
-              href="/women"
-            >
-              <div className="flex items-center">
-                <Crown className="mr-2 h-4 w-4" />
-                <span>Shop the edit</span>
-              </div>
-            </LiquidMetalButton>
+            <StarfieldButton
+              label="Shop the edit"
+              link="/women"
+              fill="#000000"
+              padding="16px 34px"
+              rounded={100}
+              gap={12}
+              font={{
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                lineHeight: "1.2em",
+              }}
+              addIcon
+              icon={{
+                type: "symbol",
+                symbol: "♛",
+                side: "left",
+                size: 14,
+                color: "#FFFFFF",
+                padding: 0,
+                rounded: 0,
+              }}
+              border={{
+                borderColor: "rgba(255,255,255,0.16)",
+                borderStyle: "solid",
+                borderWidth: 1,
+              }}
+              glow={{ color: "#FCD34D", size: 18, opacity: 100 }}
+              stroke={{
+                color: "#FCD34D",
+                size: 96,
+                count: 1,
+                speed: 60,
+                movement: "continuous",
+                direction: "ccw",
+                thickness: 2,
+              }}
+              pixel={{
+                color: "#FFFFFF",
+                size: 4,
+                density: 35,
+                brightness: 55,
+              }}
+            />
           </div>
 
           <div className="grid flex-1 gap-4 md:grid-cols-3">
@@ -163,41 +208,64 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
-              Shop our icons
-            </p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-              Globally loved silhouettes
-            </h2>
-          </div>
-          <div className="flex gap-2 text-xs uppercase tracking-[0.35em] text-zinc-500">
-            <Link href="/men">Men</Link>
-            <span>·</span>
-            <Link href="/women">Women</Link>
-          </div>
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-4">
-          {icons.map((icon) => (
-            <div
-              key={icon.id}
-              className="rounded-3xl border border-zinc-100 bg-gradient-to-b from-zinc-900 to-black p-5 text-white"
-            >
-              <p className="text-sm text-white/70">{icon.category}</p>
-              <p className="mt-2 text-lg font-semibold">{icon.name}</p>
-              <Image
-                src={icon.imageUrl}
-                alt={icon.name}
-                width={320}
-                height={240}
-                className="mt-6 h-48 w-full rounded-2xl object-cover"
-              />
-              <p className="mt-4 text-sm text-white/60">
-                ${icon.price.toFixed(2)}
-              </p>
+        <div className="relative overflow-hidden rounded-[40px] bg-[#0B0701]">
+          <HorizonBloom
+            className="absolute inset-0"
+            style={{ position: "absolute", inset: 0, minHeight: 0 }}
+            colors={["#F5B301", "#180D02"]}
+            horizon={0.66}
+            curvature={0.75}
+            sunPosition={0.25}
+            spread={0.45}
+            airglow={0.45}
+            clouds={0.55}
+            stars={0.5}
+            autoAurora
+            grain={0.22}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/75" />
+          <div className="relative z-10 p-7 md:p-10">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.4em] text-amber-300/70">
+                  Shop our icons
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+                  Globally loved silhouettes
+                </h2>
+              </div>
+              <div className="flex gap-2 text-xs uppercase tracking-[0.35em] text-white/55">
+                <Link href="/men" className="transition hover:text-white">
+                  Men
+                </Link>
+                <span>·</span>
+                <Link href="/women" className="transition hover:text-white">
+                  Women
+                </Link>
+              </div>
             </div>
-          ))}
+            <div className="mt-8 grid gap-6 md:grid-cols-4">
+              {icons.map((icon) => (
+                <div
+                  key={icon.id}
+                  className="rounded-3xl border border-white/10 bg-gradient-to-b from-black/70 to-black/90 p-5 text-white backdrop-blur-sm"
+                >
+                  <p className="text-sm text-white/70">{icon.category}</p>
+                  <p className="mt-2 text-lg font-semibold">{icon.name}</p>
+                  <Image
+                    src={icon.imageUrl}
+                    alt={icon.name}
+                    width={320}
+                    height={240}
+                    className="mt-6 h-48 w-full rounded-2xl object-cover"
+                  />
+                  <p className="mt-4 text-sm text-white/60">
+                    ${icon.price.toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

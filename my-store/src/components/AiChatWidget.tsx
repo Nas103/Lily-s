@@ -1,13 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Mic, X } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import type {
-  SpeechRecognition,
-  SpeechRecognitionEvent,
-  SpeechRecognitionErrorEvent,
-} from "@/lib/speech";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -19,8 +15,36 @@ export function AiChatWidget() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Click anywhere outside the panel (or the launcher) closes it, Escape too.
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (panelRef.current?.contains(target)) return;
+      if (toggleRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  const { listening, error: voiceError, supported, toggle, clearError } =
+    useSpeechRecognition({
+      onTranscript: (text) => setInput(text),
+    });
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -55,55 +79,9 @@ export function AiChatWidget() {
     }
   };
 
-  // Initialize speech recognition
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-
-      if (SpeechRecognition) {
-        const recognitionInstance = new SpeechRecognition();
-        recognitionInstance.continuous = false;
-        recognitionInstance.interimResults = false;
-        recognitionInstance.lang = "en-US";
-
-        recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
-          const transcript = event.results[event.resultIndex][0].transcript;
-          setInput(transcript.trim());
-          setIsListening(false);
-        };
-
-        recognitionInstance.onerror = (event: SpeechRecognitionErrorEvent) => {
-          console.error("Speech recognition error:", event.error);
-          setIsListening(false);
-          
-          let errorMessage = "Speech recognition error. Please try again.";
-          if (event.error === "no-speech") {
-            errorMessage = "No speech detected. Please try again.";
-          } else if (event.error === "not-allowed") {
-            errorMessage = "Microphone permission denied. Please allow microphone access.";
-          }
-          
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content: errorMessage,
-            },
-          ]);
-        };
-
-        recognitionInstance.onend = () => {
-          setIsListening(false);
-        };
-
-        setRecognition(recognitionInstance);
-      }
-    }
-  }, []);
-
   const handleVoice = () => {
-    if (!recognition) {
+    clearError();
+    if (!supported) {
       setMessages((prev) => [
         ...prev,
         {
@@ -114,48 +92,27 @@ export function AiChatWidget() {
       ]);
       return;
     }
-
-    if (isListening) {
-      recognition.stop();
-      setIsListening(false);
-    } else {
-      try {
-        recognition.start();
-        setIsListening(true);
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "🎤 Listening... Speak your question now.",
-          },
-        ]);
-      } catch (error) {
-        console.error("Error starting speech recognition:", error);
-        setIsListening(false);
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: "Could not start voice recognition. Please try again.",
-          },
-        ]);
-      }
-    }
+    toggle();
   };
 
   return (
     <>
       <button
+        ref={toggleRef}
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen((value) => !value)}
         className="fixed bottom-4 right-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-black text-white shadow-lg transition hover:scale-105 md:bottom-6 md:right-6 md:h-12 md:w-12"
         aria-label="Open AI shopping assistant"
+        aria-expanded={open}
       >
         <MessageCircle size={22} className="md:w-5 md:h-5" />
       </button>
 
       {open ? (
-        <div className="fixed inset-x-4 bottom-4 z-50 w-auto max-w-md overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl md:inset-x-auto md:bottom-6 md:right-6">
+        <div
+          ref={panelRef}
+          className="fixed inset-x-4 bottom-4 z-50 w-auto max-w-md overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl md:inset-x-auto md:bottom-6 md:right-6"
+        >
           <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3">
             <div>
               <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500 md:text-xs">
@@ -203,19 +160,24 @@ export function AiChatWidget() {
               <p className="text-[11px] text-zinc-400 md:text-xs">Thinking…</p>
             ) : null}
           </div>
+          {voiceError ? (
+            <p className="border-t border-amber-100 bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-800 md:text-xs">
+              {voiceError}
+            </p>
+          ) : null}
           <div className="flex items-center gap-2 border-t border-zinc-100 px-3 py-2.5 md:py-2">
             <button
               type="button"
               onClick={handleVoice}
               className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border md:h-8 md:w-8 transition-colors ${
-                isListening
+                listening
                   ? "border-red-500 bg-red-50 text-red-600 animate-pulse"
                   : "border-zinc-200 text-zinc-600 hover:border-zinc-900"
               }`}
-              aria-label={isListening ? "Stop listening" : "Start voice shopping"}
-              title={isListening ? "Click to stop listening" : "Click to speak"}
+              aria-label={listening ? "Stop listening" : "Start voice shopping"}
+              title={listening ? "Click to stop listening" : "Click to speak"}
             >
-              <Mic size={16} className={isListening ? "animate-pulse" : ""} />
+              <Mic size={16} className={listening ? "animate-pulse" : ""} />
             </button>
             <input
               value={input}
@@ -226,7 +188,7 @@ export function AiChatWidget() {
                   void sendMessage();
                 }
               }}
-              placeholder="Ask a question..."
+              placeholder={listening ? "Listening…" : "Ask a question..."}
               className="flex-1 border-none bg-transparent text-xs text-zinc-900 outline-none placeholder:text-zinc-400 md:text-sm"
             />
             <button
@@ -243,5 +205,3 @@ export function AiChatWidget() {
     </>
   );
 }
-
-

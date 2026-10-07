@@ -18,14 +18,12 @@ const CATALOG_CONTEXT = (() => {
   for (const meta of CATEGORY_META) {
     const items = catalogProducts.filter((product) => product.category === meta.id);
     if (!items.length) continue;
-    lines.push(`\n## ${meta.label} (${meta.blurb}) — /${meta.id}`);
+    lines.push(`${meta.label}:`);
     for (const product of items) {
-      const bits = [`- ${product.name} — $${product.price.toFixed(2)}`];
+      const bits = [`${product.name} $${product.price.toFixed(2)}`];
       if (product.gender) bits.push(`(${product.gender})`);
       if (product.subCategory) bits.push(`[${product.subCategory}]`);
-      if (product.tags?.length) bits.push(`tags: ${product.tags.slice(0, 5).join(", ")}`);
-      bits.push(`link: /product/${product.slug}`);
-      lines.push(bits.join(" "));
+      lines.push(`- ${bits.join(" ")}`);
     }
   }
   return lines.join("\n");
@@ -45,7 +43,13 @@ const SYSTEM_PROMPT =
   "• Never invent products, prices, stock levels, or policies that are not in the catalog or brand info below.\n" +
   "• If something is not in the catalog, say so and suggest the closest alternatives.\n" +
   "• You do not process payments or handle orders; direct users to checkout or Support for that.\n" +
-  "• Be warm, concise, and helpful — use short paragraphs or bullet lists when listing products.\n\n" +
+  "• Be warm, concise, and helpful. Use short paragraphs.\n\n" +
+  "FORMATTING (VERY IMPORTANT):\n" +
+  "• Reply in plain, natural conversational text ONLY. Never use Markdown.\n" +
+  "• Do NOT use asterisks, # or headings, backticks, or [text](link) syntax.\n" +
+  "• Do NOT wrap product names in symbols. Write them normally, e.g. \"the Nike Vaporfly Next% 3 at $249.99\".\n" +
+  "• To list a few options, put each on its own line starting with a simple hyphen or just separate them in a sentence.\n" +
+  "• Never output raw URLs. If you must point somewhere, say it in words (e.g. \"in the Running section\").\n\n" +
   "SHIPPING & POLICIES:\n" +
   "• Standard shipping 5–7 business days; Express 2–3 business days; free shipping over $75.\n" +
   "• 30-day returns on unworn items with tags attached.\n\n" +
@@ -83,6 +87,45 @@ function getHelpfulResponse(userMessage: string): string {
   }
 
   return "I'm here to help! I can assist with product questions, sizing, shipping information, returns, and more. Feel free to ask me anything about our products or services.";
+}
+
+/**
+ * Safety net: flatten any Markdown the model still produces into plain text,
+ * since the chat UIs render messages as plain text.
+ */
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/__([^_]+)__/g, "$1")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1$2")
+    .replace(/(^|[^_])_([^_\n]+)_/g, "$1$2")
+    .replace(/^\s*[-*+]\s+/gm, "- ")
+    .replace(/^\s*>\s?/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+/**
+ * OpenAI/OpenRouter SDK errors expose `status` and `message`; unknown throws
+ * (network failures) do not. Normalize both into something loggable.
+ */
+function describeError(error: unknown): { status?: number; message: string } {
+  if (error && typeof error === "object") {
+    const candidate = error as { status?: unknown; message?: unknown };
+    const status =
+      typeof candidate.status === "number" ? candidate.status : undefined;
+    const message =
+      typeof candidate.message === "string"
+        ? candidate.message
+        : String(error);
+    return { status, message };
+  }
+  return { message: String(error) };
 }
 
 export async function POST(request: NextRequest) {
@@ -123,29 +166,48 @@ export async function POST(request: NextRequest) {
         content: SYSTEM_PROMPT,
       };
 
-      try {
-        const completion = await openrouter.chat.completions.create({
-          model: OPENROUTER_MODEL,
-          messages: [systemPrompt, ...messages],
-          temperature: 0.8,
-          max_tokens: 1200,
-        });
+      let answer = "";
+      let lastError: unknown = null;
 
-        const answer =
-          completion.choices[0]?.message?.content?.trim() ||
-          getHelpfulResponse(userMessage);
+      for (let attempt = 0; attempt < 4; attempt++) {
+        try {
+          const completion = await openrouter.chat.completions.create({
+            model: OPENROUTER_MODEL,
+            messages: [systemPrompt, ...messages],
+            temperature: 0.8,
+            max_tokens: 600,
+          });
 
-        return NextResponse.json({
-          reply: answer,
-          context,
-        });
-      } catch (aiError: any) {
-        console.error("[ai-chat] OpenRouter error:", aiError?.message || aiError);
-        return NextResponse.json({
-          reply: getHelpfulResponse(userMessage),
-          context,
-        });
+          const raw = completion.choices[0]?.message?.content ?? "";
+          const cleaned = stripMarkdown(raw);
+          if (cleaned) {
+            answer = cleaned;
+            break;
+          }
+        } catch (aiError: unknown) {
+          lastError = aiError;
+          const { status, message } = describeError(aiError);
+          console.warn(
+            `[ai-chat] OpenRouter attempt ${attempt + 1} failed:`,
+            message
+          );
+          // Don't retry client errors (bad request, no credit, model not found)
+          if (status && status >= 400 && status < 500 && status !== 429) {
+            break;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
+        }
       }
+
+      if (!answer) {
+        console.error("[ai-chat] OpenRouter failed after retries:", lastError);
+        answer = getHelpfulResponse(userMessage);
+      }
+
+      return NextResponse.json({
+        reply: answer,
+        context,
+      });
     }
 
     const reply = getHelpfulResponse(userMessage);
@@ -154,8 +216,8 @@ export async function POST(request: NextRequest) {
       reply,
       context,
     });
-  } catch (error: any) {
-    console.error("[ai-chat] Error:", error);
+  } catch (error: unknown) {
+    console.error("[ai-chat] Error:", describeError(error).message);
 
     const reply = userMessage
       ? getHelpfulResponse(userMessage)
