@@ -103,6 +103,42 @@ export async function GET(request: NextRequest) {
     return securityResponse;
   }
 
+  const origin = request.nextUrl.origin;
+
+  type ColorImageSet = Record<string, string>;
+  type ProductWithImages = {
+    id?: string;
+    imageUrl: string;
+    colorImages?: Record<string, string[] | ColorImageSet>;
+    [key: string]: unknown;
+  };
+
+  // Convert relative asset paths (e.g. /perfumes/<slug>/main.webp) to absolute
+  // URLs so the mobile app can load them via Image source={{ uri }}.
+  const rebaseImageUrls = (value: string): string =>
+    value.startsWith('/') && !value.startsWith('//') ? `${origin}${value}` : value;
+  const rebaseProductImages = (product: ProductWithImages): ProductWithImages => {
+    const copy = { ...product };
+    copy.imageUrl = rebaseImageUrls(product.imageUrl);
+    if (product.colorImages) {
+      const colorImages: Record<string, string[] | ColorImageSet> = {};
+      for (const [color, images] of Object.entries(product.colorImages)) {
+        if (Array.isArray(images)) {
+          colorImages[color] = (images as string[]).map(rebaseImageUrls);
+        } else if (images && typeof images === 'object') {
+          const set: ColorImageSet = {};
+          for (const angle of ['front', 'back', 'side', 'top']) {
+            const value = (images as ColorImageSet)[angle];
+            if (value) set[angle] = rebaseImageUrls(value);
+          }
+          colorImages[color] = set;
+        }
+      }
+      copy.colorImages = colorImages;
+    }
+    return copy;
+  };
+
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search') ?? undefined;
   const category = searchParams.get('category') ?? undefined;
@@ -142,8 +178,12 @@ export async function GET(request: NextRequest) {
 
   // Helper function to return static products with currency conversion
   const getStaticProducts = async () => {
-    // Merge static products with new products
-    const allProducts = [...staticProducts, ...newProducts];
+    // Merge static products with new products, deduplicating by id
+    const allProducts = [
+      ...new Map(
+        [...staticProducts, ...newProducts].map((product) => [product.id, product])
+      ).values(),
+    ];
     
     const filtered = allProducts.filter((product) => {
       const productCategory = typeof product.category === 'string' 
@@ -169,7 +209,7 @@ export async function GET(request: NextRequest) {
         : product.category || { name: 'other', slug: 'other' };
       
       return {
-        ...product,
+        ...rebaseProductImages(product),
         category: categoryObj,
       };
     });
@@ -258,7 +298,7 @@ export async function GET(request: NextRequest) {
         formatted: `$${priceInUSD.toFixed(2)}`,
       };
       return {
-        ...product,
+        ...rebaseProductImages(product),
         price: priceInUSD, // Keep original price in USD
         convertedPrice: converted.amount,
         currency: converted.currency,

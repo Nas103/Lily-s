@@ -1,21 +1,25 @@
 /**
  * Perfumes Products Data
- * 
- * This file contains product data for the Perfumes category.
- * - Men's Perfumes: 15 products
- * - Women's Perfumes: 20 products
- * - Each product has 1 image
- * 
- * TODO: Replace image URLs with local storage paths when images are uploaded
- * Image paths should be: assets/images/products/perfumes/men/product-XXX/main.jpg
- *                        assets/images/products/perfumes/women/product-XXX/main.jpg
+ *
+ * Real products (10 items). Prices are stored in USD and auto-converted
+ * via the API using currency.ts (ZAR 18.5). Images are served from the web
+ * public/perfumes/<slug>/ folder (main + up to 3 views). Each product has a
+ * single color with 4 image angles (front/back/side/top) to fit the gallery.
  */
 
 import { Product } from '../types';
 
+const images = (slug: string, extension = 'webp', available = 4) => {
+  const main = `/perfumes/${slug}/main.${extension}`;
+  const [back, side, top] = [2, 3, 4].map((n) =>
+    n <= available ? `/perfumes/${slug}/${n}.${extension}` : main
+  );
+  return {
+    Classic: { front: main, back, side, top },
+  };
+};
+
 export const perfumesProducts: Product[] = [
-  // Men's Perfumes (6 items) + Unisex (4 items) - real products
-// Men's Perfumes (10 real items)
   {
     id: 'perfume-men-tommy-boy-forever',
     name: 'Tommy Boy Forever Eau de Toilette',
@@ -23,10 +27,12 @@ export const perfumesProducts: Product[] = [
     description: 'Aromatic Fougere fragrance for men by Tommy Hilfiger. Top notes: Lemon, Ginger, Black Pepper. Middle: Lavender, Sage, Cinnamon. Base: Driftwood, Musk, Patchouli. Available in 30ml, 50ml and 100ml.',
     category: 'perfumes',
     gender: 'men',
-    price: 775.00,
+    price: 41.89,
+    colors: ['Classic'],
+    colorImages: images('tommy-boy-forever-eau-de-toilette', 'jpg', 2),
     tags: ['fragrance', 'aromatic-fougere', 'tommy-hilfiger'],
     badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=80',
+    imageUrl: '/perfumes/tommy-boy-forever-eau-de-toilette/main.jpg',
   },
   {
     id: 'perfume-men-bad-boy-cobalt-elixir',
@@ -35,10 +41,12 @@ export const perfumesProducts: Product[] = [
     description: 'Aromatic, intense interpretation of BAD BOY Cobalt. Sage, Black Truffle and Resinous Woods with Vanilla and Olibanum. Available in 50ml & 100ml.',
     category: 'perfumes',
     gender: 'men',
-    price: 2250.00,
+    price: 121.62,
+    colors: ['Classic'],
+    colorImages: images('bad-boy-cobalt-elixir-eau-de-parfum', 'jpg', 1),
     tags: ['fragrance', 'aromatic', 'woody', 'carolina-herrera'],
     badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1514557179557-9efc4d7949cc?w=800&q=80',
+    imageUrl: '/perfumes/bad-boy-cobalt-elixir-eau-de-parfum/main.jpg',
   },
   {
     id: 'perfume-men-k-by-dolce-gabbana',
@@ -47,10 +55,12 @@ export const perfumesProducts: Product[] = [
     description: 'Celebrates a new era of masculinity with citrus freshness, Sicilian lemon, blood orange, juniper berry, cedarwood, green vetiver, patchouli and pimiento essence. Available in 50ml, 100ml and 150ml.',
     category: 'perfumes',
     gender: 'men',
-    price: 2150.00,
+    price: 116.22,
+    colors: ['Classic'],
+    colorImages: images('k-by-dolce-gabbana-eau-de-toilette', 'jpg', 2),
     tags: ['fragrance', 'citrus', 'woody', 'dolce-gabbana'],
     badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1557170334-a9632e77c6e4?w=800&q=80',
+    imageUrl: '/perfumes/k-by-dolce-gabbana-eau-de-toilette/main.jpg',
   },
   {
     id: 'perfume-men-hugo-man',
@@ -59,10 +69,12 @@ export const perfumesProducts: Product[] = [
     description: 'Green Apple, Aromatic Notes and Fir Balsam. Available in 75ml, 125ml and 200ml. HUGO Man captures a free-spirited attitude.',
     category: 'perfumes',
     gender: 'men',
-    price: 2720.00,
+    price: 147.03,
+    colors: ['Classic'],
+    colorImages: images('hugo-man-eau-de-toilette', 'jpg', 4),
     tags: ['fragrance', 'aromatic', 'fresh', 'hugo-boss'],
     badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1610461888750-10bfc601b874?w=800&q=80',
+    imageUrl: '/perfumes/hugo-man-eau-de-toilette/main.jpg',
   },
   {
     id: 'perfume-men-stronger-with-you-absolutely',
@@ -71,22 +83,26 @@ export const perfumesProducts: Product[] = [
     description: 'Refined masculine parfum with addictive rum accord, lavender, vanilla and smoky cedarwood. Available in 50ml and 100ml.',
     category: 'perfumes',
     gender: 'men',
-    price: 2000.00,
+    price: 108.11,
+    colors: ['Classic'],
+    colorImages: images('emprorio-armani-stronger-with-you-absolutely-parfum', 'jpg', 3),
     tags: ['fragrance', 'parfum', 'woody-amber', 'armani'],
     badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1617224793032-9f29d4b6f5e3?w=800&q=80',
+    imageUrl: '/perfumes/emprorio-armani-stronger-with-you-absolutely-parfum/main.jpg',
   },
   {
-    id: 'perfume-men-myslf',
-    name: 'Yves Saint Laurent MYSLF Eau de Parfum',
-    slug: 'ysl-myslf-eau-de-parfum',
-    description: 'Woody floral fragrance with bergamot, orange blossom absolute and warm woods including Indonesian patchouli and Ambrofix. Available in 60ml & 100ml.',
+    id: 'perfume-unisex-ex-nihilo-scarlet-sands',
+    name: 'Ex Nihilo Scarlet Sands Eau de Parfum - Dubai Exclusive',
+    slug: 'ex-nihilo-scarlet-sands-eau-de-parfum',
+    description: 'Ex Nihilo Scarlet Sands Eau de Parfum, Dubai Exclusive, 100ml.',
     category: 'perfumes',
-    gender: 'men',
-    price: 3000.00,
-    tags: ['fragrance', 'woody-floral', 'ysl'],
-    badge: 'Men',
-    imageUrl: 'https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=800&q=80',
+    gender: 'unisex',
+    price: 542.86,
+    colors: ['Classic'],
+    colorImages: images('ex-nihilo-scarlet-sands-eau-de-parfum', 'webp', 4),
+    tags: ['fragrance', 'parfum', 'unisex', 'ex-nihilo'],
+    badge: 'Unisex',
+    imageUrl: '/perfumes/ex-nihilo-scarlet-sands-eau-de-parfum/main.webp',
   },
   {
     id: 'perfume-unisex-heritage',
@@ -95,10 +111,12 @@ export const perfumesProducts: Product[] = [
     description: 'Heritage Parfum from Fragrance Du Bois. Unisex/statement fragrance.',
     category: 'perfumes',
     gender: 'unisex',
-    price: 10808.44,
+    price: 584.24,
+    colors: ['Classic'],
+    colorImages: images('fragrance-du-bois-heritage-parfum', 'webp', 4),
     tags: ['fragrance', 'parfum', 'unisex'],
     badge: 'Unisex',
-    imageUrl: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59cbe?w=800&q=80',
+    imageUrl: '/perfumes/fragrance-du-bois-heritage-parfum/main.webp',
   },
   {
     id: 'perfume-unisex-amouage-outlands',
@@ -107,10 +125,12 @@ export const perfumesProducts: Product[] = [
     description: 'Amouage Outlands EDP, 100ml.',
     category: 'perfumes',
     gender: 'unisex',
-    price: 7908.18,
+    price: 427.47,
+    colors: ['Classic'],
+    colorImages: images('amouage-outlands-eau-de-parfum', 'webp', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'amouage'],
     badge: 'Unisex',
-    imageUrl: 'https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80',
+    imageUrl: '/perfumes/amouage-outlands-eau-de-parfum/main.webp',
   },
   {
     id: 'perfume-unisex-roja-united-arab-emirates',
@@ -119,10 +139,12 @@ export const perfumesProducts: Product[] = [
     description: 'Roja UAE Parfum.',
     category: 'perfumes',
     gender: 'unisex',
-    price: 9457.39,
+    price: 511.21,
+    colors: ['Classic'],
+    colorImages: images('roja-united-arab-emirates-parfum', 'webp', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'roja'],
     badge: 'Unisex',
-    imageUrl: 'https://images.unsplash.com/photo-1618557031831-8e1c0d6b7c85?w=800&q=80',
+    imageUrl: '/perfumes/roja-united-arab-emirates-parfum/main.webp',
   },
   {
     id: 'perfume-unisex-xerjoff-5-five-white',
@@ -131,11 +153,11 @@ export const perfumesProducts: Product[] = [
     description: 'Xerjoff 5 Five White Eau de Parfum - UAE Exclusive Dubai Boutique Edition, 100ml.',
     category: 'perfumes',
     gender: 'unisex',
-    price: 12159.50,
+    price: 657.27,
+    colors: ['Classic'],
+    colorImages: images('xerjoff-5-five-white-eau-de-parfum-uae-exclusive', 'webp', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'xerjoff'],
     badge: 'Unisex',
-    imageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=800&q=80',
+    imageUrl: '/perfumes/xerjoff-5-five-white-eau-de-parfum-uae-exclusive/main.webp',
   },
 ];
-
-

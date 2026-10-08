@@ -134,7 +134,11 @@ const staticCatalog: CatalogProduct[] = staticProducts.map((product) => ({
   colorImages: product.colorImages,
 }));
 
-export const catalogProducts: CatalogProduct[] = [...staticCatalog, ...mobileProducts];
+export const catalogProducts: CatalogProduct[] = [
+  ...new Map(
+    [...staticCatalog, ...mobileProducts].map((product) => [product.id, product])
+  ).values(),
+];
 
 export function getCatalogByCategory(
   category: CatalogCategory,
