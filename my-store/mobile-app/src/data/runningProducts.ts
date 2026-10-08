@@ -1,580 +1,294 @@
 /**
- * Sample Running Shoe Products Data
- * 
- * This file contains sample product data for the Running category.
- * 10 products for men, 10 products for women.
- * 
- * Women's products:
- * - 5 products have 3 colors max with full colorImages structure (front, back, side, top)
- * - 5 products have 1 color but with different side images (front, back, side, top)
- * 
- * TODO: Replace image URLs with actual product images
- * TODO: Update prices, descriptions, and other details as needed
+ * Real Nike Running Shoe Products Data
+ *
+ * 10 real Nike running shoes backed by local product images under
+ * /public/running/<slug>/<color>/. Images are webp (converted from the
+ * avif assets) so they render natively in React Native.
+ *
+ * Products with a color subfolder expose those colors for the
+ * color-selection UI (each color carries its own front/back/side/top set).
+ * Prices are stored in USD (converted from the ZAR guidance at 18.5).
  */
 
 import { Product } from '../types';
 
 export const runningProducts: Product[] = [
-  // Men's Running Shoes (10 products)
   {
     id: 'running-men-001',
-    name: 'Nike Vaporfly Next% 3',
-    slug: 'nike-vaporfly-next-3',
-    description: 'Elite racing shoe with ZoomX foam and carbon fiber plate. Designed for speed and efficiency.',
+    name: 'Nike Alphafly 4',
+    slug: 'nike-alphafly-4',
+    description: 'The pinnacle of Nike road racing. Ultra-responsive ZoomX foam with a full-length carbon Flyplate, built to chase marathon records.',
+    highlight: 'ZoomX foam with a full-length carbon Flyplate.',
     category: 'running',
     gender: 'men',
-    price: 249.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Red'],
+    price: 313.51,
+    imageUrl: '/running/nike-alphafly-4/sea-glass/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Sea Glass'],
     colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Red': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Sea Glass': {
+        front: '/running/nike-alphafly-4/sea-glass/main.webp',
+        back: '/running/nike-alphafly-4/sea-glass/2.webp',
+        side: '/running/nike-alphafly-4/sea-glass/3.webp',
+        top: '/running/nike-alphafly-4/sea-glass/4.webp',
       },
     },
+    tags: ['running', 'racing', 'carbon', 'nike'],
+    badge: 'Racing',
+  },
+  {
+    id: 'running-women-001',
+    name: 'Nike Vaporfly 4 "Keely Hodgkinson"',
+    slug: 'nike-vaporfly-4-keely-hodgkinson',
+    description: 'Women\u2019s road-racing shoe honouring Olympic mid-distance champion Keely Hodgkinson. ZoomX foam with a carbon Flyplate for elite speed.',
+    highlight: 'The road-racing shoe honouring Keely Hodgkinson.',
+    category: 'running',
+    gender: 'women',
+    price: 302.70,
+    imageUrl: '/running/nike-vaporfly-4-keely-hodgkinson/pencil-point/main.webp',
+    sizes: ['2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5'],
+    colors: ['Pencil Point'],
+    colorImages: {
+      'Pencil Point': {
+        front: '/running/nike-vaporfly-4-keely-hodgkinson/pencil-point/main.webp',
+        back: '/running/nike-vaporfly-4-keely-hodgkinson/pencil-point/2.webp',
+        side: '/running/nike-vaporfly-4-keely-hodgkinson/pencil-point/3.webp',
+        top: '/running/nike-vaporfly-4-keely-hodgkinson/pencil-point/4.webp',
+      },
+    },
+    tags: ['running', 'racing', 'carbon', 'women', 'nike'],
+    badge: 'Racing',
   },
   {
     id: 'running-men-002',
-    name: 'Adidas Adizero Adios Pro 4',
-    slug: 'adidas-adizero-adios-pro-4',
-    description: 'Premium racing shoe with Lightstrike Pro foam and carbon energy rods for maximum propulsion.',
+    name: 'Nike Zoom Fly 6',
+    slug: 'nike-zoom-fly-6',
+    description: 'A fast everyday racing shoe pairing ZoomX foam with a carbon-fibre plate for a smooth, supportive ride on training miles.',
+    highlight: 'ZoomX foam with a carbon-fibre plate for race-day pace.',
     category: 'running',
     gender: 'men',
-    price: 229.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Blue'],
+    price: 189.19,
+    imageUrl: '/running/nike-zoom-fly-6/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black', 'Grey', 'Lime/White'],
     colorImages: {
       'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+        front: '/running/nike-zoom-fly-6/black/main.webp',
+        back: '/running/nike-zoom-fly-6/black/2.webp',
+        side: '/running/nike-zoom-fly-6/black/3.webp',
+        top: '/running/nike-zoom-fly-6/black/4.webp',
       },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Grey': {
+        front: '/running/nike-zoom-fly-6/grey/main.webp',
+        back: '/running/nike-zoom-fly-6/grey/2.webp',
+        side: '/running/nike-zoom-fly-6/grey/3.webp',
+        top: '/running/nike-zoom-fly-6/grey/4.webp',
       },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Lime/White': {
+        front: '/running/nike-zoom-fly-6/lime-white/main.webp',
+        back: '/running/nike-zoom-fly-6/lime-white/2.webp',
+        side: '/running/nike-zoom-fly-6/lime-white/3.webp',
+        top: '/running/nike-zoom-fly-6/lime-white/4.webp',
       },
     },
+    tags: ['running', 'racing', 'trainer', 'nike'],
+    badge: 'Trainer',
   },
   {
     id: 'running-men-003',
-    name: 'Brooks Ghost 16',
-    slug: 'brooks-ghost-16',
-    description: 'Balanced cushioning for smooth transitions. Perfect for daily training and long runs.',
+    name: 'Nike Vaporfly 4 SE',
+    slug: 'nike-vaporfly-4-se',
+    description: 'Men\u2019s marathon racer with ZoomX foam and a full-length carbon Flyplate for maximum energy return at the finish line.',
+    highlight: 'Marathon racer with ZoomX and a carbon Flyplate.',
     category: 'running',
     gender: 'men',
-    price: 139.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Grey', 'Black', 'Blue'],
-    colorImages: {
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-004',
-    name: 'Asics Gel-Nimbus 26',
-    slug: 'asics-gel-nimbus-26',
-    description: 'Maximum cushioning with GEL technology. Ideal for neutral runners seeking comfort.',
-    category: 'running',
-    gender: 'men',
-    price: 159.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Orange'],
+    price: 291.89,
+    imageUrl: '/running/nike-vaporfly-4-se/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black'],
     colorImages: {
       'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Orange': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+        front: '/running/nike-vaporfly-4-se/black/main.webp',
+        back: '/running/nike-vaporfly-4-se/black/2.webp',
+        side: '/running/nike-vaporfly-4-se/black/3.webp',
+        top: '/running/nike-vaporfly-4-se/black/4.webp',
       },
     },
-  },
-  {
-    id: 'running-men-005',
-    name: 'Saucony Endorphin Speed 4',
-    slug: 'saucony-endorphin-speed-4',
-    description: 'Lightweight speed trainer with PWRRUN PB foam and nylon plate for responsive rides.',
-    category: 'running',
-    gender: 'men',
-    price: 179.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Green'],
-    colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Green': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-006',
-    name: 'Hoka Clifton 10',
-    slug: 'hoka-clifton-10',
-    description: 'Maximum cushioning with lightweight design. Perfect for long-distance running.',
-    category: 'running',
-    gender: 'men',
-    price: 149.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'Blue'],
-    colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-007',
-    name: 'New Balance FuelCell SuperComp Elite v4',
-    slug: 'new-balance-fuelcell-supercomp-elite-v4',
-    description: 'Elite racing shoe with carbon fiber plate and FuelCell foam for maximum energy return.',
-    category: 'running',
-    gender: 'men',
-    price: 219.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Black'],
-    colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-008',
-    name: 'Mizuno Wave Rider 28',
-    slug: 'mizuno-wave-rider-28',
-    description: 'Smooth ride with Wave technology for stability and cushioning. Great for daily training.',
-    category: 'running',
-    gender: 'men',
-    price: 129.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Blue', 'Black'],
-    colorImages: {
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-009',
-    name: 'Under Armour Flow Velociti Elite 2',
-    slug: 'under-armour-flow-velociti-elite-2',
-    description: 'Lightweight racing shoe with Flow cushioning technology. Built for speed.',
-    category: 'running',
-    gender: 'men',
-    price: 199.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White'],
-    colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-men-010',
-    name: 'Puma Deviate Nitro Elite 3',
-    slug: 'puma-deviate-nitro-elite-3',
-    description: 'Elite racing shoe with Nitro foam and carbon fiber plate. Maximum energy return.',
-    category: 'running',
-    gender: 'men',
-    price: 209.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'Orange', 'Blue'],
-    colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Orange': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
-      },
-    },
-  },
-  
-  // Women's Running Shoes (10 products)
-  // First 5 with 3 colors
-  {
-    id: 'running-women-001',
-    name: 'Nike Vaporfly Next% 3',
-    slug: 'nike-vaporfly-next-3-women',
-    description: 'Elite racing shoe with ZoomX foam and carbon fiber plate. Designed for speed and efficiency.',
-    category: 'running',
-    gender: 'women',
-    price: 249.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Pink', 'White', 'Purple'],
-    colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Purple': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
-      },
-    },
+    tags: ['running', 'racing', 'carbon', 'nike'],
+    badge: 'Racing',
   },
   {
     id: 'running-women-002',
-    name: 'Adidas Adizero Adios Pro 4',
-    slug: 'adidas-adizero-adios-pro-4-women',
-    description: 'Premium racing shoe with Lightstrike Pro foam and carbon energy rods for maximum propulsion.',
+    name: 'Nike Vaporfly 4',
+    slug: 'nike-vaporfly-4-women',
+    description: 'Women\u2019s road-racing shoe delivering propulsive ZoomX cushioning and a carbon Flyplate, now lighter than ever.',
+    highlight: 'Propulsive ZoomX cushioning with a carbon Flyplate.',
     category: 'running',
     gender: 'women',
-    price: 229.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Pink', 'White', 'Blue'],
+    price: 291.89,
+    imageUrl: '/running/nike-vaporfly-4-women/grey/main.webp',
+    sizes: ['2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5'],
+    colors: ['Grey', 'Purple/Blue', 'Rose Pink', 'Yellow/Gold'],
     colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+      'Grey': {
+        front: '/running/nike-vaporfly-4-women/grey/main.webp',
+        back: '/running/nike-vaporfly-4-women/grey/2.webp',
+        side: '/running/nike-vaporfly-4-women/grey/3.webp',
+        top: '/running/nike-vaporfly-4-women/grey/4.webp',
       },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Purple/Blue': {
+        front: '/running/nike-vaporfly-4-women/purple-blue/main.webp',
+        back: '/running/nike-vaporfly-4-women/purple-blue/2.webp',
+        side: '/running/nike-vaporfly-4-women/purple-blue/3.webp',
+        top: '/running/nike-vaporfly-4-women/purple-blue/4.webp',
       },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Rose Pink': {
+        front: '/running/nike-vaporfly-4-women/rose-pink/main.webp',
+        back: '/running/nike-vaporfly-4-women/rose-pink/2.webp',
+        side: '/running/nike-vaporfly-4-women/rose-pink/3.webp',
+        top: '/running/nike-vaporfly-4-women/rose-pink/4.webp',
+      },
+      'Yellow/Gold': {
+        front: '/running/nike-vaporfly-4-women/yellow-gold/main.webp',
+        back: '/running/nike-vaporfly-4-women/yellow-gold/2.webp',
+        side: '/running/nike-vaporfly-4-women/yellow-gold/3.webp',
+        top: '/running/nike-vaporfly-4-women/yellow-gold/4.webp',
       },
     },
+    tags: ['running', 'racing', 'carbon', 'women', 'nike'],
+    badge: 'Racing',
+  },
+  {
+    id: 'running-men-004',
+    name: 'Nike Pegasus Premium',
+    slug: 'nike-pegasus-premium',
+    description: 'Everyday trainer with a Zoom Air unit and soft, responsive foam for smooth daily miles.',
+    highlight: 'Zoom Air everyday trainer for smooth daily miles.',
+    category: 'running',
+    gender: 'men',
+    price: 167.57,
+    imageUrl: '/running/nike-pegasus-premium/black-blue/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black/Blue', 'Gradient Pink/Blue', 'White/Brown', 'White/Grey'],
+    colorImages: {
+      'Black/Blue': {
+        front: '/running/nike-pegasus-premium/black-blue/main.webp',
+        back: '/running/nike-pegasus-premium/black-blue/2.webp',
+        side: '/running/nike-pegasus-premium/black-blue/3.webp',
+        top: '/running/nike-pegasus-premium/black-blue/4.webp',
+      },
+      'Gradient Pink/Blue': {
+        front: '/running/nike-pegasus-premium/gradient-pink-blue/main.webp',
+        back: '/running/nike-pegasus-premium/gradient-pink-blue/2.webp',
+        side: '/running/nike-pegasus-premium/gradient-pink-blue/3.webp',
+        top: '/running/nike-pegasus-premium/gradient-pink-blue/4.webp',
+      },
+      'White/Brown': {
+        front: '/running/nike-pegasus-premium/white-brown/main.webp',
+        back: '/running/nike-pegasus-premium/white-brown/2.webp',
+        side: '/running/nike-pegasus-premium/white-brown/3.webp',
+        top: '/running/nike-pegasus-premium/white-brown/4.webp',
+      },
+      'White/Grey': {
+        front: '/running/nike-pegasus-premium/white-grey/main.webp',
+        back: '/running/nike-pegasus-premium/white-grey/2.webp',
+        side: '/running/nike-pegasus-premium/white-grey/3.webp',
+        top: '/running/nike-pegasus-premium/white-grey/4.webp',
+      },
+    },
+    tags: ['running', 'trainer', 'daily', 'nike'],
+    badge: 'Trainer',
   },
   {
     id: 'running-women-003',
-    name: 'Brooks Ghost 16',
-    slug: 'brooks-ghost-16-women',
-    description: 'Balanced cushioning for smooth transitions. Perfect for daily training and long runs.',
+    name: 'Nike Vaporfly 4 SE',
+    slug: 'nike-vaporfly-4-se-women',
+    description: 'Women\u2019s road-racing SE with ZoomX foam and a carbon Flyplate for race-day speed.',
+    highlight: 'Women\u2019s race-day SE with ZoomX and a carbon plate.',
     category: 'running',
     gender: 'women',
-    price: 139.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Purple', 'Pink', 'Grey'],
+    price: 205.40,
+    imageUrl: '/running/nike-vaporfly-4-se-women/team-red/main.webp',
+    sizes: ['2.5', '3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5'],
+    colors: ['Team Red'],
     colorImages: {
-      'Purple': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Team Red': {
+        front: '/running/nike-vaporfly-4-se-women/team-red/main.webp',
+        back: '/running/nike-vaporfly-4-se-women/team-red/2.webp',
+        side: '/running/nike-vaporfly-4-se-women/team-red/3.webp',
+        top: '/running/nike-vaporfly-4-se-women/team-red/4.webp',
       },
     },
+    tags: ['running', 'racing', 'carbon', 'women', 'nike'],
+    badge: 'Racing',
   },
   {
-    id: 'running-women-004',
-    name: 'Asics Gel-Nimbus 26',
-    slug: 'asics-gel-nimbus-26-women',
-    description: 'Maximum cushioning with GEL technology. Ideal for neutral runners seeking comfort.',
+    id: 'running-men-005',
+    name: 'Nike Alphafly 3',
+    slug: 'nike-alphafly-3',
+    description: 'Men\u2019s elite marathon shoe with Zoom Air pods, ZoomX foam and a full-length carbon plate for record-setting speed.',
+    highlight: 'Elite marathon shoe with Zoom Air, ZoomX and a carbon plate.',
     category: 'running',
-    gender: 'women',
-    price: 159.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Pink', 'White', 'Lavender'],
+    gender: 'men',
+    price: 254.05,
+    imageUrl: '/running/nike-alphafly-3/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black'],
     colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Black': {
+        front: '/running/nike-alphafly-3/black/main.webp',
+        back: '/running/nike-alphafly-3/black/2.webp',
+        side: '/running/nike-alphafly-3/black/3.webp',
+        top: '/running/nike-alphafly-3/black/4.webp',
       },
     },
+    tags: ['running', 'racing', 'carbon', 'nike'],
+    badge: 'Racing',
   },
   {
-    id: 'running-women-005',
-    name: 'Saucony Endorphin Speed 4',
-    slug: 'saucony-endorphin-speed-4-women',
-    description: 'Lightweight speed trainer with PWRRUN PB foam and nylon plate for responsive rides.',
+    id: 'running-men-006',
+    name: 'Nike Vaporfly 4 x Renegade',
+    slug: 'nike-vaporfly-4-x-renegade',
+    description: 'Men\u2019s road-racing collaboration edition with ZoomX foam and a carbon Flyplate in a distinctive colourway.',
+    highlight: 'Road-racing collaboration with ZoomX and a carbon plate.',
     category: 'running',
-    gender: 'women',
-    price: 179.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Pink', 'White', 'Mint'],
+    gender: 'men',
+    price: 216.22,
+    imageUrl: '/running/nike-vaporfly-4-x-renegade/brown-basalt/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Brown Basalt'],
     colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Mint': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Brown Basalt': {
+        front: '/running/nike-vaporfly-4-x-renegade/brown-basalt/main.webp',
+        back: '/running/nike-vaporfly-4-x-renegade/brown-basalt/2.webp',
+        side: '/running/nike-vaporfly-4-x-renegade/brown-basalt/3.webp',
+        top: '/running/nike-vaporfly-4-x-renegade/brown-basalt/4.webp',
       },
     },
-  },
-  // Last 5 with 1 color but different side images
-  {
-    id: 'running-women-006',
-    name: 'Hoka Clifton 10',
-    slug: 'hoka-clifton-10-women',
-    description: 'Maximum cushioning with lightweight design. Perfect for long-distance running.',
-    category: 'running',
-    gender: 'women',
-    price: 149.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Pink'],
-    colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-    },
+    tags: ['running', 'racing', 'collab', 'nike'],
+    badge: 'Racing',
   },
   {
-    id: 'running-women-007',
-    name: 'New Balance FuelCell SuperComp Elite v4',
-    slug: 'new-balance-fuelcell-supercomp-elite-v4-women',
-    description: 'Elite racing shoe with carbon fiber plate and FuelCell foam for maximum energy return.',
+    id: 'running-men-007',
+    name: 'Nike Vaporfly 4',
+    slug: 'nike-vaporfly-4-men',
+    description: 'Men\u2019s road-racing shoe with ZoomX foam and a full-length carbon Flyplate for maximum energy return.',
+    highlight: 'Road-racing shoe with ZoomX and a carbon Flyplate.',
     category: 'running',
-    gender: 'women',
-    price: 219.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Purple'],
+    gender: 'men',
+    price: 205.40,
+    imageUrl: '/running/nike-vaporfly-4-men/racer-blue/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Racer Blue'],
     colorImages: {
-      'Purple': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+      'Racer Blue': {
+        front: '/running/nike-vaporfly-4-men/racer-blue/main.webp',
+        back: '/running/nike-vaporfly-4-men/racer-blue/2.webp',
+        side: '/running/nike-vaporfly-4-men/racer-blue/3.webp',
+        top: '/running/nike-vaporfly-4-men/racer-blue/4.webp',
       },
     },
-  },
-  {
-    id: 'running-women-008',
-    name: 'Mizuno Wave Rider 28',
-    slug: 'mizuno-wave-rider-28-women',
-    description: 'Smooth ride with Wave technology for stability and cushioning. Great for daily training.',
-    category: 'running',
-    gender: 'women',
-    price: 129.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Lavender'],
-    colorImages: {
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-women-009',
-    name: 'Under Armour Flow Velociti Elite 2',
-    slug: 'under-armour-flow-velociti-elite-2-women',
-    description: 'Lightweight racing shoe with Flow cushioning technology. Built for speed.',
-    category: 'running',
-    gender: 'women',
-    price: 199.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Mint'],
-    colorImages: {
-      'Mint': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-    },
-  },
-  {
-    id: 'running-women-010',
-    name: 'Puma Deviate Nitro Elite 3',
-    slug: 'puma-deviate-nitro-elite-3-women',
-    description: 'Elite racing shoe with Nitro foam and carbon fiber plate. Maximum energy return.',
-    category: 'running',
-    gender: 'women',
-    price: 209.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Rose'],
-    colorImages: {
-      'Rose': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-    },
+    tags: ['running', 'racing', 'carbon', 'nike'],
+    badge: 'Racing',
   },
 ];
-

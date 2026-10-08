@@ -1,452 +1,399 @@
 /**
- * Sample Lifestyle Shoe Products Data
- * 
- * This file contains sample product data for the Lifestyle category.
- * 10 products have 3 colors max with full colorImages structure (front, back, side, top).
- * 
- * TODO: Replace image URLs with actual product images
- * TODO: Update prices, descriptions, and other details as needed
+ * Real Lifestyle Shoe Products Data
+ *
+ * 15 real lifestyle/training shoes backed by local product images under
+ * /public/lifestyle/<slug>/<color>/. Images are webp (converted from the
+ * avif/png assets) so they render natively in React Native.
+ *
+ * Products with a color subfolder expose those colors for the
+ * color-selection UI (each color carries its own front/back/side/top set).
+ * Prices are stored in USD (converted from the ZAR guidance at 18.5).
+ * Sale items carry an original price plus discountPercent, which the UI
+ * applies to compute the current price.
  */
 
 import { Product } from '../types';
 
 export const lifestyleProducts: Product[] = [
-  // Products with 3 colors (10 products)
   {
     id: 'lifestyle-001',
-    name: 'Nike LeBron TR1',
-    slug: 'nike-lebron-tr1',
-    description: 'Premium lifestyle sneaker with advanced cushioning technology. Perfect for everyday wear and casual outings.',
+    name: 'Nike ACG Pegasus Trail GORE-TEX',
+    slug: 'nike-acg-pegasus-trail-gore-tex',
+    description: 'All-terrain grip and comfort, made to wreak havoc on every surface. Waterproof GORE-TEX fabric keeps you dry while ReactX foam delivers an energy-returning, stable ride on wet trails and technical terrain.',
+    highlight: 'ReactX foam with waterproof GORE-TEX, built for wet trails.',
     category: 'lifestyle',
-    price: 129.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace with actual image
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Red'],
+    gender: 'unisex',
+    price: 189.19,
+    imageUrl: '/lifestyle/nike-acg-pegasus-trail-gore-tex/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black', 'Green/Blue', 'Orange/Brown', 'Peach'],
     colorImages: {
       'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+        front: '/lifestyle/nike-acg-pegasus-trail-gore-tex/black/main.webp',
+        back: '/lifestyle/nike-acg-pegasus-trail-gore-tex/black/2.webp',
+        side: '/lifestyle/nike-acg-pegasus-trail-gore-tex/black/3.webp',
+        top: '/lifestyle/nike-acg-pegasus-trail-gore-tex/black/4.webp',
       },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Green/Blue': {
+        front: '/lifestyle/nike-acg-pegasus-trail-gore-tex/green-blue/main.webp',
+        back: '/lifestyle/nike-acg-pegasus-trail-gore-tex/green-blue/2.webp',
+        side: '/lifestyle/nike-acg-pegasus-trail-gore-tex/green-blue/3.webp',
+        top: '/lifestyle/nike-acg-pegasus-trail-gore-tex/green-blue/4.webp',
       },
-      'Red': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Orange/Brown': {
+        front: '/lifestyle/nike-acg-pegasus-trail-gore-tex/orange-brown/main.webp',
+        back: '/lifestyle/nike-acg-pegasus-trail-gore-tex/orange-brown/2.webp',
+        side: '/lifestyle/nike-acg-pegasus-trail-gore-tex/orange-brown/3.webp',
+        top: '/lifestyle/nike-acg-pegasus-trail-gore-tex/orange-brown/4.webp',
+      },
+      'Peach': {
+        front: '/lifestyle/nike-acg-pegasus-trail-gore-tex/peach/main.webp',
+        back: '/lifestyle/nike-acg-pegasus-trail-gore-tex/peach/2.webp',
+        side: '/lifestyle/nike-acg-pegasus-trail-gore-tex/peach/3.webp',
+        top: '/lifestyle/nike-acg-pegasus-trail-gore-tex/peach/4.webp',
       },
     },
+    tags: ['lifestyle', 'trail', 'gore-tex', 'nike'],
+    badge: 'Trail',
   },
   {
     id: 'lifestyle-002',
-    name: 'Adidas Originals Superstar',
-    slug: 'adidas-originals-superstar',
-    description: 'Classic shell-toe design with iconic three stripes. Timeless style for the modern lifestyle.',
+    name: 'Puma Fade LS Brushed Luxe Sneakers',
+    slug: 'fade-ls-brushed-luxe-sneakers-women',
+    description: 'The Puma Fade redefines technical streetwear with a bold, sculpted style. These Fade LS sneakers blend a layered design with retro materials for a standout, everyday finish.',
+    highlight: 'Bold, sculpted technical streetwear in a layered silhouette.',
     category: 'lifestyle',
-    price: 89.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Black', 'Navy'],
+    gender: 'women',
+    price: 145.89,
+    imageUrl: '/lifestyle/fade-ls-brushed-luxe-sneakers-women/glacial-gray-powder-pink/main.webp',
+    sizes: ['3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5'],
+    colors: ['Glacial Gray-Powder Pink'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Navy': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Glacial Gray-Powder Pink': {
+        front: '/lifestyle/fade-ls-brushed-luxe-sneakers-women/glacial-gray-powder-pink/main.webp',
+        back: '/lifestyle/fade-ls-brushed-luxe-sneakers-women/glacial-gray-powder-pink/2.webp',
+        side: '/lifestyle/fade-ls-brushed-luxe-sneakers-women/glacial-gray-powder-pink/3.webp',
+        top: '/lifestyle/fade-ls-brushed-luxe-sneakers-women/glacial-gray-powder-pink/4.webp',
       },
     },
+    tags: ['lifestyle', 'women', 'puma', 'luxe'],
+    badge: 'Casual',
   },
   {
     id: 'lifestyle-003',
-    name: 'Puma Suede Classic',
-    slug: 'puma-suede-classic',
-    description: 'Iconic suede upper with Formstrip branding. A streetwear essential for any wardrobe.',
+    name: 'Nike Ja 4 \'Deep Water\'',
+    slug: 'nike-ja-4-deep-water',
+    description: 'Ja\u2019s elevation is pure hang-time horror. Responsive Cushlon 3.0 foam delivers explosive lift, while the supportive upper and logo-inspired traction keep you locked in and ready to terrorise any defender.',
+    highlight: 'Responsive Cushlon 3.0 foam for explosive lift.',
     category: 'lifestyle',
-    price: 79.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Grey'],
+    gender: 'men',
+    price: 145.94,
+    imageUrl: '/lifestyle/nike-ja-4-deep-water/deep-water/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Deep Water'],
     colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Deep Water': {
+        front: '/lifestyle/nike-ja-4-deep-water/deep-water/main.webp',
+        back: '/lifestyle/nike-ja-4-deep-water/deep-water/2.webp',
+        side: '/lifestyle/nike-ja-4-deep-water/deep-water/3.webp',
+        top: '/lifestyle/nike-ja-4-deep-water/deep-water/4.webp',
       },
     },
+    tags: ['lifestyle', 'basketball', 'nike', 'ja-morant'],
+    badge: 'Basketball',
   },
   {
     id: 'lifestyle-004',
-    name: 'New Balance 574',
-    slug: 'new-balance-574',
-    description: 'Classic running-inspired design with premium materials. Comfort meets style.',
+    name: 'Under Armour HB Runner SE 2',
+    slug: 'ua-hb-runner-se-2',
+    description: 'Everyday road runner with responsive UA HOVR\u2122 cushioning that reduces impact and returns energy. Durable ripstop upper with strategic overlays supports and guides your stride mile after mile.',
+    highlight: 'Responsive UA HOVR cushioning with a durable ripstop upper.',
     category: 'lifestyle',
-    price: 99.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Navy', 'Grey', 'Beige'],
+    gender: 'men',
+    price: 162.11,
+    imageUrl: '/lifestyle/ua-hb-runner-se-2/blue/main.webp',
+    sizes: ['6', '7', '8', '9', '10', '11', '12'],
+    colors: ['Blue', 'Brown', 'White'],
     colorImages: {
-      'Navy': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+      'Blue': {
+        front: '/lifestyle/ua-hb-runner-se-2/blue/main.webp',
+        back: '/lifestyle/ua-hb-runner-se-2/blue/2.webp',
+        side: '/lifestyle/ua-hb-runner-se-2/blue/3.webp',
+        top: '/lifestyle/ua-hb-runner-se-2/blue/4.webp',
       },
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Brown': {
+        front: '/lifestyle/ua-hb-runner-se-2/brown/main.webp',
+        back: '/lifestyle/ua-hb-runner-se-2/brown/2.webp',
+        side: '/lifestyle/ua-hb-runner-se-2/brown/3.webp',
+        top: '/lifestyle/ua-hb-runner-se-2/brown/4.webp',
       },
-      'Beige': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'White': {
+        front: '/lifestyle/ua-hb-runner-se-2/white/main.webp',
+        back: '/lifestyle/ua-hb-runner-se-2/white/2.webp',
+        side: '/lifestyle/ua-hb-runner-se-2/white/3.webp',
+        top: '/lifestyle/ua-hb-runner-se-2/white/4.webp',
       },
     },
+    tags: ['lifestyle', 'running', 'under-armour'],
+    badge: 'Running',
   },
   {
     id: 'lifestyle-005',
-    name: 'Vans Old Skool',
-    slug: 'vans-old-skool',
-    description: 'The iconic side stripe design. A skateboarding classic that transcends generations.',
+    name: 'Under Armour Infinite Elite',
+    slug: 'ua-infinite-elite',
+    description: 'High-mileage trainer with extra-springy UA HOVR+ cushioning and a precision UA IntelliKnit fit to keep your legs feeling fresh mile after mile. Now at 55% off.',
+    highlight: 'Extra-springy UA HOVR+ cushioning for high-mileage comfort.',
     category: 'lifestyle',
-    price: 69.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Red'],
+    gender: 'men',
+    price: 81.03,
+    imageUrl: '/lifestyle/ua-infinite-elite/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '12', '13'],
+    colors: ['Black', 'Pink'],
     colorImages: {
       'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
+        front: '/lifestyle/ua-infinite-elite/black/main.webp',
+        back: '/lifestyle/ua-infinite-elite/black/2.webp',
+        side: '/lifestyle/ua-infinite-elite/black/3.webp',
+        top: '/lifestyle/ua-infinite-elite/black/4.webp',
       },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Red': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Pink': {
+        front: '/lifestyle/ua-infinite-elite/pink/main.webp',
+        back: '/lifestyle/ua-infinite-elite/pink/2.webp',
+        side: '/lifestyle/ua-infinite-elite/pink/3.webp',
+        top: '/lifestyle/ua-infinite-elite/pink/4.webp',
       },
     },
+    tags: ['lifestyle', 'running', 'under-armour'],
+    badge: 'Running',
   },
   {
     id: 'lifestyle-006',
-    name: 'Converse Chuck Taylor All Star',
-    slug: 'converse-chuck-taylor-all-star',
-    description: 'The original basketball shoe, now a cultural icon. Timeless design for everyday wear.',
+    name: 'Nike Air Force 1 \'07',
+    slug: 'nike-air-force-1-07',
+    description: 'Comfortable, durable and timeless. This Air Force 1 features a thoughtfully crafted upper with elevated, textured materials for added depth and dimension, plus a Nike Air unit for lightweight cushioning.',
+    highlight: 'The timeless icon with a Nike Air unit and textured upper.',
     category: 'lifestyle',
-    price: 59.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White', 'Navy'],
+    gender: 'unisex',
+    price: 129.73,
+    imageUrl: '/lifestyle/nike-air-force-1-07/summit-white/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Summit White'],
     colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Navy': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Summit White': {
+        front: '/lifestyle/nike-air-force-1-07/summit-white/main.webp',
+        back: '/lifestyle/nike-air-force-1-07/summit-white/2.webp',
+        side: '/lifestyle/nike-air-force-1-07/summit-white/3.webp',
+        top: '/lifestyle/nike-air-force-1-07/summit-white/4.webp',
       },
     },
+    tags: ['lifestyle', 'icon', 'nike', 'af1'],
+    badge: 'Icon',
   },
   {
     id: 'lifestyle-007',
-    name: 'Nike Air Force 1',
-    slug: 'nike-air-force-1',
-    description: 'The basketball icon that made the transition from court to street. Premium leather construction.',
+    name: 'Nike Air Max 90 SE',
+    slug: 'nike-air-max-90-se',
+    description: 'The timeless runner updated with more wiggle room in the toe. Real and synthetic leather add structure while visible Max Air cushioning keeps the Air Max legacy alive.',
+    highlight: 'Visible Max Air cushioning with a classic waffle sole.',
     category: 'lifestyle',
-    price: 109.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Black', 'Triple White'],
+    gender: 'unisex',
+    price: 129.73,
+    imageUrl: '/lifestyle/nike-air-max-90-se/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
       'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Triple White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+        front: '/lifestyle/nike-air-max-90-se/black/main.webp',
+        back: '/lifestyle/nike-air-max-90-se/black/2.webp',
+        side: '/lifestyle/nike-air-max-90-se/black/3.webp',
+        top: '/lifestyle/nike-air-max-90-se/black/4.webp',
       },
     },
+    tags: ['lifestyle', 'icon', 'nike', 'air-max'],
+    badge: 'Icon',
   },
   {
     id: 'lifestyle-008',
-    name: 'Adidas Stan Smith',
-    slug: 'adidas-stan-smith',
-    description: 'The original tennis shoe. Clean, minimalist design with premium leather upper.',
+    name: 'Nike Air Max 95 Big Bubble',
+    slug: 'nike-air-max-95-big-bubble',
+    description: 'Inspired by the human anatomy and \u201990s athletics aesthetics. Mixed materials and visible cushioning create a layered look with unbelievable comfort.',
+    highlight: 'Distinctive wavy design with visible Max Air cushioning.',
     category: 'lifestyle',
-    price: 79.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Green', 'Navy'],
+    gender: 'unisex',
+    price: 199.99,
+    imageUrl: '/lifestyle/nike-air-max-95-big-bubble/black/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Black'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Green': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Navy': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Black': {
+        front: '/lifestyle/nike-air-max-95-big-bubble/black/main.webp',
+        back: '/lifestyle/nike-air-max-95-big-bubble/black/2.webp',
+        side: '/lifestyle/nike-air-max-95-big-bubble/black/3.webp',
+        top: '/lifestyle/nike-air-max-95-big-bubble/black/4.webp',
       },
     },
+    tags: ['lifestyle', 'icon', 'nike', 'air-max'],
+    badge: 'Icon',
   },
   {
     id: 'lifestyle-009',
-    name: 'Reebok Classic Leather',
-    slug: 'reebok-classic-leather',
-    description: 'Vintage-inspired design with premium leather construction. A timeless classic.',
+    name: 'Nike P-6000 TU',
+    slug: 'nike-p-6000-tu',
+    description: 'Inspired by retro Pegs of the 2000s. Supportive cushioning, padded ankles and layered panelling call back to its performance roots with a sporty look you can rock all day.',
+    highlight: 'Retro Pegasus-inspired design with supportive cushioning.',
     category: 'lifestyle',
-    price: 89.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Black', 'Grey'],
+    gender: 'unisex',
+    price: 102.70,
+    imageUrl: '/lifestyle/nike-p-6000-tu/grey-fog/main.webp',
+    sizes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5'],
+    colors: ['Grey Fog'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'Grey Fog': {
+        front: '/lifestyle/nike-p-6000-tu/grey-fog/main.webp',
+        back: '/lifestyle/nike-p-6000-tu/grey-fog/2.webp',
+        side: '/lifestyle/nike-p-6000-tu/grey-fog/3.webp',
+        top: '/lifestyle/nike-p-6000-tu/grey-fog/4.webp',
       },
     },
+    tags: ['lifestyle', 'retro', 'nike'],
+    badge: 'Retro',
   },
   {
     id: 'lifestyle-010',
-    name: 'Jordan 1 Retro High',
-    slug: 'jordan-1-retro-high',
-    description: 'The shoe that started it all. Iconic design with premium materials and heritage styling.',
+    name: 'Puma x Aston Martin Aramco F1 Team Fade Sneakers',
+    slug: 'puma-x-aston-martin-aramaco',
+    description: 'Infused with the DNA of the Aston Martin Aramco F1 Team. A bold, sculpted silhouette stands out on the street while a SOFTFOAM+ sockliner with an extra-thick heel delivers step-in comfort.',
+    highlight: 'Motorsport-inspired Fade with a SOFTFOAM+ sockliner.',
     category: 'lifestyle',
-    price: 179.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Bred', 'Royal', 'Shadow'],
+    gender: 'unisex',
+    price: 156.70,
+    imageUrl: '/lifestyle/puma-x-aston-martin-aramaco/white-lime-shimmer/main.webp',
+    sizes: ['3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '12.5', '13'],
+    colors: ['White/Lime Shimmer'],
     colorImages: {
-      'Bred': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Royal': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
-      },
-      'Shadow': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=10', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=11', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=12', // TODO: Replace
+      'White/Lime Shimmer': {
+        front: '/lifestyle/puma-x-aston-martin-aramaco/white-lime-shimmer/main.webp',
+        back: '/lifestyle/puma-x-aston-martin-aramaco/white-lime-shimmer/2.webp',
+        side: '/lifestyle/puma-x-aston-martin-aramaco/white-lime-shimmer/3.webp',
+        top: '/lifestyle/puma-x-aston-martin-aramaco/white-lime-shimmer/4.webp',
       },
     },
+    tags: ['lifestyle', 'collab', 'puma', 'motorsport'],
+    badge: 'Collab',
   },
-  // Products with fewer colors (5 products)
   {
     id: 'lifestyle-011',
-    name: 'Nike Dunk Low',
-    slug: 'nike-dunk-low',
-    description: 'Basketball heritage meets street style. Low-top design with premium materials.',
+    name: 'Puma Suede Hike Sneakers',
+    slug: 'suede-hike-sneakers',
+    description: 'It\u2019s more than a sneaker \u2013 it\u2019s a legend. Since 1968 the Puma Suede has been an icon of streetwear, sport and style; the Suede Hike updates the classic with hiking-inspired details.',
+    highlight: 'The legendary Puma Suede, refreshed with hiking details.',
     category: 'lifestyle',
-    price: 119.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White'],
+    gender: 'unisex',
+    price: 156.70,
+    imageUrl: '/lifestyle/suede-hike-sneakers/cashew-gum/main.webp',
+    sizes: ['3', '3.5', '4', '4.5', '5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '12.5', '13'],
+    colors: ['Cashew-Gum'],
     colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Cashew-Gum': {
+        front: '/lifestyle/suede-hike-sneakers/cashew-gum/main.webp',
+        back: '/lifestyle/suede-hike-sneakers/cashew-gum/2.webp',
+        side: '/lifestyle/suede-hike-sneakers/cashew-gum/3.webp',
+        top: '/lifestyle/suede-hike-sneakers/cashew-gum/4.webp',
       },
     },
+    tags: ['lifestyle', 'outdoor', 'puma', 'suede'],
+    badge: 'Outdoor',
   },
   {
     id: 'lifestyle-012',
-    name: 'Adidas Gazelle',
-    slug: 'adidas-gazelle',
-    description: 'Classic suede upper with retro styling. A timeless favorite for casual wear.',
+    name: 'Under Armour ExplorTrail',
+    slug: 'ua-explortrail',
+    description: 'Performance trail shoes with sportswear style, inspired by the Phantom series. Outdoor details like wet-or-dry traction and a quick-toggle lacing system take on any terrain while running or hiking.',
+    highlight: 'Phantom-inspired trail shoe with wet-or-dry Exogrip traction.',
     category: 'lifestyle',
-    price: 89.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Blue', 'Black'],
+    gender: 'unisex',
+    price: 205.35,
+    imageUrl: '/lifestyle/ua-explortrail/tan/main.webp',
+    sizes: ['4', '5', '6', '7', '8', '9', '10', '11', '12'],
+    colors: ['Tan'],
     colorImages: {
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Tan': {
+        front: '/lifestyle/ua-explortrail/tan/main.webp',
+        back: '/lifestyle/ua-explortrail/tan/2.webp',
+        side: '/lifestyle/ua-explortrail/tan/3.webp',
+        top: '/lifestyle/ua-explortrail/tan/4.webp',
       },
     },
+    tags: ['lifestyle', 'trail', 'under-armour'],
+    badge: 'Trail',
   },
   {
     id: 'lifestyle-013',
-    name: 'Puma RS-X',
-    slug: 'puma-rs-x',
-    description: 'Retro-futuristic design with bold color blocking. Stand out from the crowd.',
+    name: 'Under Armour Flare Lifestyle',
+    slug: 'ua-flare-lifestyle',
+    description: 'The everyday sportstyle shoe that goes wherever you do. Lightweight, breathable upper keeps you comfortable while the cushioned midsole and durable rubber outsole deliver all-day wearability.',
+    highlight: 'Everyday sportstyle shoe for all-day wearability.',
     category: 'lifestyle',
-    price: 99.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Black'],
+    gender: 'unisex',
+    price: 189.14,
+    imageUrl: '/lifestyle/ua-flare-lifestyle/burgundy/main.webp',
+    sizes: ['4', '5', '6', '7', '8', '9', '10', '11', '12'],
+    colors: ['Burgundy'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Burgundy': {
+        front: '/lifestyle/ua-flare-lifestyle/burgundy/main.webp',
+        back: '/lifestyle/ua-flare-lifestyle/burgundy/2.webp',
+        side: '/lifestyle/ua-flare-lifestyle/burgundy/3.webp',
+        top: '/lifestyle/ua-flare-lifestyle/burgundy/4.webp',
       },
     },
+    tags: ['lifestyle', 'casual', 'under-armour'],
+    badge: 'Casual',
   },
   {
     id: 'lifestyle-014',
-    name: 'New Balance 550',
-    slug: 'new-balance-550',
-    description: 'Basketball-inspired design with premium suede and leather construction.',
+    name: 'Under Armour Charged Bandit TR 4',
+    slug: 'ua-charged-bandit-tr-4',
+    description: 'Trail shoes built to shut down shock. Charged Cushioning absorbs impact while the aggressive deep-lug outsole grips any terrain, wet or dry.',
+    highlight: 'Charged Cushioning with aggressive deep-lug traction.',
     category: 'lifestyle',
-    price: 109.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['White', 'Grey'],
+    gender: 'women',
+    price: 124.27,
+    imageUrl: '/lifestyle/ua-charged-bandit-tr-4/tan/main.webp',
+    sizes: ['3', '4', '5', '6', '7', '8'],
+    colors: ['Tan'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'Grey': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Tan': {
+        front: '/lifestyle/ua-charged-bandit-tr-4/tan/main.webp',
+        back: '/lifestyle/ua-charged-bandit-tr-4/tan/2.webp',
+        side: '/lifestyle/ua-charged-bandit-tr-4/tan/3.webp',
+        top: '/lifestyle/ua-charged-bandit-tr-4/tan/4.webp',
       },
     },
+    tags: ['lifestyle', 'trail', 'women', 'under-armour'],
+    badge: 'Trail',
   },
   {
     id: 'lifestyle-015',
-    name: 'Vans Authentic',
-    slug: 'vans-authentic',
-    description: 'The original Vans design. Simple, classic, and endlessly versatile.',
+    name: 'Under Armour Infinite Pro',
+    slug: 'ua-infinite-pro',
+    description: 'Endurance trainer with the perfect amount of support and new, springy UA HOVR+ cushioning to keep your legs feeling fresh when coach says keep running. Now at 46% off.',
+    highlight: 'Springy UA HOVR+ cushioning with a breathable warp-knit upper.',
     category: 'lifestyle',
-    price: 64.99,
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-    sizes: ['6', '7', '8', '9', '10', '11'],
-    colors: ['Black', 'White'],
+    gender: 'women',
+    price: 81.03,
+    imageUrl: '/lifestyle/ua-infinite-pro/rose/main.webp',
+    sizes: ['3', '4', '5', '6', '7', '8'],
+    colors: ['Rose'],
     colorImages: {
-      'Black': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace
-      },
-      'White': {
-        front: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace
-        back: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace
-        side: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace
-        top: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace
+      'Rose': {
+        front: '/lifestyle/ua-infinite-pro/rose/main.webp',
+        back: '/lifestyle/ua-infinite-pro/rose/2.webp',
+        side: '/lifestyle/ua-infinite-pro/rose/3.webp',
+        top: '/lifestyle/ua-infinite-pro/rose/4.webp',
       },
     },
+    tags: ['lifestyle', 'running', 'women', 'under-armour'],
+    badge: 'Running',
   },
 ];
-
