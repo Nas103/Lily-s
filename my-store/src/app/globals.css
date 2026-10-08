@@ -110,8 +110,11 @@ a {
 /* ============================================================================
    MODERN SCROLLBAR STYLING
    ============================================================================
-   Custom scrollbar styles matching the app's sleek, modern aesthetic.
-   Uses zinc color palette with rounded corners and smooth transitions.
+   Custom scrollbar styles matching the app's sleek zinc aesthetic.
+
+   The thumb is slim, rounded and "floating": it uses a transparent track and
+   an inset transparent border, so the scrollbar never paints over a parent's
+   padding or rounded corners (prevents overlap with the product view modal).
    ============================================================================ */
 
 /* Webkit browsers (Chrome, Safari, Edge) */
@@ -121,58 +124,59 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #fafafa;
-  border-radius: 10px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e4e4e7;
-  border-radius: 10px;
-  border: 2px solid #fafafa;
-  transition: background 0.2s ease;
+  background: rgba(161, 161, 170, 0.45);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4d4d8;
+  background-color: rgba(113, 113, 122, 0.7);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #a1a1aa;
+  background-color: rgba(82, 82, 91, 0.85);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #e4e4e7 #fafafa;
+  scrollbar-color: rgba(161, 161, 170, 0.45) transparent;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background: #18181b;
-  }
-
   ::-webkit-scrollbar-thumb {
-    background: #3f3f46;
-    border: 2px solid #18181b;
+    background: rgba(82, 82, 91, 0.7);
+    background-clip: content-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #52525b;
+    background-color: rgba(113, 113, 122, 0.9);
   }
 
   ::-webkit-scrollbar-thumb:active {
-    background: #71717a;
+    background-color: rgba(161, 161, 170, 0.9);
   }
 
   * {
-    scrollbar-color: #3f3f46 #18181b;
+    scrollbar-color: rgba(82, 82, 91, 0.7) transparent;
   }
 }
 
 /* Smooth scrolling for better UX */
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 /* Shimmer animation for LiquidMetalButton */

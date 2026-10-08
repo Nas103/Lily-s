@@ -9,7 +9,7 @@
 
 import { Product } from '../types';
 
-const images = (slug: string, extension = 'webp', available = 4) => {
+const images = (slug: string, extension = 'jpg', available = 4) => {
   const main = `/perfumes/${slug}/main.${extension}`;
   const [back, side, top] = [2, 3, 4].map((n) =>
     n <= available ? `/perfumes/${slug}/${n}.${extension}` : main
@@ -99,10 +99,10 @@ export const perfumesProducts: Product[] = [
     gender: 'unisex',
     price: 542.86,
     colors: ['Classic'],
-    colorImages: images('ex-nihilo-scarlet-sands-eau-de-parfum', 'webp', 4),
+    colorImages: images('ex-nihilo-scarlet-sands-eau-de-parfum', 'jpg', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'ex-nihilo'],
     badge: 'Unisex',
-    imageUrl: '/perfumes/ex-nihilo-scarlet-sands-eau-de-parfum/main.webp',
+    imageUrl: '/perfumes/ex-nihilo-scarlet-sands-eau-de-parfum/main.jpg',
   },
   {
     id: 'perfume-unisex-heritage',
@@ -113,10 +113,10 @@ export const perfumesProducts: Product[] = [
     gender: 'unisex',
     price: 584.24,
     colors: ['Classic'],
-    colorImages: images('fragrance-du-bois-heritage-parfum', 'webp', 4),
+    colorImages: images('fragrance-du-bois-heritage-parfum', 'jpg', 4),
     tags: ['fragrance', 'parfum', 'unisex'],
     badge: 'Unisex',
-    imageUrl: '/perfumes/fragrance-du-bois-heritage-parfum/main.webp',
+    imageUrl: '/perfumes/fragrance-du-bois-heritage-parfum/main.jpg',
   },
   {
     id: 'perfume-unisex-amouage-outlands',
@@ -127,10 +127,10 @@ export const perfumesProducts: Product[] = [
     gender: 'unisex',
     price: 427.47,
     colors: ['Classic'],
-    colorImages: images('amouage-outlands-eau-de-parfum', 'webp', 4),
+    colorImages: images('amouage-outlands-eau-de-parfum', 'jpg', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'amouage'],
     badge: 'Unisex',
-    imageUrl: '/perfumes/amouage-outlands-eau-de-parfum/main.webp',
+    imageUrl: '/perfumes/amouage-outlands-eau-de-parfum/main.jpg',
   },
   {
     id: 'perfume-unisex-roja-united-arab-emirates',
@@ -141,10 +141,10 @@ export const perfumesProducts: Product[] = [
     gender: 'unisex',
     price: 511.21,
     colors: ['Classic'],
-    colorImages: images('roja-united-arab-emirates-parfum', 'webp', 4),
+    colorImages: images('roja-united-arab-emirates-parfum', 'jpg', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'roja'],
     badge: 'Unisex',
-    imageUrl: '/perfumes/roja-united-arab-emirates-parfum/main.webp',
+    imageUrl: '/perfumes/roja-united-arab-emirates-parfum/main.jpg',
   },
   {
     id: 'perfume-unisex-xerjoff-5-five-white',
@@ -155,9 +155,9 @@ export const perfumesProducts: Product[] = [
     gender: 'unisex',
     price: 657.27,
     colors: ['Classic'],
-    colorImages: images('xerjoff-5-five-white-eau-de-parfum-uae-exclusive', 'webp', 4),
+    colorImages: images('xerjoff-5-five-white-eau-de-parfum-uae-exclusive', 'jpg', 4),
     tags: ['fragrance', 'parfum', 'unisex', 'xerjoff'],
     badge: 'Unisex',
-    imageUrl: '/perfumes/xerjoff-5-five-white-eau-de-parfum-uae-exclusive/main.webp',
+    imageUrl: '/perfumes/xerjoff-5-five-white-eau-de-parfum-uae-exclusive/main.jpg',
   },
 ];

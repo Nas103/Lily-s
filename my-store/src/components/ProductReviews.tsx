@@ -198,14 +198,14 @@ function ReviewForm({
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Review title (optional)"
-        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm"
+        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-400"
       />
       <textarea
         value={body}
         onChange={(event) => setBody(event.target.value)}
-        placeholder="Tell others what you think"
+        placeholder="Write your review here…"
         rows={3}
-        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm"
+        className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-400"
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="flex items-center gap-3">

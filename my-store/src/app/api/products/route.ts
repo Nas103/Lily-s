@@ -24,62 +24,6 @@ try {
   // Continue without new products if import fails
 }
 
-// Discount logic: Random discounts on max 9 products from different categories
-const DISCOUNT_PERCENTAGES = [10, 15, 20, 25, 30];
-const MAX_DISCOUNTED_PRODUCTS = 9;
-
-function applyRandomDiscounts(products: any[]): any[] {
-  // Group products by category
-  const categoryGroups: Record<string, any[]> = {};
-  products.forEach((product) => {
-    const categoryName = typeof product.category === 'string' 
-      ? product.category 
-      : product.category?.name || product.category?.slug || 'other';
-    if (!categoryGroups[categoryName]) {
-      categoryGroups[categoryName] = [];
-    }
-    categoryGroups[categoryName].push(product);
-  });
-
-  // Select products for discounts (max 9, distributed across categories)
-  const discountedProductIds = new Set<string>();
-  const categories = Object.keys(categoryGroups);
-  let totalDiscounted = 0;
-
-  // Distribute discounts across categories
-  for (const category of categories) {
-    if (totalDiscounted >= MAX_DISCOUNTED_PRODUCTS) break;
-    
-    const categoryProducts = categoryGroups[category];
-    const productsToDiscount = Math.min(
-      Math.ceil((MAX_DISCOUNTED_PRODUCTS - totalDiscounted) / (categories.length - Object.keys(discountedProductIds).length)),
-      categoryProducts.length
-    );
-
-    // Randomly select products from this category
-    const shuffled = [...categoryProducts].sort(() => Math.random() - 0.5);
-    for (let i = 0; i < productsToDiscount && totalDiscounted < MAX_DISCOUNTED_PRODUCTS; i++) {
-      const product = shuffled[i];
-      if (product?.id && !discountedProductIds.has(product.id)) {
-        discountedProductIds.add(product.id);
-        totalDiscounted++;
-      }
-    }
-  }
-
-  // Apply random discounts
-  return products.map((product) => {
-    if (discountedProductIds.has(product.id)) {
-      const discountPercent = DISCOUNT_PERCENTAGES[Math.floor(Math.random() * DISCOUNT_PERCENTAGES.length)];
-      return {
-        ...product,
-        discountPercent,
-      };
-    }
-    return product;
-  });
-}
-
 const mapStaticProduct = (products: typeof staticProducts) =>
   products.map((product) => ({
     ...product,
@@ -103,7 +47,14 @@ export async function GET(request: NextRequest) {
     return securityResponse;
   }
 
-  const origin = request.nextUrl.origin;
+  // Derive the origin from the request's Host header instead of
+  // request.nextUrl.origin: the dev server runs with `-H 0.0.0.0`, so
+  // nextUrl.origin resolves to `http://0.0.0.0:3000` — an address the mobile
+  // app (physical device or emulator) cannot connect to for image loads.
+  const host = request.headers.get('host');
+  const protocol =
+    request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol.replace(':', '');
+  const origin = host ? `${protocol}://${host}` : request.nextUrl.origin;
 
   type ColorImageSet = Record<string, string>;
   type ProductWithImages = {
@@ -278,17 +229,15 @@ export async function GET(request: NextRequest) {
   if (!products.length) {
     // Use static products (which now includes new products)
     const productsWithCurrency = await getStaticProducts();
-    const productsWithDiscounts = applyRandomDiscounts(productsWithCurrency);
-    return NextResponse.json(productsWithDiscounts);
+    return NextResponse.json(productsWithCurrency);
   }
 
-  // Apply random discounts to database products
-  const productsWithDiscounts = applyRandomDiscounts(products);
-  
   // Add currency conversion to database products
   // Prices are stored in USD, convert only if user has country set
+  // (Discount pricing is intentionally not applied; a custom discount system
+  // will be implemented separately.)
   const productsWithCurrency = await Promise.all(
-    productsWithDiscounts.map(async (product: any) => {
+    products.map(async (product: any) => {
       const priceInUSD = parseFloat(product.price.toString());
       // Only convert if user has a country set
       const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
