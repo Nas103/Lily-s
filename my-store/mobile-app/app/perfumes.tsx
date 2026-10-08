@@ -38,8 +38,8 @@ export default function PerfumesScreen() {
       const products = data.products || data || [];
       
       // Filter and limit: 15 for men, 20 for women
-      const menProducts = products.filter((p: Product) => p.gender === 'men' || p.category === 'men').slice(0, 15);
-      const womenProducts = products.filter((p: Product) => p.gender === 'women' || p.category === 'women').slice(0, 20);
+      const menProducts = products.filter((p: Product) => p.gender === 'men' || p.gender === 'unisex' || (typeof p.category === 'string' ? p.category === 'men' : p.category?.slug === 'men')).slice(0, 15);
+      const womenProducts = products.filter((p: Product) => p.gender === 'women' || (typeof p.category === 'string' ? p.category === 'women' : p.category?.slug === 'women')).slice(0, 20);
       
       setMenPerfumes(menProducts);
       setWomenPerfumes(womenProducts);

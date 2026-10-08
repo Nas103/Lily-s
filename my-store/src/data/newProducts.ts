@@ -12,7 +12,7 @@
 // For now, we'll define the products directly here to avoid path issues
 // TODO: Consider moving these files to a shared location or using a build step
 
-import type { Product } from '../../mobile-app/src/types';
+// import type { Product } from '../../mobile-app/src/types';
 
 // Re-export lifestyle products
 export { lifestyleProducts } from '../../mobile-app/src/data/lifestyleProducts';
