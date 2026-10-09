@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   images: {
+    localPatterns: [
+      { pathname: "/**", search: "" },
+      { pathname: "/**", search: "?v=2" },
+    ],
     remotePatterns: [
       {
         protocol: "https",

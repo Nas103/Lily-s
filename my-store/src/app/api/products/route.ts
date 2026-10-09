@@ -7,12 +7,16 @@ import { getUserCurrency, convertPrice } from '@/lib/currency'
 // Import new product data
 let newProducts: any[] = [];
 try {
+  const { womenProducts } = await import('../../../../mobile-app/src/data/womenProducts');
+  const { menProducts } = await import('../../../../mobile-app/src/data/menProducts');
   const { lifestyleProducts } = await import('../../../../mobile-app/src/data/lifestyleProducts');
   const { runningProducts } = await import('../../../../mobile-app/src/data/runningProducts');
   const { boxrawProducts } = await import('../../../../mobile-app/src/data/boxrawProducts');
   const { electronicsProducts } = await import('../../../../mobile-app/src/data/electronicsProducts');
   const { perfumesProducts } = await import('../../../../mobile-app/src/data/perfumesProducts');
   newProducts = [
+    ...(womenProducts || []),
+    ...(menProducts || []),
     ...(lifestyleProducts || []),
     ...(runningProducts || []),
     ...(boxrawProducts || []),

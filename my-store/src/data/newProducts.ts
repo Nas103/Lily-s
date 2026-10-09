@@ -14,10 +14,16 @@
 
 // import type { Product } from '../../mobile-app/src/types';
 
+// Re-export women products
+export { womenProducts } from '../../mobile-app/src/data/womenProducts';
+
+// Re-export men products
+export { menProducts } from '../../mobile-app/src/data/menProducts';
+
 // Re-export lifestyle products
 export { lifestyleProducts } from '../../mobile-app/src/data/lifestyleProducts';
 
-// Re-export running products  
+// Re-export running products
 export { runningProducts } from '../../mobile-app/src/data/runningProducts';
 
 // Re-export boxraw products

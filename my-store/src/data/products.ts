@@ -1,3 +1,6 @@
+import { womenProducts as mobileWomenProducts } from "../../mobile-app/src/data/womenProducts";
+import { menProducts as mobileMenProducts } from "../../mobile-app/src/data/menProducts";
+
 export type ProductCategory =
   | "men"
   | "women"
@@ -433,6 +436,66 @@ const realPerfumeProducts: ProductRecord[] = [
   },
 ];
 
+// ============================================================================
+// REAL WOMENSWEAR - replaces the generated women slots (prod-2, prod-6, ...)
+// Sourced from mobile-app/src/data/womenProducts.ts (El Huyam + Black Modesty).
+// The mobile colorImages use a { front, back, side, top } object; the web
+// ProductRecord expects string[] per color, so we flatten them here.
+// ============================================================================
+const realWomenProducts: ProductRecord[] = mobileWomenProducts.map((product) => ({
+  id: product.id,
+  name: product.name,
+  slug: product.slug,
+  description: product.description,
+  highlight: product.highlight ?? product.name,
+  category: "women",
+  gender: "women",
+  price: product.price,
+  tags: product.tags ?? [],
+  badge: product.badge,
+  imageUrl: product.imageUrl,
+  sizes: product.sizes,
+  colors: product.colors,
+  colorImages: product.colorImages
+    ? Object.fromEntries(
+        Object.entries(product.colorImages).map(([color, set]) => [
+          color,
+          [set.front, set.back, set.side, set.top].filter(Boolean),
+        ])
+      )
+    : undefined,
+}));
+
+// ============================================================================
+// REAL MENSWEAR - replaces the generated men slots (prod-1, prod-5, ...)
+// Sourced from mobile-app/src/data/menProducts.ts (Under Armour). The mobile
+// colorImages use a { front, back, side, top } object; the web ProductRecord
+// expects string[] per color, so we flatten them here.
+// ============================================================================
+const realMenProducts: ProductRecord[] = mobileMenProducts.map((product) => ({
+  id: product.id,
+  name: product.name,
+  slug: product.slug,
+  description: product.description,
+  highlight: product.highlight ?? product.name,
+  category: "men",
+  gender: "men",
+  price: product.price,
+  tags: product.tags ?? [],
+  badge: product.badge,
+  imageUrl: product.imageUrl,
+  sizes: product.sizes,
+  colors: product.colors,
+  colorImages: product.colorImages
+    ? Object.fromEntries(
+        Object.entries(product.colorImages).map(([color, set]) => [
+          color,
+          [set.front, set.back, set.side, set.top].filter(Boolean),
+        ])
+      )
+    : undefined,
+}));
+
 export const products: ProductRecord[] = (() => {
   const generated = Array.from({ length: 60 }).map(
     (_, index) => {
@@ -510,12 +573,27 @@ export const products: ProductRecord[] = (() => {
   });
 
   // Replace generated perfume slots (prod-3, prod-9, ...) with real perfume data
+  // and generated women slots (prod-2, prod-6, ...) with real womenswear. Any
+  // leftover women placeholders are dropped until the remaining real items land.
   let perfumeIndex = 0;
-  return generated.map((product) =>
-    product.category === "perfumes"
-      ? realPerfumeProducts[perfumeIndex++]
-      : product
-  );
+  let womenIndex = 0;
+  const output: ProductRecord[] = [];
+  for (const product of generated) {
+    if (product.category === "perfumes") {
+      output.push(realPerfumeProducts[perfumeIndex++] ?? product);
+    } else if (product.category === "women") {
+      if (womenIndex < realWomenProducts.length) {
+        output.push(realWomenProducts[womenIndex++]);
+      }
+    } else if (product.category === "men") {
+      // Real men's products replace the generated men slots entirely
+      // (22 real products vs 20 generated slots); appended below.
+    } else {
+      output.push(product);
+    }
+  }
+  output.push(...realMenProducts);
+  return output;
 })();
 
 export function getProductsByCategory(category: ProductCategory) {

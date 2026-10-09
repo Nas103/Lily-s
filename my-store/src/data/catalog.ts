@@ -1,5 +1,7 @@
 import type { Product } from "../../mobile-app/src/types";
 import { products as staticProducts } from "./products";
+import { womenProducts } from "../../mobile-app/src/data/womenProducts";
+import { menProducts } from "../../mobile-app/src/data/menProducts";
 import { lifestyleProducts } from "../../mobile-app/src/data/lifestyleProducts";
 import { runningProducts } from "../../mobile-app/src/data/runningProducts";
 import { boxrawProducts } from "../../mobile-app/src/data/boxrawProducts";
@@ -111,6 +113,8 @@ const normalizeMobileProduct = (product: Product): CatalogProduct => {
 };
 
 const mobileProducts: CatalogProduct[] = [
+  ...womenProducts,
+  ...menProducts,
   ...lifestyleProducts,
   ...runningProducts,
   ...boxrawProducts,

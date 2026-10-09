@@ -1,25 +1,12 @@
 import { ProductGrid } from "@/components/ProductGrid";
-import { getProductsByCategory } from "@/data/products";
+import { getCatalogByCategory, toGridProduct } from "@/data/catalog";
 
 export const metadata = {
   title: "Women",
 };
 
 export default function WomenPage() {
-  const womenProducts = getProductsByCategory("women").map((product) => ({
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    imageUrl: product.imageUrl,
-    category: "WOMEN",
-    highlight: product.highlight,
-    badge: product.badge,
-    description: product.description,
-    tags: product.tags,
-    sizes: product.sizes,
-    colors: product.colors,
-    colorImages: product.colorImages,
-  }));
+  const womenProducts = getCatalogByCategory("women").map(toGridProduct);
 
   return (
     <div className="min-h-screen bg-white">
@@ -29,11 +16,11 @@ export default function WomenPage() {
             Womenswear
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
-            Studio to soirée
+            Modest by design
           </h1>
           <p className="text-sm text-zinc-600">
-            Tailored sets, sculpted sneakers, and couture abayas designed for
-            adaptive wardrobes.
+            Couture abayas, flowing ghashwa sets, and everyday modest essentials
+            from El Huyam and Black Modesty.
           </p>
         </header>
         <div className="mt-10">
@@ -43,5 +30,3 @@ export default function WomenPage() {
     </div>
   );
 }
-
-
