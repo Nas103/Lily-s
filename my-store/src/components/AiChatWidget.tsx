@@ -131,7 +131,7 @@ export function AiChatWidget() {
               <X size={18} className="md:w-4 md:h-4" />
             </button>
           </div>
-          <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto bg-zinc-50 px-3 py-3 text-xs md:max-h-80 md:px-4 md:text-sm">
+          <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto bg-zinc-50 pl-3 pr-2 py-3 text-xs md:max-h-80 md:pl-4 md:pr-3 md:text-sm">
             {messages.length === 0 ? (
               <p className="text-[11px] text-zinc-500 md:text-xs">
                 Ask about fit, shipping, styling ideas, or what goes well with

@@ -149,7 +149,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
               </div>
             )}
           </div>
-          <div className="flex flex-1 flex-col gap-4 p-6 md:p-8 overflow-y-auto">
+          <div className="flex flex-1 flex-col gap-4 p-6 pr-4 md:p-8 md:pr-6 overflow-y-auto">
             <div className="space-y-2">
               <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
                 {product.category ?? "Drop"}

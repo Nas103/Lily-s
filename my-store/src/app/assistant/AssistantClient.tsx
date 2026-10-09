@@ -96,7 +96,7 @@ export function AssistantClient() {
 
       <div
         ref={scrollRef}
-        className="h-[55vh] min-h-[360px] space-y-4 overflow-y-auto rounded-3xl border border-zinc-200 bg-white p-5"
+        className="h-[55vh] min-h-[360px] space-y-4 overflow-y-auto rounded-3xl border border-zinc-200 bg-white p-5 pr-3"
       >
         {messages.map((message, index) => (
           <motion.div
