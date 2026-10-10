@@ -81,18 +81,18 @@ const RUNNING_IMAGES = [
   'https://static.nike.com/a/images/t_web_pw_592_v2/f_auto/a1f54fc0-fb4f-43b3-8c17-b5bcb41abaf4/ZOOM+FLY+6.png', // Zoom Fly 6 (variant)
 ];
 
-// BoxRaw Clothing slideshow images (10 images)
+// BoxRaw Clothing slideshow images (served from the web host)
 const BOXRAW_IMAGES = [
-  'https://boxraw.com/cdn/shop/files/outspoken-desktop_35367bbf-f798-416b-bd64-08ab3fd95633_x1440.jpg?v=1760738489', // BoxRaw category theme image
-  'https://boxraw.com/cdn/shop/files/Summer_Training_Wear-Homepage-Banner-Desktop-V1_0638bf9a-f245-440f-af57-5e2e05703c4a_x1440.jpg?v=1751011524', // Summer Training Wear
-  'https://boxraw.com/cdn/shop/files/equipment-desktop_794b2abd-0019-41e7-b7b6-9cc7fa59478b_x1440.jpg?v=1680706592', // Equipment
-  'https://boxraw.com/cdn/shop/files/bags-desktop--v1_x1440.jpg?v=1716558801', // Bags
-  'https://cdn.shopify.com/s/files/1/1147/5966/files/photo_2023-11-06_14.57.48_1024x1024.jpg?v=1699282813', // BoxRaw photo
-  'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/outspoken-desktop-v2_x1900.jpg?v=1668614138', // Outspoken v2
-  'https://cdn.shopify.com/s/files/1/1147/5966/files/BOXRAW-2023-Wallpaper-Logo-V2.jpg?v=1703157614', // BoxRaw Wallpaper Logo
-  'https://boxraw.com/cdn/shop/files/Banner-Home-Desktop--v2_0928d3c4-5361-4c93-a7a1-cb178aef30b4_x1440.jpg?v=1691072239', // Banner Home Desktop
-  'https://uk.boxraw.com/cdn/shop/articles/BOXRAW_Giftcard_bundle_16x9-1_600x.jpg?v=1702026402', // Giftcard Bundle
-  'https://boxraw.com/cdn/shop/files/outspoken-desktop_35367bbf-f798-416b-bd64-08ab3fd95633_x1440.jpg?v=1760738489', // BoxRaw category theme image (duplicate for 10th image)
+  `${API_BASE_URL}/boxraw/hrdr-fstr-smtr-oversized-t-shirt/black/main.jpg`,
+  `${API_BASE_URL}/boxraw/death-before-dishonor-oversized-t-shirt/beige/main.jpg`,
+  `${API_BASE_URL}/boxraw/ring-x-boxraw-oversized-hoodie/black_beige/main.jpg`,
+  `${API_BASE_URL}/boxraw/sparring-club-oversized-hoodie/beige/main.jpg`,
+  `${API_BASE_URL}/boxraw/nakatani-x-sparring-club-oversized-hoodie/black/main.jpg`,
+  `${API_BASE_URL}/boxraw/genaro-zip-up-windbreaker/black/main.jpg`,
+  `${API_BASE_URL}/boxraw/valdes-1-4-zip/charcoal/main.jpg`,
+  `${API_BASE_URL}/boxraw/ring-x-boxraw-track-jacket/black-beige/main.jpg`,
+  `${API_BASE_URL}/boxraw/saddler-compression-t-shirt/black/main.jpg`,
+  `${API_BASE_URL}/boxraw/sparring-club-fire-horse-oversized-t-shirt/baby_blue/main.jpg`,
 ];
 
 // Electronics slideshow images (10 images)

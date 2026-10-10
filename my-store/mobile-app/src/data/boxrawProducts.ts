@@ -1,461 +1,431 @@
 /**
- * Sample BoxRaw Products Data
- * 
- * This file contains sample product data for the BoxRaw category.
- * Sub-categories: Clothing and Equipment
- * 
- * Clothing (20 products):
- * - 5 products have 2 colors (1 image per color)
- * - 15 products have 1 color only (1 image per color)
- * - No side images needed, just one image per color
- * - Sizes: S, M, L, XL only
- * 
- * Equipment (10 products):
- * - Each product has 1 color only
- * - Each product has 1 image (no side images)
- * - No sizes needed for equipment
- * 
- * TODO: Replace image URLs with actual product images
- * TODO: Update prices, descriptions, and other details as needed
+ * BoxRaw Products Data
+ *
+ * 21 real clothing products with local images under
+ * /public/boxraw/<slug>/<color>/{main,2,3,4}.jpg. Prices were given in
+ * ZAR and converted to the store's USD base (1 USD = 18.5 ZAR).
+ * colorImages uses the front/back/side/top angle set. Equipment is
+ * still pending real assets and is left as placeholder data.
  */
 
 import { Product } from '../types';
 
+const imgSet = (slug: string, color: string) => ({
+  front: `/boxraw/${slug}/${color}/main.jpg`,
+  back: `/boxraw/${slug}/${color}/2.jpg`,
+  side: `/boxraw/${slug}/${color}/3.jpg`,
+  top: `/boxraw/${slug}/${color}/4.jpg`,
+});
+
 export const boxrawProducts: Product[] = [
-  // Clothing Sub-category (20 products)
-  // First 5 products with 2 colors
+  // Clothing Sub-category (21 products)
   {
-    id: 'boxraw-clothing-001',
-    name: 'BoxRaw Training Shorts',
-    slug: 'boxraw-training-shorts',
-    description: 'Premium boxing shorts with moisture-wicking fabric. Perfect for training and sparring sessions.',
+    id: 'boxraw-hrdr-fstr-smtr-oversized-t-shirt',
+    name: 'HRDR FSTR SMTR Oversized T-Shirt',
+    slug: 'hrdr-fstr-smtr-oversized-t-shirt',
+    description: 'This oversized stretch cotton tee offers the perfect balance of breathability, structure and flow to accompany you through the rounds, round after round. Featuring our signature HRDR FSTR SMTR® slogan across the front and back, this tee demands that you work harder, strike faster and think smarter in all that you do.\n\nProduct details:\n* Printed logo on chest and back\n* Drop shoulder\n* Short sleeve\n* Oversized fit\n* 92% Combed Cotton, 8% Elastane',
     category: 'boxraw',
     subCategory: 'clothing',
-    price: 49.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black', 'Navy'],
+    brand: 'BOXRAW',
+    price: 45.30,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Ivory', 'Slate', 'Lime'],
     colorImages: {
-      'Black': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
-      'Navy': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image (duplicate for second color)
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
+      'Black': imgSet('hrdr-fstr-smtr-oversized-t-shirt', 'black'),
+      'Ivory': imgSet('hrdr-fstr-smtr-oversized-t-shirt', 'ivory'),
+      'Slate': imgSet('hrdr-fstr-smtr-oversized-t-shirt', 'slate'),
+      'Lime': imgSet('hrdr-fstr-smtr-oversized-t-shirt', 'yellow'),
     },
+    tags: ['boxraw', 'clothing', 'hrdr-fstr-smtr-oversized-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/hrdr-fstr-smtr-oversized-t-shirt/black/main.jpg',
   },
   {
-    id: 'boxraw-clothing-002',
-    name: 'BoxRaw Training Jacket',
-    slug: 'boxraw-training-jacket',
-    description: 'Lightweight training jacket with breathable mesh panels. Ideal for warm-ups and cool-downs.',
+    id: 'boxraw-hrdr-fstr-smtr-oversized-long-sleeve-t-shirt',
+    name: 'HRDR FSTR SMTR Oversized Long Sleeve T-Shirt',
+    slug: 'hrdr-fstr-smtr-oversized-long-sleeve-t-shirt',
+    description: 'This oversized stretch cotton long sleeve t-shirt offers the perfect balance of breathability, structure and flow to accompany you through the rounds, round after round. Featuring our signature HRDR FSTR SMTR® slogan across the front and back, this long sleeve t-shirt demands that you work harder, strike faster and think smarter in all that you do.\n\nProduct details:\n* Printed logo on chest and back\n* Drop shoulder\n* Ribbed neck\n* Oversized fit\n* 92% Combed Cotton, 8% Elastane',
     category: 'boxraw',
     subCategory: 'clothing',
-    price: 79.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black', 'Grey'],
+    brand: 'BOXRAW',
+    price: 49.84,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Ivory', 'Slate', 'Lime'],
     colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-      'Grey': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image (duplicate for second color)
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
+      'Black': imgSet('hrdr-fstr-smtr-oversized-long-sleeve-t-shirt', 'black'),
+      'Ivory': imgSet('hrdr-fstr-smtr-oversized-long-sleeve-t-shirt', 'ivory'),
+      'Slate': imgSet('hrdr-fstr-smtr-oversized-long-sleeve-t-shirt', 'slate'),
+      'Lime': imgSet('hrdr-fstr-smtr-oversized-long-sleeve-t-shirt', 'yellow'),
     },
+    tags: ['boxraw', 'clothing', 'hrdr-fstr-smtr-oversized-long-sleeve-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/hrdr-fstr-smtr-oversized-long-sleeve-t-shirt/black/main.jpg',
   },
   {
-    id: 'boxraw-clothing-003',
-    name: 'BoxRaw Tracksuit',
-    slug: 'boxraw-tracksuit',
-    description: 'Complete tracksuit set with matching jacket and pants. Premium quality for training and casual wear.',
+    id: 'boxraw-death-before-dishonor-oversized-long-sleeve-t-shirt',
+    name: 'Death Before Dishonor Oversized Long Sleeve T-Shirt',
+    slug: 'death-before-dishonor-oversized-long-sleeve-t-shirt',
+    description: 'This oversized stretch cotton long sleeve tee offers the perfect balance of breathability, structure and flow to accompany you through the rounds, day after day. Featuring the Death Before Dishonor samurai mantra across the back and Printed Japanese Oni Mask logo on the chest. This tee serves to remind the world of the limits we are willing to go to before ever surrendering what holds value to us. There\'s no giving in.\n\nProduct details:\n* Japanese Oni Mask logo on chest\n* Death Before Dishonor mantra across the back\n* Drop shoulder\n* Oversized fit\n* Ribbed Neck\n* 100% Cotton',
     category: 'boxraw',
     subCategory: 'clothing',
-    price: 129.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black', 'Navy'],
+    brand: 'BOXRAW',
+    price: 54.38,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Beige'],
     colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-      'Navy': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image (duplicate for second color)
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
+      'Black': imgSet('death-before-dishonor-oversized-long-sleeve-t-shirt', 'black'),
+      'Beige': imgSet('death-before-dishonor-oversized-long-sleeve-t-shirt', 'white'),
     },
+    tags: ['boxraw', 'clothing', 'death-before-dishonor-oversized-long-sleeve-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/death-before-dishonor-oversized-long-sleeve-t-shirt/black/main.jpg',
   },
   {
-    id: 'boxraw-clothing-004',
-    name: 'BoxRaw Training T-Shirt',
-    slug: 'boxraw-training-t-shirt',
-    description: 'Moisture-wicking t-shirt designed for intense training sessions. Comfortable and durable.',
+    id: 'boxraw-chavez-x-sparring-club-oversized-t-shirt',
+    name: 'Chávez x Sparring Club Oversized T-Shirt',
+    slug: 'chavez-x-sparring-club-oversized-t-shirt',
+    description: 'Some rivalries in boxing cut deeper than the fight. What happened between Julio César Chávez and Oscar De La Hoya became one of boxing\'s greatest stories. A chapter that defined both men\'s legacies and that the sport never forgot. The Chávez x Sparring Club Oversized T-Shirt pays homage to that moment, carrying a hand-drawn portrait of Julio César Chávez across the back, layered behind the Sparring Club mark, overlaid with “El Gran Campeón Mexicano”.\n\nProduct details:\n* Chávez x Sparring Club® graphic on back\n* Drop shoulder\n* Oversized fit\n* Ribbed neck\n* Branding neck tape\n* Washed fabric\n* 100% Cotton',
     category: 'boxraw',
     subCategory: 'clothing',
-    price: 39.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
+    brand: 'BOXRAW',
+    price: 58.92,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('chavez-x-sparring-club-oversized-t-shirt', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'chavez-x-sparring-club-oversized-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/chavez-x-sparring-club-oversized-t-shirt/black/main.jpg',
+  },
+  {
+    id: 'boxraw-death-before-dishonor-oversized-t-shirt',
+    name: 'Death Before Dishonor Oversized T-Shirt',
+    slug: 'death-before-dishonor-oversized-t-shirt',
+    description: 'This oversized stretch cotton tee offers the perfect balance of breathability, structure and flow to accompany you through the rounds, day after day. Featuring the Death Before Dishonor samurai mantra across the back and Printed Japanese Oni Mask logo on the chest. This tee serves to remind the world of the limits we are willing to go to before ever surrendering what holds value to us. There\'s no giving in.\n\nProduct details:\n* Japanese Oni Mask logo on chest\n* Death Before Dishonor mantra across the back\n* Drop shoulder\n* Short sleeve\n* Oversized fit\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 49.84,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Beige', 'Black', 'Charcoal'],
+    colorImages: {
+      'Beige': imgSet('death-before-dishonor-oversized-t-shirt', 'beige'),
+      'Black': imgSet('death-before-dishonor-oversized-t-shirt', 'black'),
+      'Charcoal': imgSet('death-before-dishonor-oversized-t-shirt', 'charcoal'),
+    },
+    tags: ['boxraw', 'clothing', 'death-before-dishonor-oversized-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/death-before-dishonor-oversized-t-shirt/beige/main.jpg',
+  },
+  {
+    id: 'boxraw-death-before-dishonor-muscle-tank',
+    name: 'Death Before Dishonor Muscle Tank',
+    slug: 'death-before-dishonor-muscle-tank',
+    description: 'This stretch cotton muscle tank provides you with optimal airflow to the body while leaving your tools unrestricted through the rounds, day after day. Featuring the Death Before Dishonor samurai mantra across the back and Printed Japanese Oni Mask logo on the chest. This tank serves to remind the world of the limits we are willing to go to before ever surrendering what holds value to us. There\'s no giving in.\n\nProduct details:\n* Japanese Oni Mask logo on chest\n* Death Before Dishonor mantra across the back\n* Drop armhole cut\n* Straight hem\n* Slim fit\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 40.81,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('death-before-dishonor-muscle-tank', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'death-before-dishonor-muscle-tank'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/death-before-dishonor-muscle-tank/black/main.jpg',
+  },
+  {
+    id: 'boxraw-boxing-is-love-oversized-muscle-tank',
+    name: 'Boxing is Love Oversized Muscle Tank',
+    slug: 'boxing-is-love-oversized-muscle-tank',
+    description: 'The Boxing is Love foundation uses boxing as a tool to create a lasting impact on communities in areas of the world which have been left behind. This muscle tank captures the emotional aspect of boxing while also encompassing the sport\'s ability to foster genuine, meaningful connections. The BOXING IS LOVE graphic print makes a statement while you make an impact. With all proceeds supporting the efforts of the Boxing is Love foundation, shop knowing that you are a part of a bigger picture. Boxing is more than a sport, and this is more than a muscle tank.\n\nProduct details:\n* \'BOXING IS LOVE\' graphic print\n* Drop armhole cut\n* Relaxed fit\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 36.27,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('boxing-is-love-oversized-muscle-tank', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'boxing-is-love-oversized-muscle-tank'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/boxing-is-love-oversized-muscle-tank/black/main.jpg',
+  },
+  {
+    id: 'boxraw-valdes-1-4-zip',
+    name: 'Valdes 1/4 Zip',
+    slug: 'valdes-1-4-zip',
+    description: 'Engineered for performance, the Valdes 1/4 Zip is constructed from a soft SMRT-TEC weave that cools and wicks away sweat under pressure. Designed with a slim fit tailored for full range of motion in the trenches.\n\nProduct details:\n* Printed chest Strike logo\n* Embroidered sleeve Strike logos\n* Raglan sleeve\n* Slim fit\n* SMRT-TEC technology\n* Lightweight fabric\n* 75% Nylon, 25% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 49.84,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Charcoal', 'Green'],
+    colorImages: {
+      'Black': imgSet('valdes-1-4-zip', 'black'),
+      'Charcoal': imgSet('valdes-1-4-zip', 'charcoal'),
+      'Green': imgSet('valdes-1-4-zip', 'green'),
+    },
+    tags: ['boxraw', 'clothing', 'valdes-1-4-zip'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/valdes-1-4-zip/black/main.jpg',
+  },
+  {
+    id: 'boxraw-sparring-club-fire-horse-oversized-long-sleeve-t-shirt',
+    name: 'Sparring Club Fire Horse Oversized Long Sleeve T-Shirt',
+    slug: 'sparring-club-fire-horse-oversized-long-sleeve-t-shirt',
+    description: 'The Fire Horse rises once every 60 years. Forged in the ancient zodiac with speed, strength and endurance, it knows patience comes before the move. The Sparring Club Fire Horse Long Sleeve T-Shirt is crafted from washed cotton with a drop shoulder and oversized fit, finished with the Fire Horse graphic at the back and Strike sleeve graphic running the full length of the arm, capturing the energy of a fighter who knows when to wait and when to go.\n\nProduct details:\n* Fire Horse graphic print\n* BOXRAW Strike sleeve graphic\n* Oversized fit\n* Drop shoulder\n* Ribbed neck\n* Branded neck tape\n* Washed fabric\n* 100% Cotton',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 54.38,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+    colors: ['Black', 'Blue', 'Ivory'],
+    colorImages: {
+      'Black': imgSet('sparring-club-fire-horse-oversized-long-sleeve-t-shirt', 'black'),
+      'Blue': imgSet('sparring-club-fire-horse-oversized-long-sleeve-t-shirt', 'blue'),
+      'Ivory': imgSet('sparring-club-fire-horse-oversized-long-sleeve-t-shirt', 'ivory'),
+    },
+    tags: ['boxraw', 'clothing', 'sparring-club-fire-horse-oversized-long-sleeve-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/sparring-club-fire-horse-oversized-long-sleeve-t-shirt/black/main.jpg',
+  },
+  {
+    id: 'boxraw-sparring-club-fire-horse-oversized-t-shirt',
+    name: 'Sparring Club Fire Horse Oversized T-Shirt',
+    slug: 'sparring-club-fire-horse-oversized-t-shirt',
+    description: 'The Fire Horse rises once every 60 years. Forged in the ancient zodiac with speed, strength and endurance, it knows patience comes before the move. The Sparring Club Fire Horse Oversized T-Shirt is crafted from washed cotton with a drop shoulder and oversized fit, finished with the Fire Horse graphic at the back, capturing the energy of a fighter who knows when to wait and when to go.\n\nProduct details:\n* Fire Horse graphic print\n* Boxy oversized fit\n* Drop shoulder\n* Ribbed neck\n* Branded neck tape\n* Washed fabric\n* 100% Cotton',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 49.84,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Baby Blue', 'Black', 'Ivory'],
+    colorImages: {
+      'Baby Blue': imgSet('sparring-club-fire-horse-oversized-t-shirt', 'baby_blue'),
+      'Black': imgSet('sparring-club-fire-horse-oversized-t-shirt', 'black'),
+      'Ivory': imgSet('sparring-club-fire-horse-oversized-t-shirt', 'white'),
+    },
+    tags: ['boxraw', 'clothing', 'sparring-club-fire-horse-oversized-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/sparring-club-fire-horse-oversized-t-shirt/baby_blue/main.jpg',
+  },
+  {
+    id: 'boxraw-lineal-oversized-long-sleeve-t-shirt',
+    name: 'Lineal Oversized Long Sleeve T-Shirt',
+    slug: 'lineal-oversized-long-sleeve-t-shirt',
+    description: 'Designed for an oversized fit, the Lineal Long Sleeve T-Shirt features our iconic logo presented subtly on the front and loudly on the back. Crafted from stretch cotton, this t-shirt offers the perfect balance of breathability, structure and flow to accompany you through the rounds, day after day.\n\nProduct details:\n* Printed logo on chest and back\n* Drop shoulder\n* Ribbed neck\n* Oversized fit\n* 100% Cotton',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 40.81,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('lineal-oversized-long-sleeve-t-shirt', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'lineal-oversized-long-sleeve-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/lineal-oversized-long-sleeve-t-shirt/black/main.jpg',
+  },
+  {
+    id: 'boxraw-lineal-muscle-tank',
+    name: 'Lineal Muscle Tank',
+    slug: 'lineal-muscle-tank',
+    description: 'Designed for a relaxed fit, the Lineal Muscle Tank features our iconic logo presented subtly on the front and loudly on the back. Crafted from stretch cotton, this tank offers optimal airflow to the body while leaving your tools unrestricted, to accompany you through the rounds, day after day.\n\nProduct details:\n* Printed logo on chest and back\n* Drop armhole cut\n* Straight hem\n* Slim fit\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 31.73,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('lineal-muscle-tank', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'lineal-muscle-tank'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/lineal-muscle-tank/black/main.jpg',
+  },
+  {
+    id: 'boxraw-saddler-compression-t-shirt',
+    name: 'Saddler Compression T-Shirt',
+    slug: 'saddler-compression-t-shirt',
+    description: 'Performance at the highest level requires body armour that promotes muscle reoxygenation, removes lactic acid and improves blood circulation. The proprietary SMRT-TEC weave encompasses a lightweight, breathable and stretchy composition which is tailored to mirror the movements of a boxer. Targeted ventilation panels ensure optimal airflow while high compression keeps you locked in motion, yet cool. Layered or solo, the Saddler Compression T-Shirt is essential for those whose training is part of their lifestyle.\n\nProduct details:\n* Muscle-replicating panels\n* Mesh ventilation\n* Flatlock seams\n* SMRT-TEC technology\n* Lightweight breathable fabric\n* Printed logos\n* Skin tight fit\n* 90% Polyester 10% Elastane',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 45.30,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('saddler-compression-t-shirt', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'saddler-compression-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/saddler-compression-t-shirt/black/main.jpg',
+  },
+  {
+    id: 'boxraw-ring-x-boxraw-oversized-hoodie',
+    name: 'Ring x BOXRAW Oversized Hoodie',
+    slug: 'ring-x-boxraw-oversized-hoodie',
+    description: 'Two worlds. One vision. A legacy built over a century. A movement built for what\'s next. The Ring x BOXRAW Oversized Hoodie is crafted from a durable stretch cotton blend. Finished with The Ring and Strike logo marked on each sleeve.\n\nProduct details:\n* Ring x BOXRAW branding\n* Ring neck plate\n* Ribbed cuffs & waistband\n* Soft fleece lining\n* Kangaroo pouch\n* Patented secret zip pocket\n* Oversized fit\n* Embroidered Strike logos on sleeves\n* Signature BOXRAW neck plate\n* 35% Cotton, 65% Polyester',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 86.11,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Beige', 'Black', 'Black/Beige', 'Red/Beige'],
+    colorImages: {
+      'Beige': imgSet('ring-x-boxraw-oversized-hoodie', 'beige'),
+      'Black': imgSet('ring-x-boxraw-oversized-hoodie', 'black'),
+      'Black/Beige': imgSet('ring-x-boxraw-oversized-hoodie', 'black_beige'),
+      'Red/Beige': imgSet('ring-x-boxraw-oversized-hoodie', 'red_beige'),
+    },
+    tags: ['boxraw', 'clothing', 'ring-x-boxraw-oversized-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/ring-x-boxraw-oversized-hoodie/beige/main.jpg',
+  },
+  {
+    id: 'boxraw-ring-x-boxraw-track-jacket',
+    name: 'Ring x BOXRAW Track Jacket',
+    slug: 'ring-x-boxraw-track-jacket',
+    description: 'Two worlds. One vision. A legacy built over a century. A movement built for what\'s next. The Ring x BOXRAW Track Jacket offers an oversized fit, featuring mesh lining for optimal breathability and side zipped pockets for secure storage. Finished with The Ring and Strike logo marked on each sleeve.\n\nProduct details:\n* Ring x BOXRAW branding\n* Ring neck plate\n* Oversized fit\n* Elasticated waistband & cuffs\n* Embroidered sleeve Strike logo\n* Side zip pockets\n* Inside jacket zip pocket\n* Air ventilation panel\n* Lightweight fabric with mesh lining\n* Shell: 100% Nylon\n* Lining: 100% Polyester',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 90.65,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black/Beige'],
+    colorImages: {
+      'Black/Beige': imgSet('ring-x-boxraw-track-jacket', 'black-beige'),
+    },
+    tags: ['boxraw', 'clothing', 'ring-x-boxraw-track-jacket'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/ring-x-boxraw-track-jacket/black-beige/main.jpg',
+  },
+  {
+    id: 'boxraw-ring-x-boxraw-track-bottoms',
+    name: 'Ring x BOXRAW Track Bottoms',
+    slug: 'ring-x-boxraw-track-bottoms',
+    description: 'Two worlds. One vision. A legacy built over a century. A movement built for what\'s next. The Ring x BOXRAW Track Bottoms offer a relaxed fit, featuring mesh lining for optimal breathability and side zipped pockets for secure storage. Finished with The Ring and Strike logo marked on each leg.\n\nProduct details:\n* Ring x BOXRAW branding\n* Relaxed fit\n* Elasticated waistband and cuffs\n* Side zipped pockets\n* Adjustable drawstrings with metal ends\n* Lightweight fabric with mesh inside lining\n* Shell: 100% Nylon\n* Lining: 100% Polyester',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 81.57,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black'],
+    colorImages: {
+      'Black': imgSet('ring-x-boxraw-track-bottoms', 'black'),
+    },
+    tags: ['boxraw', 'clothing', 'ring-x-boxraw-track-bottoms'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/ring-x-boxraw-track-bottoms/black/main.jpg',
+  },
+  {
+    id: 'boxraw-nakatani-x-sparring-club-oversized-hoodie',
+    name: 'Nakatani x Sparring Club Oversized Hoodie',
+    slug: 'nakatani-x-sparring-club-oversized-hoodie',
+    description: 'Undefeated in a 10-year career. The 3-Division World Champion. Now 32-0, ranked among the pound-for-pound elite.\n\nThe Nakatani x Sparring Club Oversized Hoodie features our patented hidden zipped pouch for secure storage. Finished with the SPARRING CLUB® and Katakana “Big Bang” graphic, honouring the legacy of Junto Nakatani.\n\nProduct details:\n* Nakatani x Sparring Club® graphic print\n* Ribbed cuffs & hem\n* Kangaroo pouch\n* Patented secret zip pocket\n* Embroidered Strike logos on sleeves\n* Signature BOXRAW neck plate\n* Oversized fit\n* French terry washed fabric\n* 80% cotton, 20% polyester',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 95.14,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Beige'],
+    colorImages: {
+      'Black': imgSet('nakatani-x-sparring-club-oversized-hoodie', 'black'),
+      'Beige': imgSet('nakatani-x-sparring-club-oversized-hoodie', 'white'),
+    },
+    tags: ['boxraw', 'clothing', 'nakatani-x-sparring-club-oversized-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/nakatani-x-sparring-club-oversized-hoodie/black/main.jpg',
+  },
+  {
+    id: 'boxraw-sparring-club-oversized-hoodie',
+    name: 'Sparring Club Oversized Hoodie',
+    slug: 'sparring-club-oversized-hoodie',
+    description: 'This is Sparring Club.\n\nDesigned for an oversized fit, the Sparring Club Hoodie is crafted from stretch cotton, offering the perfect balance of comfort and breathability to keep you calm and ready to go deep in the trenches, where champions are made.\n\nFinished with the bold \'Sparring Club®\' graphic sitting proudly across your back, you instantly let everyone know you\'re preparing for battle.\n\nProduct details:\n* Sparring Club® graphic print\n* Ribbed cuffs & hem\n* Kangaroo pouch\n* Patented secret zip pocket\n* Embroidered Strike logos on sleeves\n* Signature BOXRAW neck plate\n* Oversized fit\n* French terry washed fabric\n* 80% cotton, 20% polyester',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 86.11,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Beige', 'Black', 'Blue', 'Brown', 'Charcoal', 'Purple', 'Teal'],
+    colorImages: {
+      'Beige': imgSet('sparring-club-oversized-hoodie', 'beige'),
+      'Black': imgSet('sparring-club-oversized-hoodie', 'black'),
+      'Blue': imgSet('sparring-club-oversized-hoodie', 'blue'),
+      'Brown': imgSet('sparring-club-oversized-hoodie', 'brown'),
+      'Charcoal': imgSet('sparring-club-oversized-hoodie', 'charcoal'),
+      'Purple': imgSet('sparring-club-oversized-hoodie', 'purple'),
+      'Teal': imgSet('sparring-club-oversized-hoodie', 'teal'),
+    },
+    tags: ['boxraw', 'clothing', 'sparring-club-oversized-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/sparring-club-oversized-hoodie/beige/main.jpg',
+  },
+  {
+    id: 'boxraw-genaro-oversized-windbreaker-hoodie',
+    name: 'Genaro Oversized Windbreaker Hoodie',
+    slug: 'genaro-oversized-windbreaker-hoodie',
+    description: 'Built for the grind - morning, day or night, the Genaro Collection protects you from spiteful temperatures without getting in the way. This technological fabric innovation took over a year to develop and is made from a less-than paper-thin nylon weave that\'s impossibly light and soft on the skin. Reflective logos feature on the shoulder, back and sleeves for early morning or late night roadwork. The relaxed fit means this hoodie flows with you during sprints, shadow and everything in between. Featuring an elasticated hood, cuffs and hem complemented with a side pockets ultimate practicality.\n\nProduct details:\n* Reflective logos on shoulder and back\n* Reflective Strike logos on cuff\n* SMRT-TEC weave\n* Relaxed fit\n* Elasticated hood, cuffs & hem\n* Paper-thin nylon weave\n* 100% Nylon',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 77.03,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Neon Yellow', 'White'],
+    colorImages: {
+      'Black': imgSet('genaro-oversized-windbreaker-hoodie', 'black'),
+      'Neon Yellow': imgSet('genaro-oversized-windbreaker-hoodie', 'neon_yellow'),
+      'White': imgSet('genaro-oversized-windbreaker-hoodie', 'white'),
+    },
+    tags: ['boxraw', 'clothing', 'genaro-oversized-windbreaker-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/genaro-oversized-windbreaker-hoodie/black/main.jpg',
+  },
+  {
+    id: 'boxraw-genaro-zip-up-windbreaker',
+    name: 'Genaro Zip Up Windbreaker',
+    slug: 'genaro-zip-up-windbreaker',
+    description: 'Built for the grind - morning, day or night, the Genaro Collection protects you from spiteful temperatures without getting in the way. This technological fabric innovation took over a year to develop and is made from a less-than paper-thin nylon weave that\'s impossibly light and soft on the skin. Reflective logos feature on the shoulder, back and sleeves for early morning or late night roadwork. The relaxed fit means this jacket flows with you during sprints, shadow and everything in between. Featuring an elasticated hood, cuffs and hem complemented with a side pockets ultimate practicality.\n\nProduct details:\n* Reflective logos on shoulder and back\n* Reflective Strike logos on cuff\n* SMRT-TEC weave\n* Relaxed fit\n* Elasticated hood, cuffs & hem\n* Paper-thin nylon weave\n* 100% Nylon',
+    category: 'boxraw',
+    subCategory: 'clothing',
+    brand: 'BOXRAW',
+    price: 86.11,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: ['Black', 'White'],
     colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-      'White': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image (duplicate for second color)
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
+      'Black': imgSet('genaro-zip-up-windbreaker', 'black'),
+      'White': imgSet('genaro-zip-up-windbreaker', 'white'),
     },
+    tags: ['boxraw', 'clothing', 'genaro-zip-up-windbreaker'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/genaro-zip-up-windbreaker/black/main.jpg',
   },
   {
-    id: 'boxraw-clothing-005',
-    name: 'Sparring Club Label Shorts',
-    slug: 'sparring-club-label-shorts',
-    description: 'Premium sparring shorts with club label branding. Professional quality for competition.',
+    id: 'boxraw-boxing-is-love-oversized-hoodie',
+    name: 'Boxing is Love Oversized Hoodie',
+    slug: 'boxing-is-love-oversized-hoodie',
+    description: 'The Boxing is Love foundation uses boxing as a tool to create a lasting impact on communities in areas of the world which have been left behind. This hoodie captures the emotional aspect of boxing while also encompassing the sport\'s ability to foster genuine, meaningful connections. The BOXING IS LOVE graphic print makes a statement while you make an impact. With all proceeds supporting the efforts of the Boxing is Love foundation, shop knowing that you are a part of a bigger picture. Boxing is more than a sport, and this is more than a hoodie.\n\nProduct details:\n* \'BOXING IS LOVE\' graphic print\n* Ribbed cuffs & waistband\n* Soft fleece lining\n* Kangaroo pouch\n* Patented secret zip pocket\n* Oversized fit\n* Embroidered Strike logos on sleeves\n* Signature BOXRAW neck plate\n* 70% Cotton, 30% Polyester',
     category: 'boxraw',
     subCategory: 'clothing',
-    price: 59.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black', 'Red'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-      'Red': {
-        front: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image (duplicate for second color)
-        back: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        side: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-        top: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156',
-      },
-    },
-  },
-  // Next 15 products with 1 color only
-  {
-    id: 'boxraw-clothing-006',
-    name: 'Bivol x BoxRaw Shorts',
-    slug: 'bivol-x-boxraw-shorts',
-    description: 'Exclusive collaboration shorts with Bivol branding. Limited edition design.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 69.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
+    brand: 'BOXRAW',
+    price: 68.00,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: ['Black'],
     colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
+      'Black': imgSet('boxing-is-love-oversized-hoodie', 'black'),
     },
+    tags: ['boxraw', 'clothing', 'boxing-is-love-oversized-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/boxing-is-love-oversized-hoodie/black/main.jpg',
   },
-  {
-    id: 'boxraw-clothing-007',
-    name: 'Bivol x BoxRaw T-Shirt',
-    slug: 'bivol-x-boxraw-t-shirt',
-    description: 'Exclusive collaboration t-shirt with Bivol branding. Premium cotton blend.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 49.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['White'],
-    colorImages: {
-      'White': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-008',
-    name: 'Bivol x BoxRaw Tracksuit',
-    slug: 'bivol-x-boxraw-tracksuit',
-    description: 'Exclusive collaboration tracksuit with Bivol branding. Complete matching set.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 149.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Navy'],
-    colorImages: {
-      'Navy': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-009',
-    name: 'Bivol x BoxRaw Trainers',
-    slug: 'bivol-x-boxraw-trainers',
-    description: 'Exclusive collaboration trainers with Bivol branding. Premium athletic footwear.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 119.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-010',
-    name: 'BoxRaw Competition Shorts',
-    slug: 'boxraw-competition-shorts',
-    description: 'Professional competition shorts with premium materials. Designed for performance.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 64.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-011',
-    name: 'BoxRaw Hooded Jacket',
-    slug: 'boxraw-hooded-jacket',
-    description: 'Warm hooded jacket perfect for training in cooler conditions. Premium quality.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 89.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Grey'],
-    colorImages: {
-      'Grey': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-012',
-    name: 'BoxRaw Training Pants',
-    slug: 'boxraw-training-pants',
-    description: 'Flexible training pants with stretch fabric. Perfect for all training activities.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 59.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-013',
-    name: 'BoxRaw Tank Top',
-    slug: 'boxraw-tank-top',
-    description: 'Lightweight tank top for intense training sessions. Breathable and comfortable.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 34.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['White'],
-    colorImages: {
-      'White': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-014',
-    name: 'BoxRaw Long Sleeve T-Shirt',
-    slug: 'boxraw-long-sleeve-t-shirt',
-    description: 'Long sleeve training shirt with moisture-wicking technology. Perfect for cooler training.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 44.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Navy'],
-    colorImages: {
-      'Navy': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-015',
-    name: 'BoxRaw Compression Shorts',
-    slug: 'boxraw-compression-shorts',
-    description: 'Compression shorts for muscle support and recovery. Advanced fabric technology.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 39.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-016',
-    name: 'BoxRaw Training Vest',
-    slug: 'boxraw-training-vest',
-    description: 'Sleeveless training vest for maximum mobility. Lightweight and breathable.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 42.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Grey'],
-    colorImages: {
-      'Grey': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-017',
-    name: 'BoxRaw Sweatpants',
-    slug: 'boxraw-sweatpants',
-    description: 'Comfortable sweatpants for training and recovery. Premium cotton blend.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 54.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-018',
-    name: 'BoxRaw Polo Shirt',
-    slug: 'boxraw-polo-shirt',
-    description: 'Classic polo shirt with BoxRaw branding. Perfect for casual training days.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 49.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Navy'],
-    colorImages: {
-      'Navy': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-019',
-    name: 'BoxRaw Windbreaker',
-    slug: 'boxraw-windbreaker',
-    description: 'Lightweight windbreaker for outdoor training. Water-resistant and breathable.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 74.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Black'],
-    colorImages: {
-      'Black': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  {
-    id: 'boxraw-clothing-020',
-    name: 'BoxRaw Training Shorts Pro',
-    slug: 'boxraw-training-shorts-pro',
-    description: 'Professional grade training shorts with advanced fabric technology. Maximum performance.',
-    category: 'boxraw',
-    subCategory: 'clothing',
-    price: 69.99,
-    imageUrl: 'https://boxraw.com/cdn/shop/files/9-BOXRAW_Mens_Genarohoodie_White-5_x1440.jpg?v=1764160156', // BoxRaw clothing product image
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['Grey'],
-    colorImages: {
-      'Grey': {
-        front: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg', // BoxRaw equipment product image
-        back: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        side: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-        top: 'https://cdn.shopify.com/s/files/1/0019/4497/7466/files/L1231809_x500.jpg',
-      },
-    },
-  },
-  
+
   // Equipment Sub-category (10 products)
   // Each product has 1 color and 1 image
   {
@@ -649,4 +619,3 @@ export const boxrawProducts: Product[] = [
     },
   },
 ];
-
