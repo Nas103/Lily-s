@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Animated, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Animated, Dimensions, TouchableOpacity, Easing } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -13,6 +13,8 @@ type ImageSlideshowProps = {
   onPress?: () => void;
 };
 
+const TRANSITION_DURATION = 700;
+
 export default function ImageSlideshow({
   images,
   title,
@@ -22,50 +24,63 @@ export default function ImageSlideshow({
   onPress,
 }: ImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const slideAnim = useRef(new Animated.Value(0)).current;
   const containerWidth = SCREEN_WIDTH - 48; // Account for padding (24px on each side)
-  const isAnimating = useRef(false);
+  const indexRef = useRef(0);
 
-  // Preload all images to prevent flickering
+  // One persistent opacity value per slide. Every slide stays mounted for the
+  // whole lifetime of the component, so an <Image> source never changes while
+  // it is visible. That removes the decode/reload blink entirely.
+  const opacitiesRef = useRef<Animated.Value[]>([]);
+  if (opacitiesRef.current.length !== images.length) {
+    opacitiesRef.current = images.map((_, i) => new Animated.Value(i === 0 ? 1 : 0));
+  }
+  const opacities = opacitiesRef.current;
+
+  // Preload every image up front so a crossfade never waits on the network.
   useEffect(() => {
-    const preloadImages = async () => {
-      // Preload all images in the array
-      for (const uri of images) {
-        try {
-          await Image.prefetch(uri);
-        } catch (error) {
-          // Silently fail - image will load normally
-        }
-      }
-    };
+    images.forEach((uri) => {
+      if (uri) Image.prefetch(uri).catch(() => {});
+    });
+  }, [images]);
 
-    if (images.length > 0) {
-      preloadImages();
-    }
+  // Reset to the first slide whenever the set of images changes.
+  useEffect(() => {
+    indexRef.current = 0;
+    setCurrentIndex(0);
+    opacitiesRef.current.forEach((value, i) => value.setValue(i === 0 ? 1 : 0));
   }, [images]);
 
   useEffect(() => {
     if (images.length <= 1) return;
 
     const interval = setInterval(() => {
-      if (isAnimating.current) return;
-      const nextIndex = (currentIndex + 1) % images.length;
-      isAnimating.current = true;
-      Animated.timing(slideAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }).start(() => {
-        setCurrentIndex(nextIndex);
-        slideAnim.setValue(0);
-        isAnimating.current = false;
-      });
+      const prev = indexRef.current;
+      const next = (prev + 1) % images.length;
+      indexRef.current = next;
+      setCurrentIndex(next);
+
+      // Crossfade: the outgoing slide fades out while the incoming slide fades
+      // in on top. Both are already mounted and decoded, so nothing blinks.
+      Animated.parallel([
+        Animated.timing(opacities[prev], {
+          toValue: 0,
+          duration: TRANSITION_DURATION,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacities[next], {
+          toValue: 1,
+          duration: TRANSITION_DURATION,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
     }, delay);
 
     return () => clearInterval(interval);
-  }, [images.length, delay, slideAnim, currentIndex]);
+  }, [images.length, delay, opacities]);
 
-  const nextIndex = (currentIndex + 1) % images.length;
+  if (images.length === 0) return null;
 
   return (
     <TouchableOpacity
@@ -75,53 +90,20 @@ export default function ImageSlideshow({
       disabled={!onPress}
     >
       <View style={styles.imageWrapper} pointerEvents="box-none">
-        <Animated.View
-          style={[
-            styles.imageContainer,
-            {
-              width: containerWidth,
-              opacity: slideAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 0],
-              }),
-              transform: [
-                {
-                  translateX: slideAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -containerWidth * 0.25],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <Image
-            source={{ uri: images[currentIndex] }}
-            style={styles.image}
-            resizeMode="cover"
-            fadeDuration={0}
-          />
-          <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.8)']}
-            style={styles.gradientOverlay}
-          />
-        </Animated.View>
-
-        {images.length > 1 && (
+        {images.map((uri, i) => (
           <Animated.View
+            key={`${uri}-${i}`}
             style={[
               styles.imageContainer,
               {
                 width: containerWidth,
-                opacity: slideAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 1],
-                }),
+                opacity: opacities[i],
+                zIndex: i === currentIndex ? 1 : 0,
                 transform: [
                   {
-                    translateX: slideAnim.interpolate({
+                    scale: opacities[i].interpolate({
                       inputRange: [0, 1],
-                      outputRange: [containerWidth * 0.25, 0],
+                      outputRange: [1.08, 1],
                     }),
                   },
                 ],
@@ -129,7 +111,7 @@ export default function ImageSlideshow({
             ]}
           >
             <Image
-              source={{ uri: images[nextIndex] }}
+              source={{ uri }}
               style={styles.image}
               resizeMode="cover"
               fadeDuration={0}
@@ -139,9 +121,9 @@ export default function ImageSlideshow({
               style={styles.gradientOverlay}
             />
           </Animated.View>
-        )}
+        ))}
       </View>
-      
+
       {/* Floating text content */}
       <View style={styles.textContainer} pointerEvents="none">
         {label && (
@@ -177,9 +159,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-  },
-  nextImageContainer: {
-    // Next image starts from the right - will be positioned via transform
   },
   image: {
     width: '100%',
@@ -220,4 +199,3 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
