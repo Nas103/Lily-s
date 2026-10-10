@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CartSummary } from "@/components/CartSummary";
+import { RecommendationsRail } from "@/components/RecommendationsRail";
 
 export const metadata = {
   title: "Cart",
@@ -28,6 +29,7 @@ export default function CartPage() {
         <div className="mt-10">
           <CartSummary />
         </div>
+        <RecommendationsRail />
       </main>
     </div>
   );
