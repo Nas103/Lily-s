@@ -48,18 +48,14 @@ export default function ImageSlideshow({
     if (images.length <= 1) return;
 
     const interval = setInterval(() => {
-      if (isAnimating.current) return; // Skip if already animating
-      
+      if (isAnimating.current) return;
       const nextIndex = (currentIndex + 1) % images.length;
       isAnimating.current = true;
-      
-      // Smooth slide transition: current slides left, next slides in from right
       Animated.timing(slideAnim, {
-        toValue: -containerWidth,
-        duration: 500,
+        toValue: 1,
+        duration: 600,
         useNativeDriver: true,
       }).start(() => {
-        // Reset position and update index
         setCurrentIndex(nextIndex);
         slideAnim.setValue(0);
         isAnimating.current = false;
@@ -67,59 +63,76 @@ export default function ImageSlideshow({
     }, delay);
 
     return () => clearInterval(interval);
-  }, [images.length, delay, slideAnim, currentIndex, containerWidth]);
+  }, [images.length, delay, slideAnim, currentIndex]);
 
   const nextIndex = (currentIndex + 1) % images.length;
 
   return (
-    <TouchableOpacity 
-      style={styles.container} 
-      onPress={onPress} 
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
       activeOpacity={0.9}
       disabled={!onPress}
     >
       <View style={styles.imageWrapper} pointerEvents="box-none">
-        {/* Current image sliding out to the left */}
-        <Animated.View 
+        <Animated.View
           style={[
-            styles.imageContainer, 
-            { 
-              transform: [{ translateX: slideAnim }],
+            styles.imageContainer,
+            {
               width: containerWidth,
-            }
+              opacity: slideAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+              transform: [
+                {
+                  translateX: slideAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -containerWidth * 0.25],
+                  }),
+                },
+              ],
+            },
           ]}
         >
           <Image
             source={{ uri: images[currentIndex] }}
             style={styles.image}
             resizeMode="cover"
+            fadeDuration={0}
           />
           <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.8)']}
             style={styles.gradientOverlay}
           />
         </Animated.View>
-        
-        {/* Next image sliding in from the right */}
+
         {images.length > 1 && (
-          <Animated.View 
+          <Animated.View
             style={[
               styles.imageContainer,
-              { 
-                transform: [{ 
-                  translateX: slideAnim.interpolate({
-                    inputRange: [-containerWidth, 0],
-                    outputRange: [0, containerWidth],
-                  })
-                }],
+              {
                 width: containerWidth,
-              }
+                opacity: slideAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
+                }),
+                transform: [
+                  {
+                    translateX: slideAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [containerWidth * 0.25, 0],
+                    }),
+                  },
+                ],
+              },
             ]}
           >
             <Image
               source={{ uri: images[nextIndex] }}
               style={styles.image}
               resizeMode="cover"
+              fadeDuration={0}
             />
             <LinearGradient
               colors={['transparent', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.8)']}

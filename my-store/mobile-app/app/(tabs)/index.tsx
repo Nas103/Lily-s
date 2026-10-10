@@ -46,18 +46,13 @@ const FEATURED_WAHHID_IMAGES = [
   `${API_BASE_URL}/featured/wahhid/polo-wahhid/khaki/main.jpg`,
 ];
 
-// Signature Perfumes slideshow images - TODO: Replace URLs with your own images
+// Signature Perfumes slideshow images (served from the web host)
 const SIGNATURE_PERFUMES_IMAGES = [
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80', // Image 1 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=2', // Image 2 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=3', // Image 3 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=4', // Image 4 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=5', // Image 5 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=6', // Image 6 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=7', // Image 7 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=8', // Image 8 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=9', // Image 9 - TODO: Replace with your perfume image
-  'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80&v=10', // Image 10 - TODO: Replace with your perfume image
+  `${API_BASE_URL}/perfumes/xerjoff-5-five-white-eau-de-parfum-uae-exclusive/main.jpg`,
+  `${API_BASE_URL}/perfumes/amouage-outlands-eau-de-parfum/main.jpg`,
+  `${API_BASE_URL}/perfumes/bad-boy-cobalt-elixir-eau-de-parfum/main.jpg`,
+  `${API_BASE_URL}/perfumes/emprorio-armani-stronger-with-you-absolutely-parfum/main.jpg`,
+  `${API_BASE_URL}/perfumes/fragrance-du-bois-heritage-parfum/main.jpg`,
 ];
 
 // LifeStyle slideshow images
