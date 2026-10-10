@@ -1,81 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@/stores/authStore";
-import { getUserCurrencySync, convertPriceSync, formatPrice, initializeExchangeRates } from "@/lib/currency";
+import { useProfile } from "@/stores/profileStore";
+import {
+  getUserCurrencySync,
+  convertPriceSync,
+  formatPrice,
+  initializeExchangeRates,
+} from "@/lib/currency";
+
+let ratesInitialized = false;
 
 /**
- * Hook to get user's currency based on their saved address
+ * Returns the user's country/currency from the shared profile store.
+ *
+ * The profile snapshot is loaded once (see `ProfileSync`) instead of being
+ * fetched by every component, so all prices on a page resolve to the same
+ * currency at the same time — and update automatically on login or profile
+ * changes without visiting settings first.
  */
 export function useCurrency() {
   const user = useAuth((state) => state.user);
-  const [userCountry, setUserCountry] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const country = useProfile((state) => state.country);
+  const loading = useProfile((state) => state.loading);
+  const initialized = useProfile((state) => state.initialized);
+  const load = useProfile((state) => state.load);
 
   useEffect(() => {
-    const fetchUserCountry = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Fetch user profile to get country
-        const res = await fetch("/api/profile", {
-          headers: {
-            "x-user-id": user.id,
-            "x-user-email": user.email,
-          },
-        });
-
-        if (res.ok) {
-          const profile = await res.json();
-          // Check if user has a default delivery address
-          if (profile.country) {
-            setUserCountry(profile.country);
-          } else {
-            // Try to get from default delivery address
-            const addressRes = await fetch("/api/delivery-addresses", {
-              headers: {
-                "x-user-id": user.id,
-                "x-user-email": user.email,
-              },
-            });
-
-            if (addressRes.ok) {
-              const addresses = await addressRes.json();
-              const defaultAddress = addresses.find((addr: any) => addr.isDefault);
-              if (defaultAddress) {
-                setUserCountry(defaultAddress.country);
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Failed to fetch user country:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserCountry();
-  }, [user]);
-
-  // Initialize exchange rates on mount
-  useEffect(() => {
-    initializeExchangeRates();
+    if (!ratesInitialized) {
+      ratesInitialized = true;
+      void initializeExchangeRates();
+    }
   }, []);
 
-  const currency = getUserCurrencySync(userCountry);
+  useEffect(() => {
+    if (user) void load();
+  }, [user, load]);
+
+  const currency = getUserCurrencySync(country);
 
   return {
-    country: userCountry,
+    country,
     currency: currency.code,
     symbol: currency.symbol,
     rate: currency.rate,
-    convertPrice: (priceInUSD: number) => convertPriceSync(priceInUSD, userCountry),
+    convertPrice: (priceInUSD: number) => convertPriceSync(priceInUSD, country),
     formatPrice: (amount: number) => formatPrice(amount, currency.symbol),
-    loading,
+    loading: Boolean(user) && loading && !initialized,
   };
 }
-

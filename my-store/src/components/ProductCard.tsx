@@ -29,13 +29,11 @@ export function ProductCard({
   badge,
   onPreview,
 }: ProductCardProps) {
-  const { formatPrice, convertPrice, loading } = useCurrency();
-  
-  // Use converted price if available, otherwise use original price in USD
-  const converted = loading ? null : (convertPrice ? convertPrice(price) : null);
-  const formattedPrice = loading 
-    ? `$${price.toFixed(2)}` 
-    : (converted ? converted.formatted : formatPrice(price));
+  const { formatPrice, convertPrice } = useCurrency();
+
+  // Base catalog prices are USD; convert into the user's currency.
+  const converted = convertPrice ? convertPrice(price) : null;
+  const formattedPrice = converted ? converted.formatted : formatPrice(price);
   return (
     <article className="group overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-lg ring-1 ring-black/5 transition hover:-translate-y-1 hover:ring-black/10">
       <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100">

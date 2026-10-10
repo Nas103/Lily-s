@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/stores/authStore";
+import { useProfile } from "@/stores/profileStore";
 import { Save, Loader2 } from "lucide-react";
 
 interface ProfileData {
@@ -140,6 +141,10 @@ export function AccountDetailsForm() {
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
+
+      // Push the new country/profile details to the shared store so prices
+      // and profile info update everywhere immediately.
+      void useProfile.getState().refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update profile");
     } finally {

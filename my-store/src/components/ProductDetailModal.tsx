@@ -20,7 +20,7 @@ type ProductDetailModalProps = {
 const DEFAULT_COLORS = ["Onyx", "Sand", "Oat", "Shadow", "Fog"];
 
 export function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
-  const { formatPrice, convertPrice, loading } = useCurrency();
+  const { formatPrice, convertPrice } = useCurrency();
   
   const colors = product?.colors ?? DEFAULT_COLORS;
   
@@ -54,11 +54,9 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
   // Early return after all hooks
   if (!product) return null;
   
-  // Use converted price if available, otherwise use USD
-  const converted = loading ? null : (convertPrice ? convertPrice(product.price) : null);
-  const formattedPrice = loading 
-    ? `$${product.price.toFixed(2)}` 
-    : (converted ? converted.formatted : formatPrice(product.price));
+  // Convert price into the user's currency (base catalog prices are USD).
+  const converted = convertPrice ? convertPrice(product.price) : null;
+  const formattedPrice = converted ? converted.formatted : formatPrice(product.price);
 
   const sizes = product.sizes; // Only use sizes if they exist (not for perfumes)
 

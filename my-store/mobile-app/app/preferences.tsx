@@ -20,27 +20,8 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../src/stores/authStore';
-import { preferencesAPI, linksAPI } from '../src/services/api';
-
-type Preferences = {
-  profileVisibility: string;
-  locationSharing: boolean;
-  emailNotifications: boolean;
-  smsNotifications: boolean;
-  marketingEmails: boolean;
-  pushNotifications: boolean;
-  orderUpdates: boolean;
-  productUpdates: boolean;
-  preferredCategories: string[];
-  preferredSizes: string[];
-  preferredColors: string[];
-  preferredCurrency: string;
-  showEmail: boolean;
-  showPhone: boolean;
-  showOrderHistory: boolean;
-  profileDiscoverable: boolean;
-  twoFactorEnabled: boolean;
-};
+import { useProfile, Preferences } from '../src/stores/profileStore';
+import { linksAPI } from '../src/services/api';
 
 type TabId = 'shop' | 'notifications' | 'privacy' | 'links';
 
@@ -53,7 +34,7 @@ const TABS: { id: TabId; label: string }[] = [
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const COLORS = ['Onyx', 'Sand', 'Oat', 'Shadow', 'Fog'];
-const CATEGORIES = ['Abayas', 'Kaftans', 'Hijabs', 'Dresses', 'Outerwear', 'Accessories'];
+const CATEGORIES = ['Featured', 'Kaftans', 'Hijabs', 'Dresses', 'Outerwear', 'Accessories'];
 const CURRENCIES = ['ZAR', 'USD', 'EUR', 'GBP', 'NGN', 'KES'];
 
 
@@ -130,25 +111,26 @@ export default function PreferencesScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
+  const prefs = useProfile((state) => state.preferences);
+  const loadProfile = useProfile((state) => state.load);
+  const updatePreferences = useProfile((state) => state.updatePreferences);
   const [tab, setTab] = useState<(typeof TABS)[number]['id']>('shop');
-  const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [links, setLinks] = useState<{ googleLinked: boolean; appleLinked: boolean } | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     try {
-      const [prefData, linksData] = await Promise.all([
-        preferencesAPI.get(),
+      const [, linksData] = await Promise.all([
+        loadProfile(),
         linksAPI.get().catch(() => ({ links: null })),
       ]);
-      setPrefs(prefData.preferences);
       setLinks(linksData.links);
     } catch (error) {
       console.error('Error loading preferences:', error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadProfile]);
 
   useEffect(() => {
     if (isAuthenticated) void load();
@@ -177,8 +159,7 @@ export default function PreferencesScreen() {
   }
 
   const update = (patch: Partial<Preferences>) => {
-    setPrefs((prev) => (prev ? { ...prev, ...patch } : prev));
-    preferencesAPI.update(patch).catch(() => Alert.alert('Error', 'Unable to save'));
+    updatePreferences(patch).catch(() => Alert.alert('Error', 'Unable to save'));
   };
 
   const toggleList = (key: 'preferredSizes' | 'preferredColors' | 'preferredCategories', item: string) => {

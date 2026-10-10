@@ -4,6 +4,7 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
 import { CATEGORY_META } from "@/data/catalog";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
+import { Price } from "@/components/Price";
 import StarfieldButton from "@/components/StarfieldButton";
 import { MoltenHero } from "@/components/MoltenHero";
 import ReflectShader from "@/components/ReflectShader";
@@ -12,7 +13,7 @@ import HorizonBloom from "@/components/HorizonBloom";
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
   { label: "Shop Women's", href: "/women", category: "women" },
-  { label: "Shop Abaya", href: "/abaya", category: "abaya" },
+  { label: "Shop Featured", href: "/featured", category: "featured" },
 ];
 
 export default function Home() {
@@ -193,10 +194,10 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-6 md:grid-cols-2">
           <CollectionTile
-            title="Modern Abaya"
-            subtitle="Architectural silhouettes and satin sheens."
-            link="/abaya"
-            product={getProductsByCategory("abaya")[0]}
+            title="Wahhid"
+            subtitle="House of brands — Wahhid drops land here."
+            link="/featured"
+            product={getProductsByCategory("featured")[0]}
           />
           <CollectionTile
             title="Signature Perfumes"
@@ -260,7 +261,7 @@ export default function Home() {
                     className="mt-6 h-48 w-full rounded-2xl object-cover"
                   />
                   <p className="mt-4 text-sm text-white/60">
-                    ${icon.price.toFixed(2)}
+                    <Price amount={icon.price} />
                   </p>
                 </div>
               ))}

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../src/stores/authStore';
-import { profileAPI } from '../src/services/api';
+import { useProfile } from '../src/stores/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 import CountryCodePicker from '../src/components/CountryCodePicker';
 import CountryPicker from '../src/components/CountryPicker';
@@ -12,6 +12,8 @@ export default function ProfileScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, isAuthenticated } = useAuth();
+  const loadStoreProfile = useProfile((state) => state.load);
+  const updateProfile = useProfile((state) => state.updateProfile);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -28,9 +30,13 @@ export default function ProfileScreen() {
 
   const loadProfile = async () => {
     try {
-      const profile = await profileAPI.get();
+      // Uses the shared store (loaded eagerly at app start) so we don't
+      // re-fetch on every visit; falls back to fetching if not loaded yet.
+      await loadStoreProfile();
+      const profile = useProfile.getState().profile;
+      if (!profile) return;
       setName(profile.name || '');
-      
+
       // Parse phone number with country code
       const phoneValue = profile.phone || '';
       if (phoneValue) {
@@ -44,7 +50,7 @@ export default function ProfileScreen() {
       } else {
         setPhoneNumber('');
       }
-      
+
       setPhone(phoneValue);
       setCountry(profile.country || '');
       setCity(profile.city || '');
@@ -61,18 +67,17 @@ export default function ProfileScreen() {
         ? phoneNumber.substring(1)
         : phoneNumber;
       const phoneValue = cleanedPhoneNumber ? `${countryCode} ${cleanedPhoneNumber}`.trim() : null;
-      
-      await profileAPI.update({
+
+      // Updates the shared store, so every screen's currency updates instantly
+      // — no need to open Settings or revisit a screen to trigger a refresh.
+      await updateProfile({
         name: name || null,
         phone: phoneValue,
         country: country || null,
         city: city || null,
       });
-      
-      Alert.alert('Success', 'Profile updated successfully. Prices will now be displayed in your local currency.');
-      
-      // Reload products to update currency (if needed)
-      // The useCurrency hook should automatically pick up the new country
+
+      Alert.alert('Success', 'Profile updated. Prices now reflect your local currency.');
     } catch (error: any) {
       const errorMessage = error?.response?.data?.error || error?.message || 'Failed to update profile';
       const errors = error?.response?.data?.errors;

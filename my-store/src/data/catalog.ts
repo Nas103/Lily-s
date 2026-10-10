@@ -7,11 +7,12 @@ import { runningProducts } from "../../mobile-app/src/data/runningProducts";
 import { boxrawProducts } from "../../mobile-app/src/data/boxrawProducts";
 import { electronicsProducts } from "../../mobile-app/src/data/electronicsProducts";
 import { perfumesProducts } from "../../mobile-app/src/data/perfumesProducts";
+import { featuredProducts } from "../../mobile-app/src/data/featuredProducts";
 
 export type CatalogCategory =
   | "men"
   | "women"
-  | "abaya"
+  | "featured"
   | "perfumes"
   | "lifestyle"
   | "running"
@@ -34,6 +35,7 @@ export type CatalogProduct = {
   sizes?: string[];
   colors?: string[];
   colorImages?: Record<string, string[]>;
+  brand?: string;
 };
 
 export const CATEGORY_META: {
@@ -45,7 +47,13 @@ export const CATEGORY_META: {
 }[] = [
   { id: "men", label: "Men", href: "/men", blurb: "Tempo-day layers and sculpted footwear." },
   { id: "women", label: "Women", href: "/women", blurb: "Studio-ready tailoring and statement sneakers." },
-  { id: "abaya", label: "Abaya", href: "/abaya", blurb: "Architectural silhouettes and satin sheens." },
+  {
+    id: "featured",
+    label: "Featured",
+    href: "/featured",
+    blurb: "House of brands — Wahhid drops land here.",
+    subCategories: [{ id: "wahhid", label: "Wahhid" }],
+  },
   { id: "perfumes", label: "Perfumes", href: "/perfumes", blurb: "Layered oud, citrus, and amber accords." },
   { id: "lifestyle", label: "Lifestyle", href: "/lifestyle", blurb: "Everyday essentials, elevated." },
   { id: "running", label: "Running", href: "/running", blurb: "Performance engineered for the long run." },
@@ -109,6 +117,7 @@ const normalizeMobileProduct = (product: Product): CatalogProduct => {
     sizes: product.sizes,
     colors: product.colors,
     colorImages: normalizeColorImages(product.colorImages),
+    brand: product.brand,
   };
 };
 
@@ -120,6 +129,7 @@ const mobileProducts: CatalogProduct[] = [
   ...boxrawProducts,
   ...electronicsProducts,
   ...perfumesProducts,
+  ...featuredProducts,
 ].map((product) => normalizeMobileProduct(product));
 
 const staticCatalog: CatalogProduct[] = staticProducts.map((product) => ({

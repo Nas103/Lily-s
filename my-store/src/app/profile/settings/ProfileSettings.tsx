@@ -9,7 +9,7 @@ import { Toggle, SettingRow } from "./Toggle";
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const COLORS = ["Onyx", "Sand", "Oat", "Shadow", "Fog"];
 const CATEGORIES = [
-  "Abayas",
+  "Featured",
   "Kaftans",
   "Hijabs",
   "Dresses",

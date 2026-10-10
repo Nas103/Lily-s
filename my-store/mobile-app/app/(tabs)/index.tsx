@@ -18,6 +18,7 @@ import LiquidMetalButton from '../../src/components/LiquidMetalButton';
 import MoltenMetalGL from '../../src/components/MoltenMetalGL';
 import MoltenTitle from '../../src/components/MoltenTitle';
 import { Ionicons } from '@expo/vector-icons';
+import { API_BASE_URL } from '../../src/config/api';
 
 // Ensure Colors is available (fallback if import fails)
 const Colors = ColorsImport || {
@@ -35,18 +36,14 @@ const Colors = ColorsImport || {
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH * 0.45;
 
-// Modern Abaya slideshow images - TODO: Replace URLs with your own images
-const MODERN_ABAYA_IMAGES = [
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80', // Image 1 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=2', // Image 2 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=3', // Image 3 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=4', // Image 4 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=5', // Image 5 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=6', // Image 6 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=7', // Image 7 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=8', // Image 8 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=9', // Image 9 - TODO: Replace with your abaya image
-  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80&v=10', // Image 10 - TODO: Replace with your abaya image
+// Featured / Wahhid slideshow images (served from the web host via API_BASE_URL)
+const FEATURED_WAHHID_IMAGES = [
+  `${API_BASE_URL}/featured/wahhid/mw-7-tee/black/main.jpg`,
+  `${API_BASE_URL}/featured/wahhid/wahhid-sweatpants/grey/main.jpg`,
+  `${API_BASE_URL}/featured/wahhid/mw-3-tee/black/main.jpg`,
+  `${API_BASE_URL}/featured/wahhid/jogger-mw-1/khaki/main.jpg`,
+  `${API_BASE_URL}/featured/wahhid/kholodok-tights/black/main.jpg`,
+  `${API_BASE_URL}/featured/wahhid/polo-wahhid/khaki/main.jpg`,
 ];
 
 // Signature Perfumes slideshow images - TODO: Replace URLs with your own images
@@ -340,12 +337,12 @@ export default function HomeScreen() {
       {/* Category Tiles with Slideshow */}
       <View style={styles.categoriesSection}>
         <ImageSlideshow
-          images={MODERN_ABAYA_IMAGES}
-          label="MODERN ABAYA"
-          title="Modern Abaya"
-          subtitle="Architectural silhouettes and satin sheens."
+          images={FEATURED_WAHHID_IMAGES}
+          label="FEATURED"
+          title="Wahhid"
+          subtitle="House of brands — Wahhid drops land here."
           delay={3000}
-          onPress={() => router.push('/(tabs)/categories?category=abaya')}
+          onPress={() => router.push('/(tabs)/categories?category=featured')}
         />
         <ImageSlideshow
           images={SIGNATURE_PERFUMES_IMAGES}

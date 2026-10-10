@@ -14,6 +14,7 @@ try {
   const { boxrawProducts } = await import('../../../../mobile-app/src/data/boxrawProducts');
   const { electronicsProducts } = await import('../../../../mobile-app/src/data/electronicsProducts');
   const { perfumesProducts } = await import('../../../../mobile-app/src/data/perfumesProducts');
+  const { featuredProducts } = await import('../../../../mobile-app/src/data/featuredProducts');
   newProducts = [
     ...(womenProducts || []),
     ...(menProducts || []),
@@ -22,6 +23,7 @@ try {
     ...(boxrawProducts || []),
     ...(electronicsProducts || []),
     ...(perfumesProducts || []),
+    ...(featuredProducts || []),
   ];
 } catch (error) {
   console.warn('[products] Could not load new product data files:', error);

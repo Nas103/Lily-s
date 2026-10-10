@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AiChatWidget } from "@/components/AiChatWidget";
+import { ProfileSync } from "@/components/ProfileSync";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { BRAND } from "@/lib/brand";
@@ -37,6 +38,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-white antialiased`}
       >
         <Header />
+        <ProfileSync />
         {children}
         <Footer />
         {/* AI chat-based shopping assistant, ready to connect to your LLM provider. */}

@@ -1,4 +1,4 @@
-export type ProductCategory = 'men' | 'women' | 'perfumes' | 'abaya';
+export type ProductCategory = 'men' | 'women' | 'perfumes' | 'featured';
 
 // Backend returns category as object with name and slug
 export type ProductCategoryObject = {
@@ -35,6 +35,7 @@ export type Product = {
   highlight?: string;
   category: ProductCategory | ProductCategoryObject | string; // Support both formats
   subCategory?: string; // Sub-category (e.g., 'clothing', 'equipment' for BoxRaw)
+  brand?: string; // Brand name (e.g., 'Wahhid' for the featured category)
   gender?: 'men' | 'women' | 'unisex';
   price: number;
   tags?: string[];

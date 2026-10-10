@@ -12,7 +12,7 @@ import { BRAND } from "@/lib/brand";
 const shopLinks = [
   { href: "/men", label: "Men" },
   { href: "/women", label: "Women" },
-  { href: "/abaya", label: "Abaya" },
+  { href: "/featured", label: "Featured" },
   { href: "/perfumes", label: "Perfumes" },
   { href: "/lifestyle", label: "Lifestyle" },
   { href: "/running", label: "Running" },

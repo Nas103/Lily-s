@@ -1,11 +1,12 @@
 import { womenProducts as mobileWomenProducts } from "../../mobile-app/src/data/womenProducts";
 import { menProducts as mobileMenProducts } from "../../mobile-app/src/data/menProducts";
+import { featuredProducts as mobileFeaturedProducts } from "../../mobile-app/src/data/featuredProducts";
 
 export type ProductCategory =
   | "men"
   | "women"
   | "perfumes"
-  | "abaya"
+  | "featured"
   | "lifestyle"
   | "running"
   | "boxraw"
@@ -26,6 +27,7 @@ export type ProductRecord = {
   sizes?: string[];
   colors?: string[];
   colorImages?: Record<string, string[]>; // Maps color name to array of 4 image URLs
+  brand?: string;
 };
 
 const adjectives = [
@@ -177,14 +179,6 @@ const blueprintCycle: Blueprint[] = [
     badge: "Signature Oil",
     tags: ["fragrance", "oil"],
     basePrice: 180,
-  },
-  {
-    category: "abaya",
-    gender: "women",
-    highlight: "Satin abaya with modular belt and hidden vents.",
-    badge: "Heritage",
-    tags: ["abaya", "couture"],
-    basePrice: 320,
   },
   {
     category: "men",
@@ -496,6 +490,37 @@ const realMenProducts: ProductRecord[] = mobileMenProducts.map((product) => ({
     : undefined,
 }));
 
+// ============================================================================
+// FEATURED BRANDS - Wahhid menswear, replacing the generated abaya slots.
+// Sourced from mobile-app/src/data/featuredProducts.ts. The mobile colorImages
+// use a { front, back, side, top } object; the web ProductRecord expects
+// string[] per color, so we flatten them here.
+// ============================================================================
+const realFeaturedProducts: ProductRecord[] = mobileFeaturedProducts.map((product) => ({
+  id: product.id,
+  name: product.name,
+  slug: product.slug,
+  description: product.description,
+  highlight: product.highlight ?? product.name,
+  category: "featured",
+  gender: product.gender ?? "men",
+  price: product.price,
+  tags: product.tags ?? [],
+  badge: product.badge,
+  imageUrl: product.imageUrl,
+  sizes: product.sizes,
+  colors: product.colors,
+  colorImages: product.colorImages
+    ? Object.fromEntries(
+        Object.entries(product.colorImages).map(([color, set]) => [
+          color,
+          [set.front, set.back, set.side, set.top].filter(Boolean),
+        ])
+      )
+    : undefined,
+  brand: product.brand,
+}));
+
 export const products: ProductRecord[] = (() => {
   const generated = Array.from({ length: 60 }).map(
     (_, index) => {
@@ -593,6 +618,7 @@ export const products: ProductRecord[] = (() => {
     }
   }
   output.push(...realMenProducts);
+  output.push(...realFeaturedProducts);
   return output;
 })();
 

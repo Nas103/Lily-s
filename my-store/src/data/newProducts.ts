@@ -35,3 +35,6 @@ export { electronicsProducts } from '../../mobile-app/src/data/electronicsProduc
 // Re-export perfumes products
 export { perfumesProducts } from '../../mobile-app/src/data/perfumesProducts';
 
+// Re-export featured brand products
+export { featuredProducts } from '../../mobile-app/src/data/featuredProducts';
+

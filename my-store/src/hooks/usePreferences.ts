@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useProfile } from "@/stores/profileStore";
 
 export type Preferences = {
   profileVisibility: string;
@@ -63,6 +64,8 @@ export function usePreferences() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Unable to save");
       setPreferences(data.preferences);
+      // Keep the shared store in sync so every consumer sees the change.
+      void useProfile.getState().refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to save");
     } finally {

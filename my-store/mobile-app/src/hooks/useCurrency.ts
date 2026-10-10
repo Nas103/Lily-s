@@ -1,54 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '../stores/authStore';
-import { profileAPI, deliveryAddressesAPI } from '../services/api';
+import { useProfile } from '../stores/profileStore';
+import { getCurrencyForCountry } from '../lib/currency';
 
 /**
- * Hook to get user's currency based on their saved address
- * Similar to web app implementation
+ * Returns the user's country and currency from the global profile store.
+ *
+ * The profile/preferences snapshot is loaded once at app start (and refreshed
+ * on login/logout and profile saves), so screens no longer fetch it
+ * individually — currency stays in sync everywhere, instantly.
  */
 export function useCurrency() {
-  const { user, isAuthenticated } = useAuth();
-  const [userCountry, setUserCountry] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
+  const country = useProfile((state) => state.country);
+  const loading = useProfile((state) => state.loading);
+  const initialized = useProfile((state) => state.initialized);
+  const load = useProfile((state) => state.load);
 
   useEffect(() => {
-    const fetchUserCountry = async () => {
-      if (!isAuthenticated || !user) {
-        setLoading(false);
-        return;
-      }
+    if (isAuthenticated) {
+      void load();
+    }
+  }, [isAuthenticated, load]);
 
-      try {
-        // First try to get from user profile
-        const profile = await profileAPI.get();
-        if (profile?.country) {
-          setUserCountry(profile.country);
-          setLoading(false);
-          return;
-        }
-
-        // If no country in profile, try default delivery address
-        const addresses = await deliveryAddressesAPI.getAll();
-        const defaultAddress = Array.isArray(addresses) 
-          ? addresses.find((addr: any) => addr.isDefault)
-          : null;
-        
-        if (defaultAddress?.country) {
-          setUserCountry(defaultAddress.country);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user country:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserCountry();
-  }, [isAuthenticated, user]);
+  const { code, symbol } = getCurrencyForCountry(country);
 
   return {
-    country: userCountry,
-    loading,
+    country,
+    currency: code,
+    symbol,
+    loading: isAuthenticated && loading && !initialized,
   };
 }
-

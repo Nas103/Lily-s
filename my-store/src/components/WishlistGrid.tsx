@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useWishlist } from "@/stores/wishlistStore";
 import { AddToCartButton } from "./AddToCartButton";
+import { Price } from "./Price";
 
 export function WishlistGrid() {
   const items = useWishlist((state) => state.items);
@@ -47,7 +48,9 @@ export function WishlistGrid() {
               Wishlist
             </p>
             <p className="text-lg font-semibold">{item.name}</p>
-            <p className="text-sm text-zinc-500">${item.price.toFixed(2)}</p>
+            <p className="text-sm text-zinc-500">
+              <Price amount={item.price} />
+            </p>
             <AddToCartButton
               id={item.id}
               name={item.name}

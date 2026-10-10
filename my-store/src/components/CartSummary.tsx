@@ -9,14 +9,11 @@ export function CartSummary() {
   const items = useCart((state) => state.items);
   const subtotal = useCart((state) => state.total());
   const removeItem = useCart((state) => state.removeItem);
-  const { formatPrice, convertPrice, loading } = useCurrency();
-  
-  const convertedSubtotal = loading 
-    ? subtotal 
-    : (convertPrice ? convertPrice(subtotal).amount : subtotal);
-  const formattedSubtotal = loading 
-    ? `$${subtotal.toFixed(2)}` 
-    : (convertPrice ? convertPrice(subtotal).formatted : formatPrice(subtotal));
+  const { formatPrice, convertPrice } = useCurrency();
+
+  const formattedSubtotal = convertPrice
+    ? convertPrice(subtotal).formatted
+    : formatPrice(subtotal);
 
   if (!items.length) {
     return (
@@ -42,9 +39,7 @@ export function CartSummary() {
               <p className="font-medium text-zinc-900">{item.name}</p>
               <p className="text-xs text-zinc-500">
                 Qty {item.quantity} · {/* TODO: Confirm the price for this SKU. */}
-                {loading 
-                  ? `R${item.price.toFixed(2)}` 
-                  : (convertPrice ? convertPrice(item.price).formatted : formatPrice(item.price))}
+                {convertPrice ? convertPrice(item.price).formatted : formatPrice(item.price)}
                 {item.size ? ` · Size ${item.size}` : ""}
                 {item.color ? ` · ${item.color}` : ""}
               </p>
@@ -52,11 +47,9 @@ export function CartSummary() {
             <div className="flex flex-col items-end gap-2">
               {/* TODO: Update subtotal display once final pricing tiers are set. */}
               <p className="text-sm font-semibold text-zinc-900">
-                {loading 
-                  ? `R${(item.price * item.quantity).toFixed(2)}` 
-                  : (convertPrice 
-                      ? convertPrice(item.price * item.quantity).formatted 
-                      : formatPrice(item.price * item.quantity))}
+                {convertPrice
+                  ? convertPrice(item.price * item.quantity).formatted
+                  : formatPrice(item.price * item.quantity)}
               </p>
               <button
                 type="button"

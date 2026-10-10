@@ -39,7 +39,7 @@ export default function CategoriesScreen() {
     { id: 'all', label: 'All' },
     { id: 'men', label: "Men's" },
     { id: 'women', label: "Women's" },
-    { id: 'abaya', label: 'Abaya' },
+    { id: 'featured', label: 'Featured' },
     { id: 'perfumes', label: 'Perfumes' },
     { id: 'lifestyle', label: 'LifeStyle' },
     { id: 'running', label: 'Running' },

@@ -13,7 +13,7 @@ type ChatMessage = {
 
 const PROMPTS = [
   "Style a black-tie look",
-  "Find party abayas",
+  "Find Wahhid pieces",
   "Do you ship to London?",
   "Gift ideas under R1000",
 ];

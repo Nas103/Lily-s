@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../src/stores/authStore';
-import { profileAPI } from '../src/services/api';
+import { useProfile } from '../src/stores/profileStore';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -24,6 +24,8 @@ export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, isAuthenticated, logout } = useAuth();
+  const loadProfile = useProfile((state) => state.load);
+  const updateProfile = useProfile((state) => state.updateProfile);
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [language, setLanguage] = useState('en');
@@ -38,8 +40,9 @@ export default function SettingsScreen() {
 
   const loadSettings = async () => {
     try {
-      const profile = await profileAPI.get();
-      if (profile.dateOfBirth) {
+      await loadProfile();
+      const profile = useProfile.getState().profile;
+      if (profile?.dateOfBirth) {
         setDateOfBirth(new Date(profile.dateOfBirth));
       }
       // Language would be stored in user preferences or local storage
@@ -52,7 +55,7 @@ export default function SettingsScreen() {
   const handleSave = async () => {
     try {
       setLoading(true);
-      await profileAPI.update({
+      await updateProfile({
         dateOfBirth: dateOfBirth ? dateOfBirth.toISOString() : null,
       });
       Alert.alert('Success', 'Settings saved successfully');
