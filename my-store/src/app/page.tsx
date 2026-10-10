@@ -4,11 +4,12 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
 import { CATEGORY_META } from "@/data/catalog";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
-import { Price } from "@/components/Price";
 import StarfieldButton from "@/components/StarfieldButton";
 import { MoltenHero } from "@/components/MoltenHero";
 import ReflectShader from "@/components/ReflectShader";
-import HorizonBloom from "@/components/HorizonBloom";
+import Vortex from "@/components/Vortex";
+import MagneticIconCarousel from "@/components/MagneticIconCarousel";
+import CategoryGrid from "@/components/CategoryGrid";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -49,20 +50,7 @@ export default function Home() {
             </h2>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {CATEGORY_META.map((category) => (
-            <Link
-              key={category.id}
-              href={category.href}
-              className="group rounded-2xl border border-zinc-200 bg-white px-5 py-4 transition hover:-translate-y-1 hover:border-black"
-            >
-              <p className="text-sm font-semibold tracking-tight">
-                {category.label}
-              </p>
-              <p className="mt-1 text-xs text-zinc-500">{category.blurb}</p>
-            </Link>
-          ))}
-        </div>
+        <CategoryGrid categories={CATEGORY_META} />
       </section>
 
       <section className="relative overflow-hidden bg-black px-6 py-16 text-white">
@@ -210,21 +198,13 @@ export default function Home() {
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="relative overflow-hidden rounded-[40px] bg-[#0B0701]">
-          <HorizonBloom
-            className="absolute inset-0"
-            style={{ position: "absolute", inset: 0, minHeight: 0 }}
-            colors={["#F5B301", "#180D02"]}
-            horizon={0.66}
-            curvature={0.75}
-            sunPosition={0.25}
-            spread={0.45}
-            airglow={0.45}
-            clouds={0.55}
-            stars={0.5}
-            autoAurora
-            grain={0.22}
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/75" />
+          <div className="absolute inset-0" aria-hidden="true">
+            <Vortex
+              background="#0B0701"
+              style={{ position: "absolute", inset: 0 }}
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/70" />
           <div className="relative z-10 p-7 md:p-10">
             <div className="flex items-center justify-between">
               <div>
@@ -245,27 +225,15 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="mt-8 grid gap-6 md:grid-cols-4">
-              {icons.map((icon) => (
-                <div
-                  key={icon.id}
-                  className="rounded-3xl border border-white/10 bg-gradient-to-b from-black/70 to-black/90 p-5 text-white backdrop-blur-sm"
-                >
-                  <p className="text-sm text-white/70">{icon.category}</p>
-                  <p className="mt-2 text-lg font-semibold">{icon.name}</p>
-                  <Image
-                    src={icon.imageUrl}
-                    alt={icon.name}
-                    width={320}
-                    height={240}
-                    className="mt-6 h-48 w-full rounded-2xl object-cover"
-                  />
-                  <p className="mt-4 text-sm text-white/60">
-                    <Price amount={icon.price} />
-                  </p>
-                </div>
-              ))}
-            </div>
+            <MagneticIconCarousel
+              items={icons.map((icon) => ({
+                id: icon.id,
+                name: icon.name,
+                category: String(icon.category),
+                price: icon.price,
+                imageUrl: icon.imageUrl,
+              }))}
+            />
           </div>
         </div>
       </section>
