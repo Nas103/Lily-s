@@ -381,11 +381,11 @@ const styles = StyleSheet.create({
   productImageContainer: {
     position: 'relative',
     width: IMAGE_SIZE,
-    height: IMAGE_SIZE,
+    aspectRatio: 4 / 5,
   },
   productImage: {
-    width: IMAGE_SIZE,
-    height: IMAGE_SIZE,
+    width: '100%',
+    height: '100%',
     backgroundColor: '#f5f5f5',
   },
   thumbnailContainer: {
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   thumbnailButton: {
     width: 80,
-    height: 80,
+    aspectRatio: 4 / 5,
     borderRadius: 8,
     borderWidth: 2,
     borderColor: '#e5e5e5',

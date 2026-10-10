@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
-    height: CARD_WIDTH * 1.2,
+    aspectRatio: 4 / 5,
     borderRadius: 12,
     backgroundColor: '#f5f5f5',
   },

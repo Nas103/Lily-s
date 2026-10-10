@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: Math.min(100, SCREEN_WIDTH * 0.25),
-    height: Math.min(100, SCREEN_WIDTH * 0.25),
+    aspectRatio: 4 / 5,
     borderRadius: 8,
     backgroundColor: '#f5f5f5',
   },
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   recommendedImageContainer: {
     position: 'relative',
     width: '100%',
-    height: 200,
+    aspectRatio: 4 / 5,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     overflow: 'hidden',
