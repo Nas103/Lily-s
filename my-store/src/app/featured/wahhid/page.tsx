@@ -1,14 +1,18 @@
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCatalogByCategory, toGridProduct } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 import { brandGroups } from "../../../../mobile-app/src/data/featuredProducts";
 
 export const metadata = {
   title: "Wahhid",
 };
 
-export default function WahhidBrandPage() {
+export const dynamic = "force-dynamic";
+
+export default async function WahhidBrandPage() {
   const brand = brandGroups.find((group) => group.slug === "wahhid");
-  const products = getCatalogByCategory("featured", "wahhid").map(toGridProduct);
+  const overrides = await loadProductOverrides();
+  const products = applyOverrides(getCatalogByCategory("featured", "wahhid"), overrides).map(toGridProduct);
 
   return (
     <div className="min-h-screen bg-white">

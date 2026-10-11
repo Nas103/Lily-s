@@ -1,5 +1,6 @@
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCategoryMeta, getCatalogByCategory, toGridProduct } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 
 const meta = getCategoryMeta("running")!;
 
@@ -8,8 +9,11 @@ export const metadata = {
   description: meta.blurb,
 };
 
-export default function RunningPage() {
-  const products = getCatalogByCategory("running");
+export const dynamic = "force-dynamic";
+
+export default async function RunningPage() {
+  const overrides = await loadProductOverrides();
+  const products = applyOverrides(getCatalogByCategory("running"), overrides);
   const men = products.filter((p) => p.gender === "men").map(toGridProduct);
   const women = products.filter((p) => p.gender === "women").map(toGridProduct);
   const other = products

@@ -1,12 +1,19 @@
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCatalogByCategory, toGridProduct } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 
 export const metadata = {
   title: "Women",
 };
 
-export default function WomenPage() {
-  const womenProducts = getCatalogByCategory("women").map(toGridProduct);
+export const dynamic = "force-dynamic";
+
+export default async function WomenPage() {
+  const overrides = await loadProductOverrides();
+  const womenProducts = applyOverrides(
+    getCatalogByCategory("women"),
+    overrides
+  ).map(toGridProduct);
 
   return (
     <div className="min-h-screen bg-white">

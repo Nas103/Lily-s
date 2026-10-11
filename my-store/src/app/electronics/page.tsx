@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCategoryMeta, getCatalogByCategory, toGridProduct } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 
 const meta = getCategoryMeta("electronics")!;
 const subCategories = meta.subCategories ?? [];
@@ -9,6 +10,8 @@ export const metadata = {
   title: meta.label,
   description: meta.blurb,
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function ElectronicsPage({
   searchParams,
@@ -19,7 +22,8 @@ export default async function ElectronicsPage({
   const active =
     subCategories.find((item) => item.id === sub)?.id ?? subCategories[0]?.id;
 
-  const products = getCatalogByCategory("electronics", active).map(toGridProduct);
+  const overrides = await loadProductOverrides();
+  const products = applyOverrides(getCatalogByCategory("electronics", active), overrides).map(toGridProduct);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white">

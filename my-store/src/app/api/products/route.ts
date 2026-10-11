@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { products as staticProducts } from '@/data/products'
 import { applySecurityMiddleware } from '@/lib/middleware'
 import { getUserCurrency, convertPrice } from '@/lib/currency'
+import { applyOverrides, loadProductOverrides } from '@/lib/productOverrides'
 
 // Import new product data
 let newProducts: any[] = [];
@@ -133,6 +134,10 @@ export async function GET(request: NextRequest) {
 
   const currency = await getUserCurrency(userCountry);
 
+  // Load admin name/price overrides once so every returned product reflects
+  // the latest admin edits.
+  const overrides = await loadProductOverrides();
+
   // Helper function to return static products with currency conversion
   const getStaticProducts = async () => {
     // Merge static products with new products, deduplicating by id
@@ -173,7 +178,7 @@ export async function GET(request: NextRequest) {
     
     // Add currency conversion to products
     const productsWithCurrency = await Promise.all(
-      mappedProducts.map(async (product: any) => {
+      applyOverrides(mappedProducts as any[], overrides).map(async (product: any) => {
         const priceInUSD = typeof product.price === 'number' ? product.price : parseFloat(product.price);
         const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
           amount: priceInUSD,
@@ -242,8 +247,9 @@ export async function GET(request: NextRequest) {
   // Prices are stored in USD, convert only if user has country set
   // (Discount pricing is intentionally not applied; a custom discount system
   // will be implemented separately.)
+  const overriddenProducts = applyOverrides(products as any[], overrides);
   const productsWithCurrency = await Promise.all(
-    products.map(async (product: any) => {
+    overriddenProducts.map(async (product: any) => {
       const priceInUSD = parseFloat(product.price.toString());
       // Only convert if user has a country set
       const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {

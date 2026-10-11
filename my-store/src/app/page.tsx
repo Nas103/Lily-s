@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
 import { CATEGORY_META } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides, serializeOverrides } from "@/lib/productOverrides";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
 import StarfieldButton from "@/components/StarfieldButton";
 import { MoltenHero } from "@/components/MoltenHero";
@@ -17,8 +18,11 @@ const heroTiles: { label: string; href: string; category: ProductCategory }[] = 
   { label: "Shop Featured", href: "/featured", category: "featured" },
 ];
 
-export default function Home() {
-  const featured = products.slice(0, 6).map((item) => ({
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const overrides = await loadProductOverrides();
+  const featured = applyOverrides(products.slice(0, 6).map((item) => ({
     id: item.id,
     name: item.name,
     price: item.price,
@@ -31,9 +35,9 @@ export default function Home() {
     sizes: item.sizes,
     colors: item.colors,
     colorImages: item.colorImages,
-  }));
+  })), overrides);
 
-  const icons = products.slice(20, 28);
+  const icons = applyOverrides(products.slice(20, 28), overrides);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white text-zinc-900">
@@ -130,7 +134,7 @@ export default function Home() {
 
           <div className="grid flex-1 gap-4 md:grid-cols-3">
             {heroTiles.map((tile, index) => {
-              const product = getProductsByCategory(tile.category)[index % 5];
+              const product = applyOverrides(getProductsByCategory(tile.category), overrides)[index % 5];
               return (
                 <Link
                   key={tile.label}
@@ -185,13 +189,13 @@ export default function Home() {
             title="Wahhid"
             subtitle="House of brands — Wahhid drops land here."
             link="/featured"
-            product={getProductsByCategory("featured")[0]}
+            product={applyOverrides(getProductsByCategory("featured"), overrides)[0]}
           />
           <CollectionTile
             title="Signature Perfumes"
             subtitle="Layered oud, citrus, and amber accords."
             link="/perfumes"
-            product={getProductsByCategory("perfumes")[1]}
+            product={applyOverrides(getProductsByCategory("perfumes"), overrides)[1]}
           />
         </div>
       </section>
@@ -239,7 +243,7 @@ export default function Home() {
       </section>
 
       {/* AI-ready recommendations, powered by browsing and add-to-cart events. */}
-      <RecommendationsRail />
+      <RecommendationsRail overrides={serializeOverrides(overrides)} />
     </div>
   );
 }

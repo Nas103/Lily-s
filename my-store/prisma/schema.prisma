@@ -94,6 +94,16 @@ model Product {
   category    Category @relation(fields: [categoryId], references: [id])
 }
 
+// Admin-editable overrides for the static product catalog. Keyed by the
+// catalog product id; only name/price are editable. Price is in USD.
+model ProductOverride {
+  productId String   @id
+  name      String?
+  price     Decimal? @db.Decimal(10, 2)
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+}
+
 model PaymentMethod {
   id             String      @id @default(uuid())
   userId         String

@@ -95,11 +95,11 @@ export default function AdminUsersPage() {
   }, [user]);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16">
+    <div className="mx-auto max-w-4xl px-6 py-16 text-zinc-900">
       <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
         Internal tool
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
         User administration
       </h1>
       <div className="mt-4 flex items-center justify-between">
@@ -131,7 +131,7 @@ export default function AdminUsersPage() {
             className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm"
           >
             <div>
-              <p className="font-medium">
+              <p className="font-medium text-zinc-900">
                 {user.email}{" "}
                 <span className="ml-2 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-zinc-600">
                   {user.role}
@@ -146,13 +146,19 @@ export default function AdminUsersPage() {
                 })}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => void handleDelete(user.id)}
-              className="text-xs font-semibold uppercase tracking-[0.25em] text-red-500 hover:text-red-700"
-            >
-              Remove
-            </button>
+            {user.role !== "ADMIN" ? (
+              <button
+                type="button"
+                onClick={() => void handleDelete(user.id)}
+                className="text-xs font-semibold uppercase tracking-[0.25em] text-red-500 hover:text-red-700"
+              >
+                Remove
+              </button>
+            ) : (
+              <span className="text-sm font-semibold uppercase tracking-[0.25em] text-zinc-400">
+                Protected
+              </span>
+            )}
           </div>
         ))}
 

@@ -25,6 +25,9 @@ const FALLBACK_RATES: Record<string, number> = {
   INR: 83.0, // 1 USD = 83 INR (Indian Rupee)
   CNY: 7.2, // 1 USD = 7.2 CNY (Chinese Yuan)
   JPY: 150.0, // 1 USD = 150 JPY (Japanese Yen)
+  RUB: 90.0, // 1 USD = 90 RUB (Russian Ruble)
+  UAH: 41.0, // 1 USD = 41 UAH (Ukrainian Hryvnia)
+  KZT: 470.0, // 1 USD = 470 KZT (Kazakhstani Tenge)
 };
 
 // Cache for exchange rates
@@ -88,7 +91,7 @@ const COUNTRY_TO_CURRENCY: Record<string, string> = {
   UG: "UGX", // Uganda
   ET: "ETB", // Ethiopia
   
-  // Asia
+// Asia
   IN: "INR", // India
   CN: "CNY", // China
   JP: "JPY", // Japan
@@ -101,7 +104,12 @@ const COUNTRY_TO_CURRENCY: Record<string, string> = {
   VN: "VND", // Vietnam
   PK: "PKR", // Pakistan
   BD: "BDT", // Bangladesh
-  
+
+  // Eastern Europe / Other
+  RU: "RUB", // Russia
+  UA: "UAH", // Ukraine
+  KZ: "KZT", // Kazakhstan
+
   // Oceania
   AU: "AUD", // Australia
   NZ: "NZD", // New Zealand
@@ -155,6 +163,9 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   PKR: "₨",
   BDT: "৳",
   NZD: "NZ$",
+  RUB: "₽",
+  UAH: "₴",
+  KZT: "₸",
 };
 
 /**
@@ -370,7 +381,8 @@ export function formatPrice(amount: number, symbol: string): string {
   if (symbol === "R" || symbol === "₦" || symbol === "KSh" || symbol === "GH₵" || 
       symbol === "FCFA" || symbol === "CFA" || symbol === "TSh" || symbol === "USh" ||
       symbol === "Br" || symbol === "Rp" || symbol === "₫" || symbol === "₨" || 
-      symbol === "৳" || symbol === "¥" || symbol === "₩") {
+      symbol === "৳" || symbol === "¥" || symbol === "₩" || symbol === "₽" ||
+      symbol === "₴" || symbol === "₸") {
     // No decimal places for some currencies
     return `${symbol}${Math.round(rounded).toLocaleString()}`;
   }
@@ -440,6 +452,9 @@ function getCurrencyName(code: string): string {
     INR: "Indian Rupee",
     CNY: "Chinese Yuan",
     JPY: "Japanese Yen",
+    RUB: "Russian Ruble",
+    UAH: "Ukrainian Hryvnia",
+    KZT: "Kazakhstani Tenge",
   };
   return names[code] || "US Dollar";
 }

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   catalogProducts,
-  getCatalogProduct,
   toGridProduct,
   type CatalogProduct,
 } from "@/data/catalog";
@@ -15,7 +14,27 @@ const LIMIT = 6;
 
 type GridProduct = ReturnType<typeof toGridProduct>;
 
+/** Admin overrides keyed by product id (from src/lib/productOverrides). */
+export type AdminOverrides = Record<
+  string,
+  { name?: string | null; price?: number | null }
+>;
+
 const norm = (value?: string | null) => (value || "").trim().toLowerCase();
+
+const applyOverrides = (
+  product: CatalogProduct,
+  overrides?: AdminOverrides
+): CatalogProduct => {
+  if (!overrides) return product;
+  const override = overrides[product.id];
+  if (!override) return product;
+  return {
+    ...product,
+    name: override.name ?? product.name,
+    price: override.price ?? product.price,
+  };
+};
 
 /**
  * Same brand OR same category as something in the cart, ranked brand-first.
@@ -23,7 +42,8 @@ const norm = (value?: string | null) => (value || "").trim().toLowerCase();
  */
 function localRecommendations(
   cartProducts: CatalogProduct[],
-  cartIds: Set<string>
+  cartIds: Set<string>,
+  source: CatalogProduct[]
 ): CatalogProduct[] {
   const brands = new Set(cartProducts.map((p) => norm(p.brand)).filter(Boolean));
   const categories = new Set(cartProducts.map((p) => norm(p.category)));
@@ -35,7 +55,7 @@ function localRecommendations(
     return value;
   };
 
-  return catalogProducts
+  return source
     .filter((product) => !cartIds.has(product.id))
     .map((product) => ({ product, score: score(product) }))
     .filter((entry) => entry.score > 0)
@@ -44,30 +64,41 @@ function localRecommendations(
     .map((entry) => entry.product);
 }
 
-export function RecommendationsRail() {
+export function RecommendationsRail({
+  overrides,
+}: {
+  overrides?: AdminOverrides;
+}) {
   const items = useCart((state) => state.items);
   const recentlyViewedIds = useRecommendationStore(
     (state) => state.recentlyViewed
   );
   const [recommended, setRecommended] = useState<GridProduct[]>([]);
 
+  const overriddenCatalog = useMemo(
+    () => catalogProducts.map((product) => applyOverrides(product, overrides)),
+    [overrides]
+  );
+
   const idSet = useMemo(() => new Set(recentlyViewedIds), [recentlyViewedIds]);
   const recentlyViewed = useMemo(
     () =>
-      catalogProducts
+      overriddenCatalog
         .filter((product) => idSet.has(product.id))
         .slice(0, LIMIT)
         .map(toGridProduct),
-    [idSet]
+    [idSet, overriddenCatalog]
   );
 
   const cartIds = useMemo(() => new Set(items.map((item) => item.id)), [items]);
   const cartProducts = useMemo(
     () =>
       items
-        .map((item) => getCatalogProduct(item.id))
+        .map((item) =>
+          overriddenCatalog.find((product) => product.id === item.id)
+        )
         .filter((product): product is CatalogProduct => Boolean(product)),
-    [items]
+    [items, overriddenCatalog]
   );
 
   useEffect(() => {
@@ -80,7 +111,7 @@ export function RecommendationsRail() {
     const controller = new AbortController();
 
     const fallback = () =>
-      localRecommendations(cartProducts, cartIds).map(toGridProduct);
+      localRecommendations(cartProducts, cartIds, overriddenCatalog).map(toGridProduct);
 
     const timer = setTimeout(async () => {
       try {
@@ -91,7 +122,7 @@ export function RecommendationsRail() {
           body: JSON.stringify({
             limit: LIMIT,
             cartItems: items.map((item) => {
-              const product = getCatalogProduct(item.id);
+              const product = overriddenCatalog.find((p) => p.id === item.id);
               return {
                 id: item.id,
                 name: item.name,
@@ -106,7 +137,9 @@ export function RecommendationsRail() {
 
         const data = await res.json();
         const mapped: GridProduct[] = (data.recommendations || [])
-          .map((rec: { id: string }) => getCatalogProduct(rec.id))
+          .map((rec: { id: string }) =>
+            overriddenCatalog.find((product) => product.id === rec.id)
+          )
           .filter((product: CatalogProduct | undefined): product is CatalogProduct =>
             Boolean(product)
           )
@@ -124,7 +157,7 @@ export function RecommendationsRail() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [items, cartProducts, cartIds]);
+  }, [items, cartProducts, cartIds, overriddenCatalog]);
 
   if (!recentlyViewed.length && !recommended.length) {
     return null;

@@ -1,12 +1,16 @@
 import { ProductGrid } from "@/components/ProductGrid";
 import { getProductsByCategory } from "@/data/products";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 
 export const metadata = {
   title: "Men",
 };
 
-export default function MenPage() {
-  const menProducts = getProductsByCategory("men").map((product) => ({
+export const dynamic = "force-dynamic";
+
+export default async function MenPage() {
+  const overrides = await loadProductOverrides();
+  const menProducts = applyOverrides(getProductsByCategory("men"), overrides).map((product) => ({
     id: product.id,
     name: product.name,
     price: product.price,

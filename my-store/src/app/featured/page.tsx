@@ -2,14 +2,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCatalogByCategory, toGridProduct } from "@/data/catalog";
+import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 import { brandGroups } from "../../../mobile-app/src/data/featuredProducts";
 
 export const metadata = {
   title: "Featured",
 };
 
-export default function FeaturedPage() {
-  const products = getCatalogByCategory("featured").map(toGridProduct);
+export const dynamic = "force-dynamic";
+
+export default async function FeaturedPage() {
+  const overrides = await loadProductOverrides();
+  const products = applyOverrides(getCatalogByCategory("featured"), overrides).map(toGridProduct);
 
   return (
     <div className="min-h-screen bg-white">
