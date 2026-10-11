@@ -122,7 +122,7 @@ export default function ReflectShader(props: ReflectShaderProps) {
     style,
   } = props;
 
-  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   const live = React.useRef({
     speed,
@@ -167,15 +167,31 @@ export default function ReflectShader(props: ReflectShaderProps) {
   };
 
   React.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Create the canvas imperatively so every mount (React Strict Mode's
+    // double-invoke, Fast Refresh, etc.) gets a brand new WebGL context.
+    // Reusing a React-managed canvas after loseContext() means getContext()
+    // returns the already-lost context and the shader silently never draws.
+    const canvas = document.createElement("canvas");
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.display = "block";
+    canvas.style.pointerEvents = "none";
+    container.appendChild(canvas);
 
     const gl = canvas.getContext("webgl", {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
     });
-    if (!gl) return;
+    if (!gl) {
+      canvas.remove();
+      return;
+    }
 
     const compile = (type: number, src: string) => {
       const sh = gl.createShader(type)!;
@@ -187,7 +203,10 @@ export default function ReflectShader(props: ReflectShaderProps) {
     gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
     gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
     gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      canvas.remove();
+      return;
+    }
     gl.useProgram(program);
 
     const buffer = gl.createBuffer();
@@ -276,11 +295,13 @@ export default function ReflectShader(props: ReflectShaderProps) {
       cancelAnimationFrame(raf);
       ro.disconnect();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
+      canvas.remove();
     };
   }, []);
 
   return (
     <div
+      ref={containerRef}
       onPointerMove={(e) => {
         const { x, y } = toUv(e);
         const p = ptr.current;
@@ -302,19 +323,7 @@ export default function ReflectShader(props: ReflectShaderProps) {
         background,
         ...style,
       }}
-    >
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          display: "block",
-          pointerEvents: "none",
-        }}
-      />
-    </div>
+    />
   );
 }
 

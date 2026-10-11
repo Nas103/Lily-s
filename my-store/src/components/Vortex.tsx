@@ -264,9 +264,26 @@ function createVortex(
   canvas: HTMLCanvasElement,
   container: HTMLElement,
   cfgRef: { current: any }
-): VortexAPI {
+): VortexAPI | null {
+  // Acquire the WebGL context ourselves first. If it cannot be created (e.g.
+  // the browser has exhausted its WebGL context budget) or comes back already
+  // lost, bail out instead of letting three.js throw the opaque
+  // "Cannot read properties of null (reading 'precision')" error.
+  const contextAttributes: WebGLContextAttributes = {
+    antialias: true,
+    alpha: true,
+    powerPreference: "high-performance",
+  };
+  const gl =
+    canvas.getContext("webgl2", contextAttributes) ||
+    canvas.getContext("webgl", contextAttributes);
+  if (!gl || (typeof gl.isContextLost === "function" && gl.isContextLost())) {
+    return null;
+  }
+
   const renderer = new THREE.WebGLRenderer({
     canvas,
+    context: gl,
     antialias: true,
     alpha: true,
     powerPreference: "high-performance",
@@ -1158,7 +1175,6 @@ function __OriginkitBase_Vortex(props: VortexProps) {
   } = props;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const reducedMotion = useReducedMotion();
   const running = !reducedMotion;
@@ -1221,18 +1237,32 @@ function __OriginkitBase_Vortex(props: VortexProps) {
   const apiRef = React.useRef<VortexAPI | null>(null);
 
   React.useEffect(() => {
-    const canvas = canvasRef.current;
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!container) return;
+
+    // Create the canvas imperatively so every mount (React Strict Mode's
+    // double-invoke, Fast Refresh, etc.) gets a brand new WebGL context.
+    // Reusing a React-managed canvas after forceContextLoss() makes
+    // getContext() return the already-lost context, which crashes three.js
+    // with "Cannot read properties of null (reading 'precision')".
+    const canvas = document.createElement("canvas");
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    container.appendChild(canvas);
+
     try {
       apiRef.current = createVortex(canvas, container, configRef);
     } catch (err) {
       console.warn("[Vortex] init failed:", err);
-      return;
+      return () => {
+        canvas.remove();
+      };
     }
     return () => {
       apiRef.current?.dispose();
       apiRef.current = null;
+      canvas.remove();
     };
   }, []);
 
@@ -1256,9 +1286,7 @@ function __OriginkitBase_Vortex(props: VortexProps) {
         background,
         overflow: "hidden",
       }}
-    >
-      <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
-    </div>
+    />
   );
 }
 
