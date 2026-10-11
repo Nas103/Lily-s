@@ -1,7 +1,7 @@
 /**
  * Perfumes Products Data
  *
- * Real products (10 items). Prices are stored in USD and auto-converted
+ * Real products (12 items). Prices are stored in USD and auto-converted
  * via the API using currency.ts (ZAR 18.5). Images are served from the web
  * public/perfumes/<slug>/ folder (main + up to 3 views). Each product has a
  * single color with 4 image angles (front/back/side/top) to fit the gallery.
@@ -159,5 +159,33 @@ export const perfumesProducts: Product[] = [
     tags: ['fragrance', 'parfum', 'unisex', 'xerjoff'],
     badge: 'Unisex',
     imageUrl: '/perfumes/xerjoff-5-five-white-eau-de-parfum-uae-exclusive/main.jpg',
+  },
+  {
+    id: 'perfume-women-armani-diamonds-intense',
+    name: 'Emporio Armani Diamonds Intense Eau de Parfum',
+    slug: 'armani-diamonds-intense-eau-de-parfum',
+    description: 'Emporio Armani Diamonds Intense is a gourmet fruity-floral blend, harmonizing a symbol of femininity with rose aromas mixed with fruity accords, leaving an amazing fragrant trail. Available in 30ml EDP.',
+    category: 'perfumes',
+    gender: 'women',
+    price: 37.78,
+    colors: ['Classic'],
+    colorImages: images('armani-diamonds-intense-eau-de-parfum', 'jpg', 1),
+    tags: ['fragrance', 'fruity-floral', 'women', 'armani'],
+    badge: 'Women',
+    imageUrl: '/perfumes/armani-diamonds-intense-eau-de-parfum/main.jpg',
+  },
+  {
+    id: 'perfume-women-armani-si-passione',
+    name: 'Armani Sì Passione Eau de Parfum',
+    slug: 'armani-si-passione-eau-de-parfum',
+    description: 'Armani Sì Passione, a bold and passionate fragrance for women. Available in 100ml EDP.',
+    category: 'perfumes',
+    gender: 'women',
+    price: 160.81,
+    colors: ['Classic'],
+    colorImages: images('armani-si-passione-eau-de-parfum', 'jpg', 1),
+    tags: ['fragrance', 'chypre-floral', 'women', 'armani'],
+    badge: 'Women',
+    imageUrl: '/perfumes/armani-si-passione-eau-de-parfum/main.jpg',
   },
 ];
