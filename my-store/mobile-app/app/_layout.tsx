@@ -4,7 +4,12 @@ import { useAuth } from '../src/stores/authStore';
 import { useProfile } from '../src/stores/profileStore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import CustomSplashScreen from '../src/components/CustomSplashScreen';
+
+// Publishable key is safe to ship in the client. Set EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY.
+const STRIPE_PUBLISHABLE_KEY =
+  process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '';
 
 export default function RootLayout() {
   const loadUser = useAuth((state) => state.loadUser);
@@ -57,32 +62,34 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: '#ffffff' },
-          }}
-        >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="product/[id]" />
-          <Stack.Screen name="checkout" />
-          <Stack.Screen name="profile" />
-          <Stack.Screen name="wishlist" />
-          <Stack.Screen name="orders" />
-          <Stack.Screen name="orders/[orderNumber]" />
-          <Stack.Screen name="preferences" />
-          <Stack.Screen name="ai-chat" />
-          <Stack.Screen name="delivery-addresses" />
-          <Stack.Screen name="payment-methods" />
-          <Stack.Screen name="settings" />
-          <Stack.Screen name="support" />
-          <Stack.Screen name="perfumes" />
-        </Stack>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} urlScheme="naso">
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: '#ffffff' },
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="product/[id]" />
+            <Stack.Screen name="checkout" />
+            <Stack.Screen name="profile" />
+            <Stack.Screen name="wishlist" />
+            <Stack.Screen name="orders" />
+            <Stack.Screen name="orders/[orderNumber]" />
+            <Stack.Screen name="preferences" />
+            <Stack.Screen name="ai-chat" />
+            <Stack.Screen name="delivery-addresses" />
+            <Stack.Screen name="payment-methods" />
+            <Stack.Screen name="settings" />
+            <Stack.Screen name="support" />
+            <Stack.Screen name="perfumes" />
+          </Stack>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </StripeProvider>
   );
 }
 

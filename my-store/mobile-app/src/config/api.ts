@@ -32,7 +32,7 @@ function getDevHost(): string {
 
 export const API_BASE_URL = __DEV__
   ? `http://${getDevHost()}:3000`
-  : 'https://your-production-domain.com'; // Production - update with your deployed Next.js URL
+  : 'https://lily-s.vercel.app'; // Production (Vercel)
 
 export const API_ENDPOINTS = {
   // Auth
@@ -57,6 +57,9 @@ export const API_ENDPOINTS = {
   
   // Cart & Checkout
   CHECKOUT: '/api/checkout',
+
+  // Stripe in-app payments
+  STRIPE_PAYMENT_INTENT: '/api/stripe/create-payment-intent',
   
   // Delivery Addresses
   DELIVERY_ADDRESSES: '/api/delivery-addresses',

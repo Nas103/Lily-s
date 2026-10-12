@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { useCurrency } from "@/hooks/useCurrency";
 
 type Order = {
   orderNumber: string;
@@ -20,6 +21,7 @@ export default function TrackOrderPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { convertPrice } = useCurrency();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -123,8 +125,8 @@ export default function TrackOrderPage() {
             )}
             <p className="mt-4 text-sm text-zinc-600">
               {order.orderItems.length} item
-              {order.orderItems.length === 1 ? "" : "s"} · Total R
-              {order.total.toFixed(2)}
+              {order.orderItems.length === 1 ? "" : "s"} · Total{" "}
+              {convertPrice(order.total).formatted}
             </p>
             <Link
               href={`/orders/${order.orderNumber}`}

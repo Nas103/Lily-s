@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, Linking } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCart } from '../src/stores/cartStore';
 import { useAuth } from '../src/stores/authStore';
 import { useState, useEffect } from 'react';
-import { deliveryAddressesAPI, checkoutAPI } from '../src/services/api';
+import { deliveryAddressesAPI, stripeAPI } from '../src/services/api';
+import { useStripe } from '@stripe/stripe-react-native';
 import { DeliveryAddress, PaymentMethod } from '../src/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useCurrency } from '../src/hooks/useCurrency';
@@ -14,7 +15,8 @@ export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
   const { items, total, clearCart } = useCart();
   const { isAuthenticated, user } = useAuth();
-  const { country } = useCurrency();
+  const { symbol } = useCurrency();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<string>('');
@@ -78,49 +80,59 @@ export default function CheckoutScreen() {
 
     try {
       setLoading(true);
-      
-      // Prepare checkout items
+
+      // Cart prices are display-only; the server re-resolves each item's price
+      // from the catalog and computes the charge amount itself.
       const checkoutItems = items.map((item) => ({
+        id: item.id,
+        productId: item.id,
         name: item.name,
         imageUrl: item.imageUrl,
         price: item.price,
         quantity: item.quantity,
+        size: item.size,
+        color: item.color,
       }));
 
-      // Call checkout API to get PayFast payment URL
-      const result = await checkoutAPI.create(checkoutItems);
-      
-      if (result.paymentUrl && result.paymentData) {
-        const orderNumber = result.orderNumber || 'N/A';
-        
-        // For mobile, open PayFast payment page in browser
-        const paymentUrl = result.paymentUrl;
-        const canOpen = await Linking.canOpenURL(paymentUrl);
-        
-        if (canOpen) {
-          // Open PayFast payment page
-          await Linking.openURL(paymentUrl);
-          
-          Alert.alert(
-            'Order Created',
-            `Order Number: ${orderNumber}\n\nYou will be redirected to PayFast to complete your payment. After payment, you will receive a confirmation email.`,
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  clearCart();
-                  // Note: In production, you'd want to handle the PayFast callback
-                  // to update order status when payment is confirmed
-                },
-              },
-            ]
-          );
-        } else {
-          throw new Error('Cannot open payment URL');
-        }
-      } else {
-        throw new Error('Invalid payment response');
+      // 1. Create a PaymentIntent on the server and get the client secret.
+      const { clientSecret, orderNumber } = await stripeAPI.createPaymentIntent(
+        checkoutItems,
+        selectedAddress
+      );
+
+      if (!clientSecret) {
+        throw new Error('Missing payment client secret');
       }
+
+      // 2. Initialise the Stripe Payment Sheet.
+      const { error: initError } = await initPaymentSheet({
+        merchantDisplayName: 'NaSO',
+        paymentIntentClientSecret: clientSecret,
+        allowsDelayedPaymentMethods: true,
+        returnURL: 'naso://stripe-redirect',
+      });
+
+      if (initError) {
+        throw new Error(initError.message);
+      }
+
+      // 3. Present the sheet and complete the payment.
+      const { error: presentError } = await presentPaymentSheet();
+
+      if (presentError) {
+        // Shopper dismissed the sheet — keep the cart intact.
+        if (presentError.code === 'Canceled') {
+          return;
+        }
+        throw new Error(presentError.message);
+      }
+
+      clearCart();
+      Alert.alert(
+        'Payment Successful',
+        `Thank you! Your order ${orderNumber} has been paid. A confirmation email is on its way.`,
+        [{ text: 'View Orders', onPress: () => router.replace('/orders') }]
+      );
     } catch (error: any) {
       console.error('Checkout error:', error);
       Alert.alert(
@@ -131,18 +143,6 @@ export default function CheckoutScreen() {
       setLoading(false);
     }
   };
-
-  // Get currency symbol based on country
-  const getCurrencySymbol = () => {
-    // This will be enhanced with actual currency conversion
-    // For now, return based on country
-    if (country === 'ZA') return 'R';
-    if (country === 'GB') return '£';
-    if (country === 'EU' || ['FR', 'DE', 'IT', 'ES'].includes(country || '')) return '€';
-    return '$';
-  };
-
-  const currencySymbol = getCurrencySymbol();
 
   if (items.length === 0) {
     return (
@@ -294,10 +294,10 @@ export default function CheckoutScreen() {
             <View key={index} style={styles.orderItem}>
               <Text style={styles.orderItemName}>{item.name}</Text>
               <Text style={styles.orderItemDetails}>
-                Qty: {item.quantity} × {currencySymbol}{item.price.toFixed(2)}
+                Qty: {item.quantity} × {symbol}{item.price.toFixed(2)}
               </Text>
               <Text style={styles.orderItemTotal}>
-                {currencySymbol}{(item.price * item.quantity).toFixed(2)}
+                {symbol}{(item.price * item.quantity).toFixed(2)}
               </Text>
             </View>
           ))}
@@ -307,7 +307,7 @@ export default function CheckoutScreen() {
         <View style={styles.totalSection}>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Subtotal</Text>
-            <Text style={styles.totalValue}>{currencySymbol}{total().toFixed(2)}</Text>
+            <Text style={styles.totalValue}>{symbol}{total().toFixed(2)}</Text>
           </View>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Shipping</Text>
@@ -315,7 +315,7 @@ export default function CheckoutScreen() {
           </View>
           <View style={[styles.totalRow, styles.finalTotal]}>
             <Text style={styles.finalTotalLabel}>Total</Text>
-            <Text style={styles.finalTotalValue}>{currencySymbol}{total().toFixed(2)}</Text>
+            <Text style={styles.finalTotalValue}>{symbol}{total().toFixed(2)}</Text>
           </View>
         </View>
       </ScrollView>

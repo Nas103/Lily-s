@@ -9,6 +9,7 @@ import { applySecurityMiddleware } from "@/lib/middleware";
 import { sanitizeInput } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth-middleware";
+import { currencyCodeForCountry } from "@/lib/currency";
 import { generateOrderNumber } from "@/lib/orders";
 
 type CheckoutItem = {
@@ -78,8 +79,29 @@ export async function POST(request: NextRequest) {
   }
 
   // Calculate total amount with optional Vertex AI dynamic pricing.
-  const currency = "ZAR";
+  // Item prices are stored in the USD base currency; `currency` records the
+  // shopper's local currency so order history can render the right symbol.
   const ipAddress = request.headers.get("x-forwarded-for") ?? undefined;
+
+  const user = await getCurrentUser(request);
+  let profileCountry: string | null = null;
+  if (user && prisma) {
+    try {
+      const profile = await (prisma as any).user.findUnique({
+        where: { id: user.id },
+        select: { country: true },
+      });
+      profileCountry = profile?.country ?? null;
+    } catch {
+      profileCountry = null;
+    }
+  }
+  const shippingCountry =
+    typeof shipping?.country === "string" ? shipping.country.trim() : "";
+  const resolvedCountry = shippingCountry || profileCountry || "";
+  const currency = resolvedCountry
+    ? currencyCodeForCountry(resolvedCountry)
+    : "ZAR";
 
   let totalAmount = 0;
 
@@ -103,7 +125,6 @@ export async function POST(request: NextRequest) {
   // Persist the order when the shopper is authenticated so it appears in
   // their history and can be reconciled by the PayFast webhook.
   try {
-    const user = await getCurrentUser(request);
     if (user && prisma) {
       await (prisma as any).order.create({
         data: {

@@ -5,7 +5,7 @@ import { useAuth } from "@/stores/authStore";
 import { useProfile } from "@/stores/profileStore";
 import {
   getUserCurrencySync,
-  convertPriceSync,
+  getCurrencyByCodeSync,
   formatPrice,
   initializeExchangeRates,
 } from "@/lib/currency";
@@ -23,6 +23,7 @@ let ratesInitialized = false;
 export function useCurrency() {
   const user = useAuth((state) => state.user);
   const country = useProfile((state) => state.country);
+  const preferences = useProfile((state) => state.preferences);
   const loading = useProfile((state) => state.loading);
   const initialized = useProfile((state) => state.initialized);
   const load = useProfile((state) => state.load);
@@ -38,14 +39,29 @@ export function useCurrency() {
     if (user) void load();
   }, [user, load]);
 
-  const currency = getUserCurrencySync(country);
+  // An explicit preferred currency (set in profile settings) takes priority
+  // over the currency inferred from the shipping country.
+  const preferredCurrency = preferences?.preferredCurrency;
+  const currency = preferredCurrency
+    ? getCurrencyByCodeSync(preferredCurrency)
+    : getUserCurrencySync(country);
+
+  const convertPrice = (priceInUSD: number) => {
+    const amount = priceInUSD / currency.rate;
+    return {
+      amount,
+      currency: currency.code,
+      symbol: currency.symbol,
+      formatted: formatPrice(amount, currency.symbol),
+    };
+  };
 
   return {
     country,
     currency: currency.code,
     symbol: currency.symbol,
     rate: currency.rate,
-    convertPrice: (priceInUSD: number) => convertPriceSync(priceInUSD, country),
+    convertPrice,
     formatPrice: (amount: number) => formatPrice(amount, currency.symbol),
     loading: Boolean(user) && loading && !initialized,
   };

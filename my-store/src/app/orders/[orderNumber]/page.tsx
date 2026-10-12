@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Loader2, ArrowLeft, Check } from "lucide-react";
 import Image from "next/image";
+import { useCurrency } from "@/hooks/useCurrency";
 
 type OrderItem = {
   id: string;
@@ -42,6 +43,7 @@ const STEPS = ["PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED"];
 export default function OrderDetailPage() {
   const params = useParams();
   const orderNumber = String(params?.orderNumber || "");
+  const { convertPrice } = useCurrency();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -181,22 +183,22 @@ export default function OrderDetailPage() {
                     </p>
                   </div>
                   <p className="text-sm font-semibold text-zinc-900">
-                    R{(item.price * item.quantity).toFixed(2)}
+                    {convertPrice(item.price * item.quantity).formatted}
                   </p>
                 </div>
               ))}
               <div className="space-y-1 border-t border-zinc-100 pt-4 text-sm">
                 <div className="flex justify-between text-zinc-600">
                   <span>Subtotal</span>
-                  <span>R{order.subtotal.toFixed(2)}</span>
+                  <span>{convertPrice(order.subtotal).formatted}</span>
                 </div>
                 <div className="flex justify-between text-zinc-600">
                   <span>Shipping</span>
-                  <span>R{order.shipping.toFixed(2)}</span>
+                  <span>{convertPrice(order.shipping).formatted}</span>
                 </div>
                 <div className="flex justify-between text-base font-semibold text-zinc-900">
                   <span>Total</span>
-                  <span>R{order.total.toFixed(2)}</span>
+                  <span>{convertPrice(order.total).formatted}</span>
                 </div>
               </div>
             </section>

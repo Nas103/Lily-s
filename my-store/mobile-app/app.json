@@ -58,7 +58,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#000000"
         }
-      ]
+      ],
+      "@stripe/stripe-react-native"
     ],
     "scheme": "naso",
     "extra": {

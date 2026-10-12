@@ -176,6 +176,15 @@ function getCurrencyCode(countryCode: string): string {
 }
 
 /**
+ * Public helper: resolve the ISO 4217 currency code for a country code.
+ * Returns "USD" when the country is unknown.
+ */
+export function currencyCodeForCountry(country?: string | null): string {
+  if (!country) return "USD";
+  return getCurrencyCode(country);
+}
+
+/**
  * Fetch exchange rates from API
  */
 async function fetchExchangeRates(): Promise<Record<string, number>> {
@@ -311,6 +320,55 @@ export function getUserCurrencySync(country?: string | null): {
     }
   }
   
+  return {
+    code: currencyCode,
+    symbol: CURRENCY_SYMBOLS[currencyCode] || "$",
+    rate,
+  };
+}
+
+/**
+ * Resolve currency info from an explicit ISO 4217 currency code
+ * (sync – uses cached rates or fallback). Used for the user's explicit
+ * `preferredCurrency` preference, which takes priority over their country.
+ */
+export function getCurrencyByCodeSync(code?: string | null): {
+  code: string;
+  symbol: string;
+  rate: number;
+} {
+  const currencyCode = (code || "").toUpperCase();
+  if (!currencyCode) return getUserCurrencySync(null);
+
+  if (currencyCode === "USD") {
+    return { code: "USD", symbol: "$", rate: 1.0 };
+  }
+
+  let rateFromUSD = exchangeRatesCache?.rates?.[currencyCode];
+  if (!rateFromUSD) rateFromUSD = FALLBACK_RATES[currencyCode];
+  const rate = rateFromUSD ? 1 / rateFromUSD : 1.0;
+
+  return {
+    code: currencyCode,
+    symbol: CURRENCY_SYMBOLS[currencyCode] || "$",
+    rate,
+  };
+}
+
+/**
+ * Resolve currency info from an explicit ISO 4217 currency code using
+ * real-time rates (falls back to cached/fallback values).
+ */
+export async function getCurrencyByCode(code?: string | null): Promise<{
+  code: string;
+  symbol: string;
+  rate: number;
+}> {
+  const currencyCode = (code || "").toUpperCase();
+  if (!currencyCode) return getUserCurrency(null);
+  if (currencyCode === "USD") return { code: "USD", symbol: "$", rate: 1.0 };
+
+  const rate = await getExchangeRate(currencyCode);
   return {
     code: currencyCode,
     symbol: CURRENCY_SYMBOLS[currencyCode] || "$",

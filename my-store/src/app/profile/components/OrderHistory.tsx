@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2, Package } from "lucide-react";
+import { useCurrency } from "@/hooks/useCurrency";
 
 type Order = {
   id: string;
@@ -27,6 +28,7 @@ export function OrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { convertPrice } = useCurrency();
 
   useEffect(() => {
     let active = true;
@@ -102,7 +104,7 @@ export function OrderHistory() {
               {order.status}
             </span>
             <span className="text-sm font-semibold text-zinc-900">
-              R{order.total.toFixed(2)}
+              {convertPrice(order.total).formatted}
             </span>
           </div>
         </Link>

@@ -229,6 +229,22 @@ export const checkoutAPI = {
   },
 };
 
+// Stripe in-app payments API
+export const stripeAPI = {
+  createPaymentIntent: async (items: any[], deliveryAddressId?: string) => {
+    const response = await api.post(API_ENDPOINTS.STRIPE_PAYMENT_INTENT, {
+      items,
+      deliveryAddressId,
+    });
+    return response.data as {
+      orderNumber: string;
+      clientSecret: string;
+      currency?: string;
+      amount?: number;
+    };
+  },
+};
+
 // Currency API
 export const currencyAPI = {
   getRates: async (baseCurrency: string = 'USD') => {

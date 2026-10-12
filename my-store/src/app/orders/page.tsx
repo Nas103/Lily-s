@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Package, Loader2 } from "lucide-react";
 import { useAuth } from "@/stores/authStore";
+import { useCurrency } from "@/hooks/useCurrency";
 import { BRAND } from "@/lib/brand";
 
 type OrderItem = {
@@ -42,6 +43,7 @@ const statusStyles: Record<string, string> = {
 export default function OrdersPage() {
   const router = useRouter();
   const user = useAuth((state) => state.user);
+  const { convertPrice } = useCurrency();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -136,7 +138,7 @@ export default function OrdersPage() {
                     {order.status}
                   </span>
                   <span className="text-sm font-semibold text-zinc-900">
-                    R{order.total.toFixed(2)}
+                    {convertPrice(order.total).formatted}
                   </span>
                 </div>
               </div>

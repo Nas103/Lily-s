@@ -11,6 +11,11 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Environment (keep .env out of git; commit .env.example only)
+.env
+.env.local
+.env.*.local
+
 # macOS
 .DS_Store
 

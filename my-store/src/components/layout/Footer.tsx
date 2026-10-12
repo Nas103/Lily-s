@@ -64,10 +64,19 @@ export function Footer() {
         </div>
         <div className="mt-10 flex flex-col gap-2 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
-          <div className="flex gap-4">
-            <span>Privacy</span>
-            <span>Cookies</span>
-            <span>Terms</span>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/privacy" className="transition hover:text-black">
+              Privacy
+            </Link>
+            <Link href="/cookies" className="transition hover:text-black">
+              Cookies
+            </Link>
+            <Link href="/terms" className="transition hover:text-black">
+              Terms
+            </Link>
+            <Link href="/refund-policy" className="transition hover:text-black">
+              Refunds &amp; Returns
+            </Link>
           </div>
         </div>
       </div>

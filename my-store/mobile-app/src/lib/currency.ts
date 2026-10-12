@@ -121,6 +121,72 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 
 export const DEFAULT_CURRENCY = 'USD';
 
+// Fallback exchange rates (base: USD). Format: 1 USD = X target currency.
+// Used until live rates are fetched from /api/currency, or if that call fails.
+export const FALLBACK_RATES: Record<string, number> = {
+  USD: 1.0,
+  ZAR: 18.5,
+  GBP: 0.79,
+  EUR: 0.92,
+  CAD: 1.36,
+  AUD: 1.52,
+  NGN: 1500.0,
+  KES: 130.0,
+  GHS: 13.5,
+  AED: 3.67,
+  KWD: 0.31,
+  XAF: 600.0,
+  SAR: 3.75,
+  INR: 83.0,
+  CNY: 7.2,
+  JPY: 150.0,
+  RUB: 90.0,
+  UAH: 41.0,
+  KZT: 470.0,
+};
+
+// Live rates (USD base) fetched from the backend, cached in memory.
+let liveRates: Record<string, number> | null = null;
+
+/** Store the latest USD-based exchange rates (from /api/currency). */
+export function setExchangeRates(rates: Record<string, number> | null): void {
+  liveRates = rates && Object.keys(rates).length ? rates : null;
+}
+
+/** Resolve 1 USD = X <code>, preferring live rates then fallback. */
+export function getRateFromUSD(currencyCode?: string | null): number {
+  const code = (currencyCode || DEFAULT_CURRENCY).toUpperCase();
+  const rate = liveRates?.[code] ?? FALLBACK_RATES[code];
+  return rate && rate > 0 ? rate : 1.0;
+}
+
+/**
+ * Convert a USD base amount into the target currency.
+ * Prices in the store are stored in USD; this is display-only.
+ */
+export function convertPriceSync(
+  amountUSD: number,
+  currencyCode?: string | null
+): number {
+  if (!Number.isFinite(amountUSD)) return 0;
+  return amountUSD * getRateFromUSD(currencyCode);
+}
+
+export function formatCurrency(
+  amountUSD: number,
+  currencyCode?: string | null
+): string {
+  const code = (currencyCode || DEFAULT_CURRENCY).toUpperCase();
+  const symbol = getCurrencySymbol(code);
+  const value = convertPriceSync(amountUSD, code);
+  // Currencies with large nominal values read better without decimals.
+  const noDecimals = ['JPY', 'KRW', 'NGN', 'KES', 'XAF', 'XOF', 'VND', 'IDR'];
+  const formatted = noDecimals.includes(code)
+    ? Math.round(value).toLocaleString()
+    : value.toFixed(2);
+  return `${symbol}${formatted}`;
+}
+
 export type CurrencyInfo = {
   code: string;
   symbol: string;
