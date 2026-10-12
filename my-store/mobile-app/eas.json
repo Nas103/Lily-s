@@ -21,7 +21,7 @@
     },
     "production": {
       "android": {
-        "buildType": "aab"
+        "buildType": "app-bundle"
       },
       "env": {
         "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_live_51UPgJcK8dSeI1LlgvYLmce2U2FwVSWEkIRKAleaCRk0IzsWLi0VgtSmd4Kw5rXxwzpXK0D1ljBCJO1Ade0E1mIhG001wSGziQu"

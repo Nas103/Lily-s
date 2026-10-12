@@ -31,7 +31,9 @@
         "ACCESS_COARSE_LOCATION",
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "web": {
@@ -59,13 +61,21 @@
           "backgroundColor": "#000000"
         }
       ],
-      "@stripe/stripe-react-native"
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.naso.app",
+          "enableGooglePay": false
+        }
+      ]
     ],
     "scheme": "naso",
     "extra": {
       "eas": {
-        "projectId": "your-project-id-here"
-      }
-    }
+        "projectId": "72b44269-09c1-4d09-8fd1-40672ff8703e"
+      },
+      "router": {}
+    },
+    "owner": "nas299"
   }
 }
