@@ -21,6 +21,18 @@ const STRIPE_CURRENCY = (process.env.STRIPE_CURRENCY ?? "usd").toLowerCase();
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 /**
+ * Stripe requires absolute image URLs. Product data uses site-relative paths
+ * (e.g. "/perfumes/.../main.jpg"), so resolve them against SITE_URL and drop
+ * anything that isn't a usable URL.
+ */
+function toAbsoluteImageUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("/")) return `${SITE_URL}${url}`;
+  return undefined;
+}
+
+/**
  * Web checkout via Stripe-hosted Checkout. Prices are resolved from the
  * catalog server-side so a tampered client can't underpay, matching the
  * mobile Payment Sheet flow.
@@ -166,7 +178,10 @@ export async function POST(request: NextRequest) {
           unit_amount: Math.round(item.price * 100),
           product_data: {
             name: item.name,
-            images: item.imageUrl ? [item.imageUrl] : undefined,
+            images: (() => {
+              const img = toAbsoluteImageUrl(item.imageUrl);
+              return img ? [img] : undefined;
+            })(),
           },
         },
       })),
