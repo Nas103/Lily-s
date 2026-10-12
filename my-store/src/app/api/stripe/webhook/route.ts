@@ -59,6 +59,23 @@ export async function POST(request: NextRequest) {
         });
         break;
       }
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const orderNumber =
+          (session.metadata?.orderNumber as string | undefined) ??
+          session.client_reference_id ??
+          undefined;
+        const paymentRef =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id;
+        await markOrderByNumber(orderNumber, {
+          status: "PAID",
+          paymentStatus: "PAID",
+          paymentRef,
+        });
+        break;
+      }
       default:
         break;
     }
@@ -97,6 +114,21 @@ async function markOrder(
     data: {
       status: data.status,
       paymentStatus: data.paymentStatus,
+    },
+  });
+}
+
+async function markOrderByNumber(
+  orderNumber: string | undefined,
+  data: { status: string; paymentStatus: string; paymentRef?: string }
+) {
+  if (!prisma || !orderNumber) return;
+  await (prisma as any).order.updateMany({
+    where: { orderNumber },
+    data: {
+      status: data.status,
+      paymentStatus: data.paymentStatus,
+      ...(data.paymentRef ? { paymentRef: data.paymentRef } : {}),
     },
   });
 }

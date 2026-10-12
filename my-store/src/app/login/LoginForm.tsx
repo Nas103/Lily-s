@@ -64,11 +64,16 @@ export function LoginForm() {
         createdAt: user.createdAt,
       });
 
-      // Redirect based on role
+      // Redirect based on role, honouring an internal ?next= target.
+      const nextParam = new URLSearchParams(window.location.search).get("next");
+      const safeNext =
+        nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+          ? nextParam
+          : null;
       if (user.role === "ADMIN") {
-        router.push("/admin/users");
+        router.push(safeNext ?? "/admin/users");
       } else {
-        router.push("/");
+        router.push(safeNext ?? "/");
       }
     } catch (err) {
       // Network errors or other client-side errors

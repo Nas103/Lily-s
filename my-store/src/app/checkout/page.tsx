@@ -17,7 +17,7 @@ export default function CheckoutPage() {
           </h1>
           <p className="text-sm text-zinc-600">
             Tell us where this order is going, review your items, then continue
-            to PayFast for secure payment.
+            to Stripe for secure payment.
           </p>
         </header>
         <section className="grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">

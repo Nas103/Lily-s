@@ -12,7 +12,7 @@ export function CheckoutButton() {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,32 +20,23 @@ export function CheckoutButton() {
         body: JSON.stringify({ items }),
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || "Checkout failed");
+      // Checkout requires a signed-in user (so the order can be recorded).
+      if (res.status === 401) {
+        window.location.href = "/login?next=/checkout";
+        return;
       }
 
-      const { paymentUrl, paymentData } = await res.json();
+      if (!res.ok) {
+        const error = await res.json().catch(() => null);
+        throw new Error(error?.error || "Checkout failed");
+      }
 
-      // Create a form and submit it to PayFast
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = paymentUrl;
+      const { url } = await res.json();
+      if (!url) {
+        throw new Error("Unable to start checkout. Please try again.");
+      }
 
-      // Add all payment data as hidden inputs
-      Object.entries(paymentData).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = key;
-          input.value = String(value);
-          form.appendChild(input);
-        }
-      });
-
-      // Append form to body and submit
-      document.body.appendChild(form);
-      form.submit();
+      window.location.href = url;
     } catch (error) {
       console.error(error);
       alert(
@@ -67,5 +58,3 @@ export function CheckoutButton() {
     </button>
   );
 }
-
-
