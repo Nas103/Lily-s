@@ -77,6 +77,12 @@
       },
       "router": {}
     },
-    "owner": "nas299"
+    "owner": "nas299",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/72b44269-09c1-4d09-8fd1-40672ff8703e"
+    }
   }
 }
