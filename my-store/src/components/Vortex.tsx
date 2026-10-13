@@ -4,6 +4,7 @@
 
 import * as React from "react";
 import * as THREE from "three";
+import { isSmallScreen } from "@/lib/smallScreen";
 
 function useReducedMotion() {
   const [reduced, setReduced] = React.useState(false);
@@ -289,7 +290,9 @@ function createVortex(
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1, isSmallScreen() ? 1 : 1.5)
+  );
   renderer.toneMapping = THREE.ReinhardToneMapping;
   renderer.toneMappingExposure = 1.25;
 
@@ -1234,6 +1237,9 @@ function __OriginkitBase_Vortex(props: VortexProps) {
   const configRef = React.useRef(config);
   configRef.current = config;
 
+  const runningRef = React.useRef(running);
+  runningRef.current = running;
+
   const apiRef = React.useRef<VortexAPI | null>(null);
 
   React.useEffect(() => {
@@ -1259,7 +1265,19 @@ function __OriginkitBase_Vortex(props: VortexProps) {
         canvas.remove();
       };
     }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!configRef.current) return;
+        configRef.current.running =
+          runningRef.current && entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    io.observe(container);
+
     return () => {
+      io.disconnect();
       apiRef.current?.dispose();
       apiRef.current = null;
       canvas.remove();

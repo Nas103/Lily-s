@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
+import { isSmallScreen } from '@/lib/smallScreen';
 
 export type MoltenMetalColorMode = 'molten' | 'ember' | 'frost';
 
@@ -187,7 +188,10 @@ const MoltenMetal: React.FC<MoltenMetalProps> = ({
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2)
+      dpr: Math.min(
+        window.devicePixelRatio || 1,
+        isSmallScreen() ? 1 : 2
+      )
     });
 
     const gl = renderer.gl;

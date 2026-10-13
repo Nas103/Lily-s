@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useEffect, useLayoutEffect, useRef } from "react"
+import { isSmallScreen } from "@/lib/smallScreen"
 import {
     useAnimate,
     useReducedMotion,
@@ -655,7 +656,10 @@ function OriginkitBaseStarfieldButton(props: StarfieldButtonProps) {
 
         const applySize = (w: number, h: number) => {
             if (w <= 0 || h <= 0) return
-            const dpr = Math.min(window.devicePixelRatio || 1, 2)
+            const dpr = Math.min(
+                window.devicePixelRatio || 1,
+                isSmallScreen() ? 1.5 : 2
+            )
             size.current = { w, h, dpr }
             canvas.width = Math.max(1, Math.floor(w * dpr))
             canvas.height = Math.max(1, Math.floor(h * dpr))

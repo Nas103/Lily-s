@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { isSmallScreen } from "@/lib/smallScreen";
 
 const COUNT = 560;
 const COLOR: [number, number, number] = [0xe8 / 255, 0xa1 / 255, 0x0c / 255];
@@ -83,7 +84,7 @@ export default function DustOverlay({ activeEl }: { activeEl: HTMLElement | null
         return;
       }
       renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmallScreen() ? 1 : 2));
 
       const scene = new THREE.Scene();
       const camera = new THREE.Camera();
@@ -130,7 +131,7 @@ export default function DustOverlay({ activeEl }: { activeEl: HTMLElement | null
       const resize = () => {
         const w = canvas.clientWidth || 1;
         const h = canvas.clientHeight || 1;
-        const pr = Math.min(window.devicePixelRatio || 1, 2);
+        const pr = Math.min(window.devicePixelRatio || 1, isSmallScreen() ? 1 : 2);
         renderer.setPixelRatio(pr);
         renderer.setSize(w, h, false);
         material.uniforms.uPixelRatio.value = pr;

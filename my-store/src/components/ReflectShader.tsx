@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { isSmallScreen } from "@/lib/smallScreen";
 
 const VERT = `
 attribute vec2 aPosition;
@@ -236,7 +237,10 @@ export default function ReflectShader(props: ReflectShaderProps) {
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        isSmallScreen() ? 1 : MAX_DPR
+      );
       const w = Math.max(1, Math.round((canvas.clientWidth || 1) * dpr));
       const h = Math.max(1, Math.round((canvas.clientHeight || 1) * dpr));
       if (canvas.width !== w || canvas.height !== h) {
@@ -253,7 +257,12 @@ export default function ReflectShader(props: ReflectShaderProps) {
     let raf = 0;
     let last = 0;
     let t = 0;
+    let isVisible = true;
     const frame = (now: number) => {
+      if (!isVisible) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(frame);
       const dt = last ? Math.min((now - last) / 1000, 1 / 15) : 0;
       last = now;
@@ -291,9 +300,19 @@ export default function ReflectShader(props: ReflectShaderProps) {
     };
     raf = requestAnimationFrame(frame);
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && raf === 0) raf = requestAnimationFrame(frame);
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      io.disconnect();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       canvas.remove();
     };
