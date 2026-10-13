@@ -23,273 +23,833 @@
 import { Product } from '../types';
 
 export const electronicsProducts: Product[] = [
-  // Apple Sub-category (10 products)
-  // TODO: Replace all product details (name, description, price) with actual information
+  // Apple Sub-category (27 products)
   {
     id: 'electronics-apple-001',
-    name: 'iPhone 17 Pro Max', // TODO: Update product name if needed
-    slug: 'iphone-17-pro-max',
-    description: 'The ultimate iPhone with A18 Pro chip, ProMotion display, and advanced camera system. Available in stunning finishes.', // TODO: Update product description
+    name: 'iPhone 18 Pro 256GB',
+    slug: 'iphone-18-pro-256gb',
+    description: 'The iPhone 18 Pro pairs the A20 Pro chip with a ProMotion Super Retina XDR display and an advanced pro camera system. Pro further.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 1299.99, // TODO: Update product price
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image with iPhone 17 Pro Max main image
-    colors: ['Natural Titanium', 'Blue Titanium', 'White Titanium'],
+    price: 1556.7,
+    imageUrl: '/electronics/Apple/iphone-18-pro/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Natural Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image with iPhone 17 Pro Max Natural Titanium front view
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image with iPhone 17 Pro Max Natural Titanium back view
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image with iPhone 17 Pro Max Natural Titanium side view
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // Same as side (not used for electronics)
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/black/top.webp',
       },
-      'Blue Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image with iPhone 17 Pro Max Blue Titanium front view
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image with iPhone 17 Pro Max Blue Titanium back view
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image with iPhone 17 Pro Max Blue Titanium side view
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // Same as side (not used for electronics)
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/glacier/top.webp',
       },
-      'White Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image with iPhone 17 Pro Max White Titanium front view
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image with iPhone 17 Pro Max White Titanium back view
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image with iPhone 17 Pro Max White Titanium side view
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // Same as side (not used for electronics)
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/purple/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-18-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/silver/top.webp',
       },
     },
   },
-  // TODO: Replace all product details (name, description, price) with actual information
   {
     id: 'electronics-apple-002',
-    name: 'iPhone 17 Pro',
-    slug: 'iphone-17-pro',
-    description: 'Pro-level iPhone with A18 Pro chip and advanced camera system. Perfect balance of size and power.',
+    name: 'iPhone 18 Pro 512GB',
+    slug: 'iphone-18-pro-512gb',
+    description: 'The iPhone 18 Pro pairs the A20 Pro chip with a ProMotion Super Retina XDR display and an advanced pro camera system. Pro further.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 1199.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Natural Titanium', 'Blue Titanium', 'Black Titanium'],
+    price: 1816.16,
+    imageUrl: '/electronics/Apple/iphone-18-pro/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Natural Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/black/top.webp',
       },
-      'Blue Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/glacier/top.webp',
       },
-      'Black Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/purple/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-18-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/silver/top.webp',
       },
     },
   },
-  // TODO: Replace all product details (name, description, price) with actual information
   {
     id: 'electronics-apple-003',
-    name: 'iPhone 17',
-    slug: 'iphone-17',
-    description: 'The latest iPhone with A18 chip and all-day battery life. Available in vibrant colors.',
+    name: 'iPhone 18 Pro 1TB',
+    slug: 'iphone-18-pro-1tb',
+    description: 'The iPhone 18 Pro pairs the A20 Pro chip with a ProMotion Super Retina XDR display and an advanced pro camera system. Pro further.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 899.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Pink', 'Blue', 'Green'],
+    price: 2340.49,
+    imageUrl: '/electronics/Apple/iphone-18-pro/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Pink': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/black/top.webp',
       },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/glacier/top.webp',
       },
-      'Green': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/purple/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-18-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-004',
-    name: 'iPad Pro 13-inch',
-    slug: 'ipad-pro-13-inch',
-    description: 'The most powerful iPad with M4 chip and Liquid Retina XDR display. Perfect for professionals.',
+    name: 'iPhone 18 Pro 2TB',
+    slug: 'iphone-18-pro-2tb',
+    description: 'The iPhone 18 Pro pairs the A20 Pro chip with a ProMotion Super Retina XDR display and an advanced pro camera system. Pro further.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 1299.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Space Gray', 'Silver'],
+    price: 3118.86,
+    imageUrl: '/electronics/Apple/iphone-18-pro/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Space Gray': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/black/top.webp',
+      },
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/glacier/top.webp',
+      },
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/purple/top.webp',
       },
       'Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+        front: '/electronics/Apple/iphone-18-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-005',
-    name: 'MacBook Pro 16-inch',
-    slug: 'macbook-pro-16-inch',
-    description: 'Powerful laptop with M4 Pro chip, Liquid Retina XDR display, and all-day battery life.',
+    name: 'iPhone 18 Pro Max 256GB',
+    slug: 'iphone-18-pro-max-256gb',
+    description: 'The iPhone 18 Pro Max delivers the largest Pro display, A20 Pro power and the most capable pro camera system yet. The ultimate iPhone.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 2499.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Space Gray', 'Silver'],
+    price: 1691.84,
+    imageUrl: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Space Gray': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/black/top.webp',
+      },
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro-max/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/glacier/top.webp',
+      },
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro-max/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/purple/top.webp',
       },
       'Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+        front: '/electronics/Apple/iphone-18-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-006',
-    name: 'AirPods Pro 3',
-    slug: 'airpods-pro-3',
-    description: 'Premium wireless earbuds with active noise cancellation and spatial audio. MagSafe charging case.',
+    name: 'iPhone 18 Pro Max 512GB',
+    slug: 'iphone-18-pro-max-512gb',
+    description: 'The iPhone 18 Pro Max delivers the largest Pro display, A20 Pro power and the most capable pro camera system yet. The ultimate iPhone.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 249.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['White'],
+    price: 1945.89,
+    imageUrl: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/black/top.webp',
+      },
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro-max/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/glacier/top.webp',
+      },
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro-max/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/purple/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-18-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-007',
-    name: 'Apple Watch Ultra 3',
-    slug: 'apple-watch-ultra-3',
-    description: 'The most rugged Apple Watch with titanium case, action button, and advanced health features.',
+    name: 'iPhone 18 Pro Max 1TB',
+    slug: 'iphone-18-pro-max-1tb',
+    description: 'The iPhone 18 Pro Max delivers the largest Pro display, A20 Pro power and the most capable pro camera system yet. The ultimate iPhone.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 799.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Titanium', 'Ocean Blue', 'Trail Orange'],
+    price: 2470.22,
+    imageUrl: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
-      'Titanium': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/black/top.webp',
       },
-      'Ocean Blue': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro-max/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/glacier/top.webp',
       },
-      'Trail Orange': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro-max/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/purple/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-18-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-008',
-    name: 'Mac Studio',
-    slug: 'mac-studio',
-    description: 'Powerful desktop with M4 Ultra chip. Perfect for creative professionals and developers.',
+    name: 'iPhone 18 Pro Max 2TB',
+    slug: 'iphone-18-pro-max-2tb',
+    description: 'The iPhone 18 Pro Max delivers the largest Pro display, A20 Pro power and the most capable pro camera system yet. The ultimate iPhone.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 3999.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Silver'],
+    price: 3243.19,
+    imageUrl: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+    colors: ['Black', 'Glacier', 'Purple', 'Silver'],
     colorImages: {
+      'Black': {
+        front: '/electronics/Apple/iphone-18-pro-max/black/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/black/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/black/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/black/top.webp',
+      },
+      'Glacier': {
+        front: '/electronics/Apple/iphone-18-pro-max/glacier/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/glacier/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/glacier/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/glacier/top.webp',
+      },
+      'Purple': {
+        front: '/electronics/Apple/iphone-18-pro-max/purple/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/purple/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/purple/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/purple/top.webp',
+      },
       'Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+        front: '/electronics/Apple/iphone-18-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-18-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-18-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-18-pro-max/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-009',
-    name: 'Apple Vision Pro',
-    slug: 'apple-vision-pro',
-    description: 'Revolutionary spatial computer with ultra-high-resolution displays and advanced eye tracking.',
+    name: 'iPhone 17 Pro 256GB',
+    slug: 'iphone-17-pro-256gb',
+    description: 'iPhone 17 Pro with the A19 Pro chip, ProMotion display and a pro camera system built for creators. Pro-level power in a compact frame.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 3499.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['White'],
+    price: 1351.3,
+    imageUrl: '/electronics/Apple/iphone-17-pro/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
     colorImages: {
-      'White': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/deep-blue/top.webp',
+      },
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/cosmic-orange/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/silver/top.webp',
       },
     },
   },
   {
     id: 'electronics-apple-010',
-    name: 'iPad Air 13-inch',
-    slug: 'ipad-air-13-inch',
-    description: 'Powerful iPad with M4 chip and Liquid Retina display. Perfect for work and creativity.',
+    name: 'iPhone 17 Pro 512GB',
+    slug: 'iphone-17-pro-512gb',
+    description: 'iPhone 17 Pro with the A19 Pro chip, ProMotion display and a pro camera system built for creators. Pro-level power in a compact frame.',
     category: 'electronics',
     subCategory: 'apple',
-    price: 799.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Space Gray', 'Starlight', 'Blue'],
+    price: 1648.59,
+    imageUrl: '/electronics/Apple/iphone-17-pro/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
     colorImages: {
-      'Space Gray': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/deep-blue/top.webp',
       },
-      'Starlight': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/cosmic-orange/top.webp',
       },
-      'Blue': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro/silver/top.webp',
       },
     },
   },
-  
+  {
+    id: 'electronics-apple-011',
+    name: 'iPhone 17 Pro Max 256GB',
+    slug: 'iphone-17-pro-max-256gb',
+    description: 'iPhone 17 Pro Max with the A19 Pro chip, the biggest Pro display and best-in-class battery life. Everything Pro, supersized.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1513.46,
+    imageUrl: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
+    colorImages: {
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/deep-blue/top.webp',
+      },
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-012',
+    name: 'iPhone 17 Pro Max 512GB',
+    slug: 'iphone-17-pro-max-512gb',
+    description: 'iPhone 17 Pro Max with the A19 Pro chip, the biggest Pro display and best-in-class battery life. Everything Pro, supersized.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1783.73,
+    imageUrl: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
+    colorImages: {
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/deep-blue/top.webp',
+      },
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-013',
+    name: 'iPhone 17 Pro Max 1TB',
+    slug: 'iphone-17-pro-max-1tb',
+    description: 'iPhone 17 Pro Max with the A19 Pro chip, the biggest Pro display and best-in-class battery life. Everything Pro, supersized.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2054,
+    imageUrl: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
+    colorImages: {
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/deep-blue/top.webp',
+      },
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-014',
+    name: 'iPhone 17 Pro Max 2TB',
+    slug: 'iphone-17-pro-max-2tb',
+    description: 'iPhone 17 Pro Max with the A19 Pro chip, the biggest Pro display and best-in-class battery life. Everything Pro, supersized.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2594.54,
+    imageUrl: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+    colors: ['Deep Blue', 'Cosmic Orange', 'Silver'],
+    colorImages: {
+      'Deep Blue': {
+        front: '/electronics/Apple/iphone-17-pro-max/deep-blue/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/deep-blue/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/deep-blue/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/deep-blue/top.webp',
+      },
+      'Cosmic Orange': {
+        front: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/cosmic-orange/top.webp',
+      },
+      'Silver': {
+        front: '/electronics/Apple/iphone-17-pro-max/silver/front.webp',
+        back: '/electronics/Apple/iphone-17-pro-max/silver/back.webp',
+        side: '/electronics/Apple/iphone-17-pro-max/silver/side.webp',
+        top: '/electronics/Apple/iphone-17-pro-max/silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-015',
+    name: 'iPhone 17 256GB',
+    slug: 'iphone-17-256gb',
+    description: 'iPhone 17 brings the A19 chip, a brilliant display and an all-day battery to the everyday iPhone, in a range of vibrant colours.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1178.32,
+    imageUrl: '/electronics/Apple/iphone-17/black/front.webp',
+    colors: ['Black', 'Lavender', 'Mist Blue', 'Sage', 'White'],
+    colorImages: {
+      'Black': {
+        front: '/electronics/Apple/iphone-17/black/front.webp',
+        back: '/electronics/Apple/iphone-17/black/back.webp',
+        side: '/electronics/Apple/iphone-17/black/side.webp',
+        top: '/electronics/Apple/iphone-17/black/top.webp',
+      },
+      'Lavender': {
+        front: '/electronics/Apple/iphone-17/lavender/front.webp',
+        back: '/electronics/Apple/iphone-17/lavender/back.webp',
+        side: '/electronics/Apple/iphone-17/lavender/side.webp',
+        top: '/electronics/Apple/iphone-17/lavender/top.webp',
+      },
+      'Mist Blue': {
+        front: '/electronics/Apple/iphone-17/mist-blue/front.webp',
+        back: '/electronics/Apple/iphone-17/mist-blue/back.webp',
+        side: '/electronics/Apple/iphone-17/mist-blue/side.webp',
+        top: '/electronics/Apple/iphone-17/mist-blue/top.webp',
+      },
+      'Sage': {
+        front: '/electronics/Apple/iphone-17/sage/front.webp',
+        back: '/electronics/Apple/iphone-17/sage/back.webp',
+        side: '/electronics/Apple/iphone-17/sage/side.webp',
+        top: '/electronics/Apple/iphone-17/sage/top.webp',
+      },
+      'White': {
+        front: '/electronics/Apple/iphone-17/white/front.webp',
+        back: '/electronics/Apple/iphone-17/white/back.webp',
+        side: '/electronics/Apple/iphone-17/white/side.webp',
+        top: '/electronics/Apple/iphone-17/white/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-016',
+    name: 'iPhone 17 512GB',
+    slug: 'iphone-17-512gb',
+    description: 'iPhone 17 brings the A19 chip, a brilliant display and an all-day battery to the everyday iPhone, in a range of vibrant colours.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1378.32,
+    imageUrl: '/electronics/Apple/iphone-17/black/front.webp',
+    colors: ['Black', 'Lavender', 'Mist Blue', 'Sage', 'White'],
+    colorImages: {
+      'Black': {
+        front: '/electronics/Apple/iphone-17/black/front.webp',
+        back: '/electronics/Apple/iphone-17/black/back.webp',
+        side: '/electronics/Apple/iphone-17/black/side.webp',
+        top: '/electronics/Apple/iphone-17/black/top.webp',
+      },
+      'Lavender': {
+        front: '/electronics/Apple/iphone-17/lavender/front.webp',
+        back: '/electronics/Apple/iphone-17/lavender/back.webp',
+        side: '/electronics/Apple/iphone-17/lavender/side.webp',
+        top: '/electronics/Apple/iphone-17/lavender/top.webp',
+      },
+      'Mist Blue': {
+        front: '/electronics/Apple/iphone-17/mist-blue/front.webp',
+        back: '/electronics/Apple/iphone-17/mist-blue/back.webp',
+        side: '/electronics/Apple/iphone-17/mist-blue/side.webp',
+        top: '/electronics/Apple/iphone-17/mist-blue/top.webp',
+      },
+      'Sage': {
+        front: '/electronics/Apple/iphone-17/sage/front.webp',
+        back: '/electronics/Apple/iphone-17/sage/back.webp',
+        side: '/electronics/Apple/iphone-17/sage/side.webp',
+        top: '/electronics/Apple/iphone-17/sage/top.webp',
+      },
+      'White': {
+        front: '/electronics/Apple/iphone-17/white/front.webp',
+        back: '/electronics/Apple/iphone-17/white/back.webp',
+        side: '/electronics/Apple/iphone-17/white/side.webp',
+        top: '/electronics/Apple/iphone-17/white/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-017',
+    name: 'iPad Pro 13-inch 256GB',
+    slug: 'ipad-pro-13-256gb',
+    description: 'iPad Pro 13-inch with a stunning Ultra Retina XDR display and Apple silicon performance. Built for work, play and everything in between.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1664.81,
+    imageUrl: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/silver/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/silver/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/ipad-pro-13/space-black/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/space-black/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/space-black/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-018',
+    name: 'iPad Pro 13-inch 512GB',
+    slug: 'ipad-pro-13-512gb',
+    description: 'iPad Pro 13-inch with a stunning Ultra Retina XDR display and Apple silicon performance. Built for work, play and everything in between.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1881.03,
+    imageUrl: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/silver/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/silver/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/ipad-pro-13/space-black/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/space-black/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/space-black/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-019',
+    name: 'iPad Pro 13-inch 1TB',
+    slug: 'ipad-pro-13-1tb',
+    description: 'iPad Pro 13-inch with a stunning Ultra Retina XDR display and Apple silicon performance. Built for work, play and everything in between.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2324.27,
+    imageUrl: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/silver/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/silver/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/ipad-pro-13/space-black/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/space-black/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/space-black/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-020',
+    name: 'iPad Pro 13-inch 2TB',
+    slug: 'ipad-pro-13-2tb',
+    description: 'iPad Pro 13-inch with a stunning Ultra Retina XDR display and Apple silicon performance. Built for work, play and everything in between.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2881.03,
+    imageUrl: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/ipad-pro-13/silver/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/silver/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/silver/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/ipad-pro-13/space-black/front.webp',
+        back: '/electronics/Apple/ipad-pro-13/space-black/back.webp',
+        side: '/electronics/Apple/ipad-pro-13/space-black/side.webp',
+        top: '/electronics/Apple/ipad-pro-13/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-021',
+    name: 'Apple AirPods Pro 3',
+    slug: 'airpods-pro-3',
+    description: 'AirPods Pro 3 deliver immersive Active Noise Cancellation, adaptive audio and rich spatial sound in a comfortable, sweat-resistant design.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 275.62,
+    imageUrl: '/electronics/Apple/airpods-pro-3/white/front.webp',
+    colors: ['White'],
+    colorImages: {
+      'White': {
+        front: '/electronics/Apple/airpods-pro-3/white/front.webp',
+        back: '/electronics/Apple/airpods-pro-3/white/back.webp',
+        side: '/electronics/Apple/airpods-pro-3/white/side.webp',
+        top: '/electronics/Apple/airpods-pro-3/white/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-022',
+    name: 'Apple Watch Ultra 4 Milanese Loop',
+    slug: 'apple-watch-ultra-4-milanese-loop',
+    description: 'Apple Watch Ultra 4 with a rugged titanium case, precision GPS and the Milanese Loop. Built for the extremes, worn every day.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 1081.03,
+    imageUrl: '/electronics/Apple/apple-watch-ultra-4/black/front.webp',
+    colors: ['Black Titanium', 'Natural Titanium'],
+    colorImages: {
+      'Black Titanium': {
+        front: '/electronics/Apple/apple-watch-ultra-4/black/front.webp',
+        back: '/electronics/Apple/apple-watch-ultra-4/black/back.webp',
+        side: '/electronics/Apple/apple-watch-ultra-4/black/side.webp',
+        top: '/electronics/Apple/apple-watch-ultra-4/black/top.webp',
+      },
+      'Natural Titanium': {
+        front: '/electronics/Apple/apple-watch-ultra-4/natural/front.webp',
+        back: '/electronics/Apple/apple-watch-ultra-4/natural/back.webp',
+        side: '/electronics/Apple/apple-watch-ultra-4/natural/side.webp',
+        top: '/electronics/Apple/apple-watch-ultra-4/natural/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-023',
+    name: 'MacBook Pro 14-inch M5 Pro 24GB / 1TB',
+    slug: 'macbook-pro-14-m5-pro-24gb-1tb',
+    description: 'MacBook Pro 14-inch with the M5 Pro chip (15-core CPU, 16-core GPU), 24GB unified memory and a 1TB SSD. Serious performance, anywhere.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2756.7,
+    imageUrl: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/silver/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/silver/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-024',
+    name: 'MacBook Pro 14-inch M5 Pro 24GB / 2TB',
+    slug: 'macbook-pro-14-m5-pro-24gb-2tb',
+    description: 'MacBook Pro 14-inch with the M5 Pro chip (18-core CPU, 20-core GPU), 24GB unified memory and a 2TB SSD. Serious performance, anywhere.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 3529.68,
+    imageUrl: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/silver/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/silver/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-025',
+    name: 'MacBook Pro 14-inch M5 Max 36GB / 2TB',
+    slug: 'macbook-pro-14-m5-max-36gb-2tb',
+    description: 'MacBook Pro 14-inch with the M5 Max chip (18-core CPU, 32-core GPU), 36GB unified memory and a 2TB SSD. The most powerful MacBook Pro.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 4529.68,
+    imageUrl: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+    colors: ['Silver', 'Space Black'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/silver/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/silver/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/silver/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/silver/top.webp',
+      },
+      'Space Black': {
+        front: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/front.webp',
+        back: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/back.webp',
+        side: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/side.webp',
+        top: '/electronics/Apple/macbook-pro-14-m5-pro/space-black/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-026',
+    name: 'Mac Studio M5 Max 36GB / 512GB',
+    slug: 'mac-studio-m5-max-36gb-512gb',
+    description: 'Mac Studio with the M5 Max chip (18-core CPU, 32-core GPU), 36GB unified memory and a 512GB SSD. Compact, silent, powerful.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 2675.62,
+    imageUrl: '/electronics/Apple/mac-studio/silver/front.webp',
+    colors: ['Silver'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/mac-studio/silver/front.webp',
+        back: '/electronics/Apple/mac-studio/silver/back.webp',
+        side: '/electronics/Apple/mac-studio/silver/side.webp',
+        top: '/electronics/Apple/mac-studio/silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-apple-027',
+    name: 'Mac Studio M5 Ultra 96GB / 1TB',
+    slug: 'mac-studio-m5-ultra-96gb-1tb',
+    description: 'Mac Studio with the M5 Ultra chip (30-core CPU, 64-core GPU), 96GB unified memory and a 1TB SSD. Built for the most demanding workflows.',
+    category: 'electronics',
+    subCategory: 'apple',
+    price: 5891.84,
+    imageUrl: '/electronics/Apple/mac-studio/silver/front.webp',
+    colors: ['Silver'],
+    colorImages: {
+      'Silver': {
+        front: '/electronics/Apple/mac-studio/silver/front.webp',
+        back: '/electronics/Apple/mac-studio/silver/back.webp',
+        side: '/electronics/Apple/mac-studio/silver/side.webp',
+        top: '/electronics/Apple/mac-studio/silver/top.webp',
+      },
+    },
+  },
+
   // Samsung Sub-category (10 products)
   // Each product has 3 colors, each color has 3 images (front, back, side)
   {
