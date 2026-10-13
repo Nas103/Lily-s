@@ -11,6 +11,10 @@
     "build:ios": "eas build --platform ios",
     "submit:android": "eas submit --platform android",
     "submit:ios": "eas submit --platform ios",
+    "update:preview": "eas update --branch preview --environment preview --platform android",
+    "update:preview:ios": "eas update --branch preview --environment preview --platform ios",
+    "update:production": "eas update --branch production --environment production --platform android",
+    "update:production:ios": "eas update --branch production --environment production --platform ios",
     "lint": "eslint ."
   },
   "dependencies": {
