@@ -14,6 +14,7 @@
       "bundleIdentifier": "com.naso.app",
       "buildNumber": "1.0.0",
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSLocationWhenInUseUsageDescription": "We use your location to provide currency conversion and personalized shopping experiences.",
         "NSCameraUsageDescription": "Allow access to camera to upload profile pictures.",
         "NSPhotoLibraryUsageDescription": "Allow access to photo library to select profile pictures."
