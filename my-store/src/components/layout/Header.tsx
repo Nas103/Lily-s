@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -34,6 +34,16 @@ const serviceLinks = [
 
 const moreLinks = [...accountLinks, ...serviceLinks];
 
+const emptySubscribe = () => () => {};
+
+function useHasMounted() {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+}
+
 export function Header() {
   const router = useRouter();
   const user = useAuth((state) => state.user);
@@ -42,6 +52,7 @@ export function Header() {
   const isAdmin = useAuth((state) => state.isAdmin);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const hasMounted = useHasMounted();
 
   useEffect(() => {
     void refresh();
@@ -93,7 +104,7 @@ export function Header() {
           <nav className="hidden items-center gap-1 text-sm font-medium text-zinc-600 lg:flex">
             <Dropdown label="Shop" items={shopLinks} />
             <Dropdown label="More" items={moreLinks} align="right" />
-            {isAdmin() && (
+            {hasMounted && isAdmin() && (
               <Link
                 href="/admin/users"
                 className="rounded-full px-3 py-2 transition hover:bg-zinc-100 hover:text-black"
@@ -120,7 +131,7 @@ export function Header() {
             <ShoppingBag size={14} className="text-zinc-800" />
             <span className="logo-gradient">Cart</span>
           </Link>
-          {user ? (
+          {hasMounted && user ? (
             <div className="flex items-center gap-3">
               <Link
                 href="/profile"
@@ -176,7 +187,7 @@ export function Header() {
             <MenuGroup title="Shop" items={shopLinks} onNavigate={() => setMobileMenuOpen(false)} />
             <MenuGroup title="Account" items={accountLinks} onNavigate={() => setMobileMenuOpen(false)} />
             <MenuGroup title="Services" items={serviceLinks} onNavigate={() => setMobileMenuOpen(false)} />
-            {isAdmin() && (
+            {hasMounted && isAdmin() && (
               <MenuGroup
                 title="Admin"
                 items={[{ href: "/admin/users", label: "Users" }, { href: "/admin/risk-review", label: "Risk review" }]}
@@ -184,7 +195,7 @@ export function Header() {
               />
             )}
             <div className="flex items-center gap-3 border-t border-zinc-100 pt-4">
-              {user ? (
+              {hasMounted && user ? (
                 <>
                   <Link
                     href="/profile"
