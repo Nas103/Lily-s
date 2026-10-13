@@ -32,7 +32,7 @@ function getDevHost(): string {
 
 export const API_BASE_URL = __DEV__
   ? `http://${getDevHost()}:3000`
-  : 'https://lily-s.vercel.app'; // Production (Vercel)
+  : 'https://nasostore.vercel.app'; // Production (Vercel)
 
 export const API_ENDPOINTS = {
   // Auth
