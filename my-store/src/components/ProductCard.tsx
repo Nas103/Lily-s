@@ -81,7 +81,7 @@ export function ProductCard({
           {name}
         </h3>
         {highlight ? (
-          <p className="text-sm text-zinc-500 line-clamp-2">{highlight}</p>
+          <p className="text-sm text-zinc-700 line-clamp-2">{highlight}</p>
         ) : null}
         <div className="mt-3 flex items-center justify-between gap-3">
           {/* TODO: Confirm pricing before launch. */}

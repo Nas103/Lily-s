@@ -29,13 +29,13 @@ export default async function MenPage() {
     <div className="min-h-screen bg-white">
       <main className="mx-auto max-w-6xl px-6 py-16">
         <header className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
             Menswear
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
             High-performance essentials
           </h1>
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-zinc-800">
             Sculpted sneakers, structured bombers, and adaptive layers for every
             hour on the calendar.
           </p>

@@ -143,7 +143,7 @@ export function PaymentMethodList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-400" size={24} />
+        <Loader2 className="animate-spin text-zinc-600" size={24} />
       </div>
     );
   }
@@ -153,7 +153,7 @@ export function PaymentMethodList() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-zinc-900 mb-2">Payment Methods</h2>
-          <p className="text-zinc-600">
+          <p className="text-zinc-800">
             Securely manage your payment methods. Card numbers are never fully stored.
           </p>
         </div>
@@ -186,14 +186,14 @@ export function PaymentMethodList() {
         <>
           {paymentMethods.length === 0 ? (
             <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
-              <CreditCard className="mx-auto text-zinc-400 mb-4" size={48} />
+              <CreditCard className="mx-auto text-zinc-600 mb-4" size={48} />
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">
                 No payment methods
               </h3>
-              <p className="text-zinc-600 mb-6">
+              <p className="text-zinc-800 mb-6">
                 Add a payment method for faster checkout.
               </p>
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 mb-6">
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-700 mb-6">
                 <Shield size={14} />
                 <span>Your payment information is encrypted and secure</span>
               </div>
@@ -219,7 +219,7 @@ export function PaymentMethodList() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-3 bg-zinc-100 rounded-lg">
-                        <CreditCard className="text-zinc-600" size={24} />
+                        <CreditCard className="text-zinc-800" size={24} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
@@ -232,7 +232,7 @@ export function PaymentMethodList() {
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-zinc-600">
+                        <p className="text-sm text-zinc-800">
                           {maskCardNumber("****" + method.cardLast4)}
                         </p>
                       </div>
@@ -240,7 +240,7 @@ export function PaymentMethodList() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(method)}
-                        className="p-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
+                        className="p-2 text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
                         title="Edit payment method"
                       >
                         <Edit size={16} />
@@ -255,7 +255,7 @@ export function PaymentMethodList() {
                     </div>
                   </div>
 
-                  <div className="space-y-1 text-sm text-zinc-600">
+                  <div className="space-y-1 text-sm text-zinc-800">
                     {method.holderName && <p>Name: {method.holderName}</p>}
                     <p>Expires: {formatExpiry(method.expiryMonth, method.expiryYear)}</p>
                   </div>
@@ -263,7 +263,7 @@ export function PaymentMethodList() {
                   {!method.isDefault && (
                     <button
                       onClick={() => handleSetDefault(method.id)}
-                      className="mt-4 text-sm text-zinc-600 hover:text-zinc-900 underline"
+                      className="mt-4 text-sm text-zinc-800 hover:text-zinc-900 underline"
                     >
                       Set as default
                     </button>

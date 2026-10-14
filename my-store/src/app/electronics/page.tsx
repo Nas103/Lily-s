@@ -28,13 +28,13 @@ export default async function ElectronicsPage({
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white">
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
+        <p className="text-xs uppercase tracking-[0.4em] text-zinc-700">
           Collection
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">
           {meta.label}
         </h1>
-        <p className="mt-2 max-w-xl text-sm text-zinc-600">{meta.blurb}</p>
+        <p className="mt-2 max-w-xl text-sm text-zinc-800">{meta.blurb}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           {subCategories.map((item) => {
@@ -46,7 +46,7 @@ export default async function ElectronicsPage({
                 className={
                   isActive
                     ? "rounded-full bg-black px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white"
-                    : "rounded-full border border-zinc-300 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-600 transition hover:border-black hover:text-black"
+                    : "rounded-full border border-zinc-300 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-800 transition hover:border-black hover:text-black"
                 }
               >
                 {item.label}

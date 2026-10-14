@@ -155,7 +155,7 @@ export function AccountDetailsForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-400" size={24} />
+        <Loader2 className="animate-spin text-zinc-600" size={24} />
       </div>
     );
   }
@@ -304,7 +304,7 @@ export function AccountDetailsForm() {
           placeholder="https://example.com/your-image.jpg"
           className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
         />
-        <p className="mt-1 text-xs text-zinc-500">
+        <p className="mt-1 text-xs text-zinc-700">
           Enter a URL to your profile image. Leave empty to use Gravatar.
         </p>
       </div>
@@ -312,7 +312,7 @@ export function AccountDetailsForm() {
       <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
         <div>
           <p className="font-medium text-zinc-900">Delete Account</p>
-          <p className="text-sm text-zinc-600">Permanently delete your account</p>
+          <p className="text-sm text-zinc-800">Permanently delete your account</p>
         </div>
         <button
           type="button"

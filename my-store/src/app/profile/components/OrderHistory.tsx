@@ -20,7 +20,7 @@ const statusStyles: Record<string, string> = {
   PROCESSING: "bg-indigo-50 text-indigo-700 border-indigo-200",
   SHIPPED: "bg-purple-50 text-purple-700 border-purple-200",
   DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  CANCELLED: "bg-zinc-100 text-zinc-600 border-zinc-200",
+  CANCELLED: "bg-zinc-100 text-zinc-800 border-zinc-200",
   FAILED: "bg-red-50 text-red-700 border-red-200",
 };
 
@@ -51,7 +51,7 @@ export function OrderHistory() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-12 text-zinc-500">
+      <div className="flex justify-center py-12 text-zinc-700">
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
@@ -67,7 +67,7 @@ export function OrderHistory() {
 
   if (!orders.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-zinc-200 p-12 text-center text-sm text-zinc-500">
+      <div className="rounded-2xl border border-dashed border-zinc-200 p-12 text-center text-sm text-zinc-700">
         <Package className="mx-auto mb-4 h-8 w-8 text-zinc-300" />
         <p>You have not placed any orders yet.</p>
         <Link href="/" className="mt-3 inline-block underline underline-offset-4">
@@ -89,7 +89,7 @@ export function OrderHistory() {
             <p className="text-sm font-semibold text-zinc-900">
               {order.orderNumber}
             </p>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-700">
               {new Date(order.createdAt).toLocaleDateString()} ·{" "}
               {order.orderItems.length} item
               {order.orderItems.length === 1 ? "" : "s"}

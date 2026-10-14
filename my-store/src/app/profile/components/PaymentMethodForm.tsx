@@ -153,7 +153,7 @@ export function PaymentMethodForm({
           Card Number *
         </label>
         <div className="relative">
-          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
+          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-600" size={20} />
           <input
             type="text"
             value={formData.cardNumber}
@@ -166,10 +166,10 @@ export function PaymentMethodForm({
           />
         </div>
         {cardBrand && (
-          <p className="mt-1 text-xs text-zinc-500">Card type: {cardBrand}</p>
+          <p className="mt-1 text-xs text-zinc-700">Card type: {cardBrand}</p>
         )}
         {paymentMethod?.cardLast4 && (
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-zinc-700">
             Current: {maskCardNumber("****" + paymentMethod.cardLast4)}
           </p>
         )}
@@ -239,7 +239,7 @@ export function PaymentMethodForm({
             maxLength={4}
             className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
           />
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-zinc-700">
             CVV is never stored. It's only used for validation.
           </p>
         </div>

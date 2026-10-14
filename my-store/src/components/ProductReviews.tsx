@@ -63,11 +63,11 @@ export function ProductReviews({ productId }: { productId: string }) {
   return (
     <div className="mt-8 border-t border-zinc-100 pt-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-700">
           Reviews
         </h3>
         {summary && summary.count > 0 && (
-          <div className="flex items-center gap-2 text-sm text-zinc-600">
+          <div className="flex items-center gap-2 text-sm text-zinc-800">
             <Stars value={summary.average} />
             <span className="font-semibold text-zinc-900">
               {summary.average.toFixed(1)}
@@ -80,7 +80,7 @@ export function ProductReviews({ productId }: { productId: string }) {
       {user ? (
         <ReviewForm productId={productId} onSubmitted={load} />
       ) : (
-        <p className="mt-4 text-sm text-zinc-500">
+        <p className="mt-4 text-sm text-zinc-700">
           <a href="/login" className="underline underline-offset-4">
             Sign in
           </a>{" "}
@@ -90,7 +90,7 @@ export function ProductReviews({ productId }: { productId: string }) {
 
       <div className="mt-6 space-y-4">
         {loading ? (
-          <div className="flex justify-center py-6 text-zinc-400">
+          <div className="flex justify-center py-6 text-zinc-600">
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         ) : reviews.length ? (
@@ -106,7 +106,7 @@ export function ProductReviews({ productId }: { productId: string }) {
                     {review.userName}
                   </span>
                 </div>
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-zinc-600">
                   {new Date(review.createdAt).toLocaleDateString()}
                 </span>
               </div>
@@ -116,12 +116,12 @@ export function ProductReviews({ productId }: { productId: string }) {
                 </p>
               )}
               {review.body && (
-                <p className="mt-1 text-sm text-zinc-600">{review.body}</p>
+                <p className="mt-1 text-sm text-zinc-800">{review.body}</p>
               )}
             </div>
           ))
         ) : (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-zinc-700">
             No reviews yet. Be the first to share your thoughts.
           </p>
         )}
@@ -198,14 +198,14 @@ function ReviewForm({
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder="Review title (optional)"
-        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-400"
+        className="w-full rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-600"
       />
       <textarea
         value={body}
         onChange={(event) => setBody(event.target.value)}
         placeholder="Write your review here…"
         rows={3}
-        className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-400"
+        className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-600"
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="flex items-center gap-3">

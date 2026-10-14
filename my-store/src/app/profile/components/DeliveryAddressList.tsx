@@ -135,7 +135,7 @@ export function DeliveryAddressList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-400" size={24} />
+        <Loader2 className="animate-spin text-zinc-600" size={24} />
       </div>
     );
   }
@@ -145,7 +145,7 @@ export function DeliveryAddressList() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-zinc-900 mb-2">Delivery Addresses</h2>
-          <p className="text-zinc-600">
+          <p className="text-zinc-800">
             Manage your delivery addresses for faster checkout.
           </p>
         </div>
@@ -178,11 +178,11 @@ export function DeliveryAddressList() {
         <>
           {addresses.length === 0 ? (
             <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
-              <MapPin className="mx-auto text-zinc-400 mb-4" size={48} />
+              <MapPin className="mx-auto text-zinc-600 mb-4" size={48} />
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">
                 No delivery addresses
               </h3>
-              <p className="text-zinc-600 mb-6">
+              <p className="text-zinc-800 mb-6">
                 Add your first delivery address to get started.
               </p>
               <button
@@ -214,12 +214,12 @@ export function DeliveryAddressList() {
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-zinc-600">{address.fullName}</p>
+                      <p className="text-sm text-zinc-800">{address.fullName}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(address)}
-                        className="p-2 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
+                        className="p-2 text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
                         title="Edit address"
                       >
                         <Edit size={16} />
@@ -234,7 +234,7 @@ export function DeliveryAddressList() {
                     </div>
                   </div>
 
-                  <div className="space-y-1 text-sm text-zinc-600">
+                  <div className="space-y-1 text-sm text-zinc-800">
                     <p>{address.addressLine1}</p>
                     {address.addressLine2 && <p>{address.addressLine2}</p>}
                     <p>
@@ -249,7 +249,7 @@ export function DeliveryAddressList() {
                   {!address.isDefault && (
                     <button
                       onClick={() => handleSetDefault(address.id)}
-                      className="mt-4 text-sm text-zinc-600 hover:text-zinc-900 underline"
+                      className="mt-4 text-sm text-zinc-800 hover:text-zinc-900 underline"
                     >
                       Set as default
                     </button>

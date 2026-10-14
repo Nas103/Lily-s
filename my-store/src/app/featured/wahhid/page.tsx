@@ -18,14 +18,14 @@ export default async function WahhidBrandPage() {
     <div className="min-h-screen bg-white">
       <main className="mx-auto max-w-6xl px-6 py-16">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
             Featured · Brand
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
             Wahhid
           </h1>
           {brand && (
-            <p className="max-w-2xl text-sm text-zinc-600">{brand.description}</p>
+            <p className="max-w-2xl text-sm text-zinc-800">{brand.description}</p>
           )}
         </header>
 

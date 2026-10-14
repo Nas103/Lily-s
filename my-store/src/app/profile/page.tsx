@@ -111,7 +111,7 @@ export default function ProfilePage() {
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition ${
                     isActive
                       ? "bg-zinc-900 text-white"
-                      : "text-zinc-600 hover:bg-zinc-100"
+                      : "text-zinc-800 hover:bg-zinc-100"
                   }`}
                 >
                   <Icon size={20} />
@@ -129,7 +129,7 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Profile</h2>
-                <p className="text-zinc-600">
+                <p className="text-zinc-800">
                   Your {BRAND.name} profile represents you across the platform.
                 </p>
               </div>
@@ -163,8 +163,8 @@ export default function ProfilePage() {
                     <h3 className="text-xl font-semibold text-zinc-900">
                       {user.name || "User"}
                     </h3>
-                    <p className="text-zinc-600">{user.email}</p>
-                    <p className="text-sm text-zinc-500 mt-1">
+                    <p className="text-zinc-800">{user.email}</p>
+                    <p className="text-sm text-zinc-700 mt-1">
                       {BRAND.name} Member Since {memberSince}
                     </p>
                   </div>
@@ -174,9 +174,9 @@ export default function ProfilePage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-zinc-900">Email</p>
-                      <p className="text-sm text-zinc-600">{user.email}</p>
+                      <p className="text-sm text-zinc-800">{user.email}</p>
                     </div>
-                    <button className="text-sm text-zinc-600 hover:text-zinc-900">
+                    <button className="text-sm text-zinc-800 hover:text-zinc-900">
                       Edit
                     </button>
                   </div>
@@ -184,9 +184,9 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium text-zinc-900">Name</p>
-                        <p className="text-sm text-zinc-600">{user.name}</p>
+                        <p className="text-sm text-zinc-800">{user.name}</p>
                       </div>
-                      <button className="text-sm text-zinc-600 hover:text-zinc-900">
+                      <button className="text-sm text-zinc-800 hover:text-zinc-900">
                         Edit
                       </button>
                     </div>
@@ -194,7 +194,7 @@ export default function ProfilePage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-zinc-900">Role</p>
-                      <p className="text-sm text-zinc-600">{user.role}</p>
+                      <p className="text-sm text-zinc-800">{user.role}</p>
                     </div>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-zinc-900">Order History</h2>
-                <p className="text-zinc-600">
+                <p className="text-zinc-800">
                   Review past orders and track their delivery status.
                 </p>
               </div>

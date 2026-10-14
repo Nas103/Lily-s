@@ -19,13 +19,13 @@ export default async function FeaturedPage() {
     <div className="min-h-screen bg-white">
       <main className="mx-auto max-w-6xl px-6 py-16">
         <header className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
             House of brands
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
             Featured
           </h1>
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-zinc-800">
             A rotating home for exclusive labels. Wahhid opens the collection;
             more brands land soon.
           </p>
@@ -51,13 +51,13 @@ export default async function FeaturedPage() {
                   />
                 )}
                 <div className="p-6">
-                  <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+                  <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
                     {brand.productCount} styles
                   </p>
                   <h2 className="mt-1 text-2xl font-semibold tracking-tight">
                     {brand.name}
                   </h2>
-                  <p className="mt-2 text-sm text-zinc-600">{brand.tagline}</p>
+                  <p className="mt-2 text-sm text-zinc-800">{brand.tagline}</p>
                 </div>
               </Link>
             );
@@ -67,7 +67,7 @@ export default async function FeaturedPage() {
         <div className="mt-12">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
+              <p className="text-xs uppercase tracking-[0.4em] text-zinc-700">
                 Featured arrivals
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">

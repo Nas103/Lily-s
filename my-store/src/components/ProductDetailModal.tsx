@@ -149,20 +149,20 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
           </div>
           <div className="flex flex-1 flex-col gap-4 p-6 pr-4 md:p-8 md:pr-6 overflow-y-auto">
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+              <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
                 {product.category ?? "Drop"}
               </p>
               {/* TODO: Finalize product naming before publishing. */}
               <h3 className="text-2xl font-semibold tracking-tight text-zinc-900">
                 {product.name}
               </h3>
-              <p className="text-sm text-zinc-500">{product.highlight}</p>
+              <p className="text-sm text-zinc-700">{product.highlight}</p>
             </div>
             {/* TODO: Lock in final retail price. */}
             <p className="text-3xl font-semibold text-zinc-900">
               {formattedPrice}
             </p>
-            <p className="text-sm leading-relaxed text-zinc-600">
+            <p className="text-sm leading-relaxed text-zinc-800">
               {product.description ??
                 `Designed for the ${BRAND.name} capsule: balanced cushioning, premium fabrics, and studio-grade finishing.`}
             </p>
@@ -171,7 +171,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                 {product.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-zinc-200 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-zinc-600"
+                    className="rounded-full border border-zinc-200 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-zinc-800"
                   >
                     {tag}
                   </span>
@@ -182,7 +182,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
             <div className="mt-4 flex flex-col gap-4">
               {sizes && sizes.length > 0 ? (
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-700">
                     Size
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
@@ -204,7 +204,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                 </div>
               ) : null}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-700">
                   Color
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">

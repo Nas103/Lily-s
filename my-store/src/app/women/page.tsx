@@ -19,13 +19,13 @@ export default async function WomenPage() {
     <div className="min-h-screen bg-white">
       <main className="mx-auto max-w-6xl px-6 py-16">
         <header className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
             Womenswear
           </p>
           <h1 className="text-3xl font-semibold tracking-tight h1-gradient">
             Modest by design
           </h1>
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-zinc-800">
             Couture abayas, flowing ghashwa sets, and everyday modest essentials
             from El Huyam and Black Modesty.
           </p>
