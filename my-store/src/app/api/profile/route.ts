@@ -6,47 +6,12 @@ import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 import { getCurrentUser } from "@/lib/auth-middleware";
 
 /**
- * Verify user authentication from the session cookie / bearer token,
- * falling back to legacy x-user-id + x-user-email headers.
+ * Verify user authentication from a verified session cookie / bearer token.
+ * Caller-supplied identity headers are intentionally not trusted.
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
   const sessionUser = await getCurrentUser(request);
-  if (sessionUser) {
-    return sessionUser.id;
-  }
-
-  const userId = request.headers.get("x-user-id");
-  const userEmail = request.headers.get("x-user-email");
-
-  if (!userId || !userEmail) {
-    console.warn("[profile] Missing auth credentials:", { hasUserId: !!userId, hasUserEmail: !!userEmail });
-    return null;
-  }
-
-  if (!prisma) {
-    console.error("[profile] Prisma client not available");
-    return null;
-  }
-
-  try {
-    const user = await (prisma as any).user.findUnique({
-      where: { id: userId },
-      select: { id: true, email: true },
-    });
-
-    if (user && user.email === userEmail) {
-      return userId;
-    } else {
-      console.warn("[profile] User verification failed:", { 
-        found: !!user, 
-        emailMatch: user?.email === userEmail 
-      });
-    }
-  } catch (error) {
-    console.error("[profile] Auth verification error:", error);
-  }
-
-  return null;
+  return sessionUser ? sessionUser.id : null;
 }
 
 /**

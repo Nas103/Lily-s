@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { products as staticProducts } from '@/data/products'
-import { applySecurityMiddleware } from '@/lib/middleware'
+import { applySecurityMiddleware, getPublicOrigin } from '@/lib/middleware'
 import { getUserCurrency, convertPrice } from '@/lib/currency'
 import { applyOverrides, loadProductOverrides } from '@/lib/productOverrides'
+import { resolveUserId } from '@/lib/auth-middleware'
 
 // Import new product data
 let newProducts: any[] = [];
@@ -54,14 +55,9 @@ export async function GET(request: NextRequest) {
     return securityResponse;
   }
 
-  // Derive the origin from the request's Host header instead of
-  // request.nextUrl.origin: the dev server runs with `-H 0.0.0.0`, so
-  // nextUrl.origin resolves to `http://0.0.0.0:3000` — an address the mobile
-  // app (physical device or emulator) cannot connect to for image loads.
-  const host = request.headers.get('host');
-  const protocol =
-    request.headers.get('x-forwarded-proto') ?? request.nextUrl.protocol.replace(':', '');
-  const origin = host ? `${protocol}://${host}` : request.nextUrl.origin;
+  // Build a validated absolute origin for asset URLs. The Host header is used
+  // (so mobile devices on the LAN get their reachable address) but sanitized.
+  const origin = getPublicOrigin(request);
 
   type ColorImageSet = Record<string, string>;
   type ProductWithImages = {
@@ -103,32 +99,33 @@ export async function GET(request: NextRequest) {
   const subCategory = searchParams.get('subCategory') ?? undefined; // For BoxRaw and Electronics sub-categories
   const country = searchParams.get('country') ?? undefined; // User's country for currency conversion
 
-  // Get user's country from headers if authenticated
-  const userId = request.headers.get("x-user-id");
-  const userEmail = request.headers.get("x-user-email");
+  // Resolve the caller's country from a verified session (never from
+  // caller-supplied identity headers) unless an explicit country was passed.
   let userCountry: string | null = country || null;
 
-  // If user is authenticated, try to get their country from profile
-  if (userId && userEmail && prisma && !userCountry) {
-    try {
-      const user = await (prisma as any).user.findUnique({
-        where: { id: userId },
-        select: { country: true },
-      });
-      if (user?.country) {
-        userCountry = user.country;
-      } else {
-        // Try to get from default delivery address
-        const defaultAddress = await (prisma as any).deliveryAddress.findFirst({
-          where: { userId, isDefault: true },
+  if (prisma && !userCountry) {
+    const userId = await resolveUserId(request);
+    if (userId) {
+      try {
+        const user = await (prisma as any).user.findUnique({
+          where: { id: userId },
           select: { country: true },
         });
-        if (defaultAddress?.country) {
-          userCountry = defaultAddress.country;
+        if (user?.country) {
+          userCountry = user.country;
+        } else {
+          // Try to get from default delivery address
+          const defaultAddress = await (prisma as any).deliveryAddress.findFirst({
+            where: { userId, isDefault: true },
+            select: { country: true },
+          });
+          if (defaultAddress?.country) {
+            userCountry = defaultAddress.country;
+          }
         }
+      } catch (error) {
+        // Silently fail, use default currency
       }
-    } catch (error) {
-      // Silently fail, use default currency
     }
   }
 

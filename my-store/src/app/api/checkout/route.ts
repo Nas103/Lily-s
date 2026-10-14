@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth-middleware";
 import { currencyCodeForCountry } from "@/lib/currency";
 import { generateOrderNumber } from "@/lib/orders";
+import { loadCatalog } from "@/lib/catalog";
 
 type CheckoutItem = {
   id?: string;
@@ -46,17 +47,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate and sanitize items
+  // Validate and sanitize items. The client-supplied price is intentionally
+  // ignored: authoritative prices are resolved from the catalog below.
   for (const item of items as CheckoutItem[]) {
     if (typeof item.name !== "string" || item.name.length > 200) {
       return NextResponse.json(
         { error: "Invalid item name" },
-        { status: 400 }
-      );
-    }
-    if (typeof item.price !== "number" || item.price < 0 || item.price > 1000000) {
-      return NextResponse.json(
-        { error: "Invalid item price" },
         { status: 400 }
       );
     }
@@ -103,19 +99,64 @@ export async function POST(request: NextRequest) {
     ? currencyCodeForCountry(resolvedCountry)
     : "ZAR";
 
+  // Resolve authoritative prices from the catalog so a tampered client can't
+  // underpay. Dynamic pricing (if configured) is applied on top of the trusted
+  // base price, never on a client-supplied one.
+  const catalog = await loadCatalog();
+
+  const resolvedItems: {
+    productId: string;
+    name: string;
+    imageUrl: string;
+    size?: string;
+    color?: string;
+    quantity: number;
+    price: number;
+  }[] = [];
+
   let totalAmount = 0;
 
   for (const item of items as CheckoutItem[]) {
+    const productId = String(item.productId || item.id || "").trim();
+    if (!productId) {
+      return NextResponse.json(
+        { error: "Missing product id" },
+        { status: 400 }
+      );
+    }
+
+    const entry = catalog.get(productId);
+    if (!entry) {
+      return NextResponse.json(
+        { error: `Unknown product: ${productId}` },
+        { status: 400 }
+      );
+    }
+
+    const basePrice = Math.round(entry.price * 100) / 100;
     const { price } = await getDynamicPrice({
-      basePrice: item.price,
+      basePrice,
       currency,
       ipAddress,
     });
-    totalAmount += price * item.quantity;
+    const charged = Math.round(price * 100) / 100;
+
+    totalAmount += charged * item.quantity;
+
+    resolvedItems.push({
+      productId,
+      name: sanitizeInput(entry.name || item.name || ""),
+      imageUrl: item.imageUrl,
+      size: item.size,
+      color: item.color,
+      quantity: item.quantity,
+      price: charged,
+    });
   }
+  totalAmount = Math.round(totalAmount * 100) / 100;
 
   // Create item description from cart items
-  const itemNames = (items as CheckoutItem[])
+  const itemNames = resolvedItems
     .map((item) => `${item.name} (x${item.quantity})`)
     .join(", ");
 
@@ -147,9 +188,9 @@ export async function POST(request: NextRequest) {
           shippingPostcode: shipping.postcode || shipping.zip || undefined,
           shippingCountry: shipping.country || undefined,
           orderItems: {
-            create: (items as CheckoutItem[]).map((item) => ({
-              productId: String(item.productId || item.id || ""),
-              name: sanitizeInput(item.name),
+            create: resolvedItems.map((item) => ({
+              productId: item.productId,
+              name: item.name,
               imageUrl: item.imageUrl,
               size: item.size,
               color: item.color,

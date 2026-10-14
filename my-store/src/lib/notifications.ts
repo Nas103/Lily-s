@@ -22,6 +22,11 @@ export async function sendOrderStatusEmail(input: {
     ? `${trackingUrl}?orderNumber=${encodeURIComponent(input.orderNumber)}&email=${encodeURIComponent(input.to)}`
     : trackingUrl;
 
+  const safeOrderNumber = escapeHtml(input.orderNumber);
+  const safeStatus = escapeHtml(status);
+  const safeAmount = input.amount ? escapeHtml(input.amount) : "";
+  const safeTracking = input.trackingNumber ? escapeHtml(input.trackingNumber) : "";
+
   const html = `<!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#f5f5f4;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
@@ -37,11 +42,11 @@ export async function sendOrderStatusEmail(input: {
           <tr><td style="padding:28px;">
             <p style="margin:0 0 12px;font-size:15px;color:#171717;">Hi,</p>
             <p style="margin:0 0 20px;font-size:15px;color:#171717;line-height:1.5;">
-              Your order <strong>${input.orderNumber}</strong> has been updated to
-              <span style="display:inline-block;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;font-weight:600;font-size:13px;">${status}</span>.
+              Your order <strong>${safeOrderNumber}</strong> has been updated to
+              <span style="display:inline-block;padding:2px 10px;border-radius:999px;background:#fef3c7;color:#92400e;font-weight:600;font-size:13px;">${safeStatus}</span>.
             </p>
-            ${input.amount ? `<p style="margin:0 0 20px;font-size:14px;color:#52525b;">Total: <strong>${input.amount}</strong></p>` : ""}
-            ${input.trackingNumber ? `<p style="margin:0 0 20px;font-size:14px;color:#52525b;">Tracking number: <strong>${input.trackingNumber}</strong></p>` : ""}
+            ${safeAmount ? `<p style="margin:0 0 20px;font-size:14px;color:#52525b;">Total: <strong>${safeAmount}</strong></p>` : ""}
+            ${safeTracking ? `<p style="margin:0 0 20px;font-size:14px;color:#52525b;">Tracking number: <strong>${safeTracking}</strong></p>` : ""}
             <p style="margin:0 0 24px;font-size:14px;color:#52525b;line-height:1.5;">
               You can follow your order any time on the order tracking page.
             </p>
@@ -80,7 +85,7 @@ export async function sendAdminMessage(input: {
           <tr>
             <td style="background:#0a0a0a;color:#ffffff;padding:24px 28px;">
               <div style="font-size:13px;letter-spacing:0.3em;text-transform:uppercase;color:#fcd34d;">${BRAND.name}</div>
-              <div style="font-size:22px;font-weight:600;margin-top:6px;">${input.subject}</div>
+              <div style="font-size:22px;font-weight:600;margin-top:6px;">${escapeHtml(input.subject)}</div>
             </td>
           </tr>
           <tr><td style="padding:28px;">

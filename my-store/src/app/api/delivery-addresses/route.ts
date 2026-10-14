@@ -6,39 +6,11 @@ import { sanitizeInput, validateText, isValidPhone } from "@/lib/security";
 import { resolveUserId } from "@/lib/auth-middleware";
 
 /**
- * Verify user authentication
+ * Verify user authentication from a verified session cookie / bearer token.
+ * Caller-supplied identity headers are intentionally not trusted.
  */
 async function verifyUser(request: NextRequest): Promise<string | null> {
-  const sessionUserId = await resolveUserId(request);
-  if (sessionUserId) return sessionUserId;
-
-  const userId = request.headers.get("x-user-id");
-  const userEmail = request.headers.get("x-user-email");
-
-  if (!userId || !userEmail) {
-    console.warn("[delivery-addresses] Missing auth headers");
-    return null;
-  }
-
-  if (!prisma) {
-    console.error("[delivery-addresses] Prisma client not available");
-    return null;
-  }
-
-  try {
-    const user = await (prisma as any).user.findUnique({
-      where: { id: userId },
-      select: { id: true, email: true },
-    });
-
-    if (user && user.email === userEmail) {
-      return userId;
-    }
-  } catch (error) {
-    console.error("[delivery-addresses] Auth verification error:", error);
-  }
-
-  return null;
+  return resolveUserId(request);
 }
 
 /**

@@ -28,28 +28,13 @@ export async function getCurrentUser(req: NextRequest): Promise<AuthenticatedUse
 }
 
 /**
- * Resolve the authenticated user id from a session cookie / bearer token,
- * falling back to the legacy x-user-id + x-user-email headers used by
- * older native builds.
+ * Resolve the authenticated user id from a verified session cookie or bearer
+ * token. Identity is NEVER derived from caller-supplied headers such as
+ * x-user-id / x-user-email: those are unauthenticated and trivially spoofed.
  */
 export async function resolveUserId(req: NextRequest): Promise<string | null> {
   const sessionUser = await getCurrentUser(req);
-  if (sessionUser) return sessionUser.id;
-
-  const userId = req.headers.get("x-user-id");
-  const userEmail = req.headers.get("x-user-email");
-  if (!userId || !userEmail || !prisma) return null;
-
-  try {
-    const user = await (prisma as any).user.findUnique({
-      where: { id: userId },
-      select: { id: true, email: true },
-    });
-    if (user && user.email === userEmail) return userId;
-  } catch {
-    // fall through
-  }
-  return null;
+  return sessionUser ? sessionUser.id : null;
 }
 
 export async function requireAuth(

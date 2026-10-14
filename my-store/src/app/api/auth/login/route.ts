@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { isValidEmail, sanitizeInput } from "@/lib/security";
-import { applySecurityMiddleware } from "@/lib/middleware";
+import { isValidEmail, sanitizeInput, checkRateLimit } from "@/lib/security";
+import { applySecurityMiddleware, getClientIp } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 import { createAuthResponse } from "@/lib/auth";
 
@@ -58,6 +58,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Password must be between 8 and 128 characters." },
         { status: 400 }
+      );
+    }
+
+    // Per-account throttle to blunt credential-stuffing / brute-force attempts.
+    // Keyed on email so it holds even when the attacker rotates source IPs.
+    const accountLimit = checkRateLimit(
+      `login:account:${email}`,
+      isDev ? 50 : 12,
+      15 * 60 * 1000
+    );
+    if (!accountLimit.allowed) {
+      const retryAfter = Math.ceil((accountLimit.resetTime - Date.now()) / 1000);
+      return NextResponse.json(
+        { error: "Too many sign-in attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
       );
     }
 

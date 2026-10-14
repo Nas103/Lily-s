@@ -8,8 +8,6 @@ export type ProductOverrideValue = {
 
 export type ProductOverrideMap = Map<string, ProductOverrideValue>;
 
-const OVERRIDE_TABLE = '"ProductOverride"';
-
 /**
  * Load all admin product overrides. Uses raw SQL so it works without a
  * regenerated Prisma client (the ProductOverride model is keyed by the static
@@ -20,9 +18,9 @@ export const loadProductOverrides = cache(async (): Promise<ProductOverrideMap> 
   const map: ProductOverrideMap = new Map();
   if (!prisma) return map;
   try {
-    const rows = (await (prisma as any).$queryRawUnsafe(
-      `SELECT "productId" AS "id", "name", "price" FROM ${OVERRIDE_TABLE}`
-    )) as { id: string; name: string | null; price: string | number | null }[];
+    const rows = (await (prisma as any).$queryRaw`
+      SELECT "productId" AS "id", "name", "price" FROM "ProductOverride"
+    `) as { id: string; name: string | null; price: string | number | null }[];
     for (const row of rows) {
       map.set(row.id, {
         name: row.name ?? null,
@@ -77,25 +75,20 @@ export async function saveProductOverride(input: {
     throw new Error("Invalid price. Must be a positive dollar amount.");
   }
 
-  await (prisma as any).$executeRawUnsafe(
-    `INSERT INTO ${OVERRIDE_TABLE} ("productId", "name", "price", "updatedBy", "updatedAt")
-     VALUES ($1, $2, $3, $4, NOW())
-     ON CONFLICT ("productId") DO UPDATE SET
-       "name" = COALESCE(EXCLUDED."name", ${OVERRIDE_TABLE}."name"),
-       "price" = COALESCE(EXCLUDED."price", ${OVERRIDE_TABLE}."price"),
-       "updatedBy" = EXCLUDED."updatedBy",
-       "updatedAt" = NOW()`,
-    productId,
-    haveName ? name : null,
-    havePrice ? price : null,
-    updatedBy ?? null
-  );
+  await (prisma as any).$executeRaw`
+    INSERT INTO "ProductOverride" ("productId", "name", "price", "updatedBy", "updatedAt")
+    VALUES (${productId}, ${haveName ? name : null}, ${havePrice ? price : null}, ${updatedBy ?? null}, NOW())
+    ON CONFLICT ("productId") DO UPDATE SET
+      "name" = COALESCE(EXCLUDED."name", "ProductOverride"."name"),
+      "price" = COALESCE(EXCLUDED."price", "ProductOverride"."price"),
+      "updatedBy" = EXCLUDED."updatedBy",
+      "updatedAt" = NOW()
+  `;
 
   // Re-read what was persisted so the response reflects actual state.
-  const rows = (await (prisma as any).$queryRawUnsafe(
-    `SELECT "name", "price" FROM ${OVERRIDE_TABLE} WHERE "productId" = $1`,
-    productId
-  )) as { name: string | null; price: string | null }[];
+  const rows = (await (prisma as any).$queryRaw`
+    SELECT "name", "price" FROM "ProductOverride" WHERE "productId" = ${productId}
+  `) as { name: string | null; price: string | null }[];
   const row = rows[0];
   return {
     name: row?.name ?? null,
@@ -106,10 +99,9 @@ export async function saveProductOverride(input: {
 /** Remove all overrides for a product (revert to the catalogue). */
 export async function resetProductOverride(productId: string): Promise<void> {
   if (!prisma) throw new Error("Database is not configured.");
-  await (prisma as any).$executeRawUnsafe(
-    `DELETE FROM ${OVERRIDE_TABLE} WHERE "productId" = $1`,
-    productId
-  );
+  await (prisma as any).$executeRaw`
+    DELETE FROM "ProductOverride" WHERE "productId" = ${productId}
+  `;
 }
 
 export function serializeOverrides(map: ProductOverrideMap): Record<string, ProductOverrideValue> {

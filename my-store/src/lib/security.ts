@@ -159,14 +159,15 @@ export function isValidPostcode(postcode: string): boolean {
 }
 
 /**
- * Validate URL (for profile images)
+ * Validate URL (for profile images). Only absolute http(s) URLs are accepted;
+ * dangerous schemes such as `javascript:` and `data:` are rejected, and the
+ * total length is capped to avoid storage/rendering abuse.
  */
 export function isValidUrl(url: string): boolean {
-  if (!url || typeof url !== "string") return false;
+  if (!url || typeof url !== "string" || url.length > 2048) return false;
   try {
     const parsed = new URL(url);
-    // Only allow http, https, and data URLs
-    return ["http:", "https:", "data:"].includes(parsed.protocol);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
   } catch {
     return false;
   }

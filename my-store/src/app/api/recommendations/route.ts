@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { applySecurityMiddleware } from "@/lib/middleware";
+import { applySecurityMiddleware, getPublicOrigin } from "@/lib/middleware";
 import { prisma } from "@/lib/prisma";
+import { resolveUserId } from "@/lib/auth-middleware";
 import { convertPrice } from "@/lib/currency";
 import {
   catalogProducts,
@@ -142,14 +143,10 @@ export async function POST(request: NextRequest) {
 
     const country = await resolveCountry(request);
 
-    // Derive the origin from the request's Host header (mirrors /api/products):
+    // Build a validated absolute origin for asset URLs (mirrors /api/products):
     // relative asset paths must be absolute for the mobile app, whose
     // Image source={{ uri }} cannot resolve paths like /perfumes/<slug>/main.webp.
-    const host = request.headers.get("host");
-    const protocol =
-      request.headers.get("x-forwarded-proto") ??
-      request.nextUrl.protocol.replace(":", "");
-    const origin = host ? `${protocol}://${host}` : request.nextUrl.origin;
+    const origin = getPublicOrigin(request);
 
     const rebaseImageUrls = (value: string): string =>
       value.startsWith("/") && !value.startsWith("//") ? `${origin}${value}` : value;
@@ -210,8 +207,8 @@ export async function POST(request: NextRequest) {
 /**
  * Resolve the country used for currency conversion: an explicit
  * `x-user-country` header or `?country=` query wins, otherwise fall back to
- * the authenticated user's saved country (or their default address). The
- * mobile app sends x-user-id / x-user-email headers on every request.
+ * the authenticated user's saved country (or their default address) resolved
+ * from a verified session — never from caller-supplied identity headers.
  */
 async function resolveCountry(request: NextRequest): Promise<string | null> {
   const explicit =
@@ -219,9 +216,9 @@ async function resolveCountry(request: NextRequest): Promise<string | null> {
     new URL(request.url).searchParams.get("country");
   if (explicit) return explicit;
 
-  const userId = request.headers.get("x-user-id");
-  const userEmail = request.headers.get("x-user-email");
-  if (!prisma || !userId || !userEmail) return null;
+  if (!prisma) return null;
+  const userId = await resolveUserId(request);
+  if (!userId) return null;
 
   try {
     const user = await (prisma as any).user.findUnique({

@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth-middleware";
 import { handleApiError } from "@/lib/errorHandler";
 import { generateOrderNumber, serializeOrder } from "@/lib/orders";
 import { sanitizeInput } from "@/lib/security";
+import { loadCatalog } from "@/lib/catalog";
 
 type OrderItemInput = {
   id?: string;
@@ -62,12 +63,60 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
-    const subtotal = items.reduce(
-      (sum, item) => sum + Number(item.price) * Number(item.quantity),
-      0
-    );
-    const shipping = Number(body.shipping ?? 0);
-    const total = subtotal + shipping;
+    // Resolve authoritative prices from the catalog — the client-supplied
+    // price is ignored so a tampered request can't underpay.
+    const catalog = await loadCatalog();
+
+    const resolvedItems: {
+      productId: string;
+      name: string;
+      imageUrl?: string;
+      size?: string;
+      color?: string;
+      quantity: number;
+      price: number;
+    }[] = [];
+
+    let subtotal = 0;
+    for (const item of items) {
+      const productId = String(item.productId || item.id || "").trim();
+      if (!productId) {
+        return NextResponse.json({ error: "Missing product id" }, { status: 400 });
+      }
+      const quantity = Number(item.quantity);
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100) {
+        return NextResponse.json(
+          { error: "Invalid item quantity" },
+          { status: 400 }
+        );
+      }
+      const entry = catalog.get(productId);
+      if (!entry) {
+        return NextResponse.json(
+          { error: `Unknown product: ${productId}` },
+          { status: 400 }
+        );
+      }
+      const price = Math.round(entry.price * 100) / 100;
+      subtotal += price * quantity;
+      resolvedItems.push({
+        productId,
+        name: sanitizeInput(entry.name || item.name || ""),
+        imageUrl: item.imageUrl,
+        size: item.size,
+        color: item.color,
+        quantity,
+        price,
+      });
+    }
+    subtotal = Math.round(subtotal * 100) / 100;
+
+    const rawShipping = Number(body.shipping ?? 0);
+    const shipping =
+      Number.isFinite(rawShipping) && rawShipping > 0
+        ? Math.round(rawShipping * 100) / 100
+        : 0;
+    const total = Math.round((subtotal + shipping) * 100) / 100;
 
     const order = await (prisma as any).order.create({
       data: {
@@ -89,14 +138,14 @@ export async function POST(request: NextRequest) {
         shippingPostcode: body.shippingPostcode,
         shippingCountry: body.shippingCountry,
         orderItems: {
-          create: items.map((item) => ({
-            productId: String(item.productId || item.id || ""),
-            name: sanitizeInput(String(item.name || "")),
+          create: resolvedItems.map((item) => ({
+            productId: item.productId,
+            name: item.name,
             imageUrl: item.imageUrl,
             size: item.size,
             color: item.color,
-            quantity: Number(item.quantity),
-            price: Number(item.price),
+            quantity: item.quantity,
+            price: item.price,
           })),
         },
       },
