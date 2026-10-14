@@ -8,16 +8,17 @@
  * - Each product has max 3 colors
  * - Each color has 3 images: front, back, side (not top)
  * 
- * Samsung (10 products):
- * - Each product has 3 colors
- * - Each color has 3 images: front, back, side (not top)
+ * Samsung (12 products):
+ * - Galaxy S26 Ultra (256GB/512GB/1TB), Galaxy S26+ (256GB/512GB/1TB),
+ *   Galaxy S26 FE (128GB/256GB), Galaxy Z Fold8 (256GB/512GB),
+ *   Galaxy Watch Ultra2, Galaxy Buds4 Pro
+ * - Each color has 4 images: front, back, side, top
+ * - Images served from /electronics/Samsung/<device>/<color>/<view>.webp
+ * - Prices converted from ZAR to USD (1 USD = 18.5 ZAR)
  * 
  * Flagship (15 products):
  * - Each product has max 2 colors
  * - Each color has 3 images: front, back, side (not top)
- * 
- * TODO: Replace image URLs with actual product images
- * TODO: Update prices, descriptions, and other details as needed
  */
 
 import { Product } from '../types';
@@ -850,315 +851,467 @@ export const electronicsProducts: Product[] = [
     },
   },
 
-  // Samsung Sub-category (10 products)
-  // Each product has 3 colors, each color has 3 images (front, back, side)
+  // Samsung Sub-category (12 products)
+  // Views per color: front, back, side, top
   {
     id: 'electronics-samsung-001',
-    name: 'Samsung Galaxy S25 Ultra',
-    slug: 'samsung-galaxy-s25-ultra',
-    description: 'The ultimate Samsung flagship with Snapdragon 8 Gen 4, 200MP camera, and S Pen. Premium design and performance.',
+    name: 'Samsung Galaxy S26 Ultra 256GB',
+    slug: 'samsung-galaxy-s26-ultra-256gb',
+    description: 'The ultimate Galaxy with a 200MP pro camera, built-in S Pen, flagship performance and a 6.9-inch Dynamic AMOLED 2X display.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 1299.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Titanium Black', 'Titanium Gray', 'Titanium Violet'],
+    price: 1675.62,
+    imageUrl: '/electronics/Samsung/s26-ultra/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Titanium Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-ultra/black/front.webp',
+        back: '/electronics/Samsung/s26-ultra/black/back.webp',
+        side: '/electronics/Samsung/s26-ultra/black/side.webp',
+        top: '/electronics/Samsung/s26-ultra/black/top.webp',
       },
-      'Titanium Gray': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-ultra/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-ultra/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-ultra/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-ultra/silver-shadow/top.webp',
       },
-      'Titanium Violet': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-ultra/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-ultra/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-ultra/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-ultra/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-ultra/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-ultra/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-ultra/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-ultra/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-ultra/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-ultra/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-ultra/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-ultra/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-ultra/white/front.webp',
+        back: '/electronics/Samsung/s26-ultra/white/back.webp',
+        side: '/electronics/Samsung/s26-ultra/white/side.webp',
+        top: '/electronics/Samsung/s26-ultra/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-002',
-    name: 'Samsung Galaxy S25+',
-    slug: 'samsung-galaxy-s25-plus',
-    description: 'Premium Samsung smartphone with Snapdragon 8 Gen 4 and advanced camera system. Perfect balance of features and size.',
+    name: 'Samsung Galaxy S26 Ultra 512GB',
+    slug: 'samsung-galaxy-s26-ultra-512gb',
+    description: 'The ultimate Galaxy with a 200MP pro camera, built-in S Pen, flagship performance and a 6.9-inch Dynamic AMOLED 2X display.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 999.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Phantom Black', 'Cream', 'Lavender'],
+    price: 1945.89,
+    imageUrl: '/electronics/Samsung/s26-ultra/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Phantom Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-ultra/black/front.webp',
+        back: '/electronics/Samsung/s26-ultra/black/back.webp',
+        side: '/electronics/Samsung/s26-ultra/black/side.webp',
+        top: '/electronics/Samsung/s26-ultra/black/top.webp',
       },
-      'Cream': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-ultra/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-ultra/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-ultra/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-ultra/silver-shadow/top.webp',
       },
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-ultra/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-ultra/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-ultra/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-ultra/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-ultra/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-ultra/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-ultra/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-ultra/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-ultra/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-ultra/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-ultra/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-ultra/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-ultra/white/front.webp',
+        back: '/electronics/Samsung/s26-ultra/white/back.webp',
+        side: '/electronics/Samsung/s26-ultra/white/side.webp',
+        top: '/electronics/Samsung/s26-ultra/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-003',
-    name: 'Samsung Galaxy S25',
-    slug: 'samsung-galaxy-s25',
-    description: 'Flagship Samsung smartphone with Snapdragon 8 Gen 4 and stunning display. Available in vibrant colors.',
+    name: 'Samsung Galaxy S26 Ultra 1TB',
+    slug: 'samsung-galaxy-s26-ultra-1tb',
+    description: 'The ultimate Galaxy with a 200MP pro camera, built-in S Pen, flagship performance and a 6.9-inch Dynamic AMOLED 2X display.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 899.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Phantom Black', 'Cream', 'Lavender'],
+    price: 2351.3,
+    imageUrl: '/electronics/Samsung/s26-ultra/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Phantom Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-ultra/black/front.webp',
+        back: '/electronics/Samsung/s26-ultra/black/back.webp',
+        side: '/electronics/Samsung/s26-ultra/black/side.webp',
+        top: '/electronics/Samsung/s26-ultra/black/top.webp',
       },
-      'Cream': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-ultra/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-ultra/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-ultra/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-ultra/silver-shadow/top.webp',
       },
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-ultra/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-ultra/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-ultra/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-ultra/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-ultra/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-ultra/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-ultra/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-ultra/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-ultra/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-ultra/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-ultra/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-ultra/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-ultra/white/front.webp',
+        back: '/electronics/Samsung/s26-ultra/white/back.webp',
+        side: '/electronics/Samsung/s26-ultra/white/side.webp',
+        top: '/electronics/Samsung/s26-ultra/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-004',
-    name: 'Samsung Galaxy Z Fold 6',
-    slug: 'samsung-galaxy-z-fold-6',
-    description: 'Revolutionary foldable smartphone with dual displays. Unfold to tablet mode for enhanced productivity.',
+    name: 'Samsung Galaxy S26+ 256GB',
+    slug: 'samsung-galaxy-s26-plus-256gb',
+    description: 'A large-screen flagship pairing a 6.7-inch Dynamic AMOLED 2X display with a pro-grade camera system and all-day battery.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 1799.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Phantom Black', 'Titanium Silver', 'Titanium Gold'],
+    price: 1405.35,
+    imageUrl: '/electronics/Samsung/s26-plus/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Phantom Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-plus/black/front.webp',
+        back: '/electronics/Samsung/s26-plus/black/back.webp',
+        side: '/electronics/Samsung/s26-plus/black/side.webp',
+        top: '/electronics/Samsung/s26-plus/black/top.webp',
       },
-      'Titanium Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-plus/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-plus/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-plus/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-plus/silver-shadow/top.webp',
       },
-      'Titanium Gold': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-plus/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-plus/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-plus/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-plus/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-plus/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-plus/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-plus/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-plus/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-plus/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-plus/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-plus/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-plus/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-plus/white/front.webp',
+        back: '/electronics/Samsung/s26-plus/white/back.webp',
+        side: '/electronics/Samsung/s26-plus/white/side.webp',
+        top: '/electronics/Samsung/s26-plus/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-005',
-    name: 'Samsung Galaxy Z Flip 6',
-    slug: 'samsung-galaxy-z-flip-6',
-    description: 'Compact foldable smartphone that flips open. Stylish design with powerful performance.',
+    name: 'Samsung Galaxy S26+ 512GB',
+    slug: 'samsung-galaxy-s26-plus-512gb',
+    description: 'A large-screen flagship pairing a 6.7-inch Dynamic AMOLED 2X display with a pro-grade camera system and all-day battery.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 999.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Mint', 'Graphite', 'Lavender'],
+    price: 1675.62,
+    imageUrl: '/electronics/Samsung/s26-plus/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Mint': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-plus/black/front.webp',
+        back: '/electronics/Samsung/s26-plus/black/back.webp',
+        side: '/electronics/Samsung/s26-plus/black/side.webp',
+        top: '/electronics/Samsung/s26-plus/black/top.webp',
       },
-      'Graphite': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-plus/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-plus/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-plus/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-plus/silver-shadow/top.webp',
       },
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-plus/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-plus/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-plus/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-plus/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-plus/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-plus/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-plus/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-plus/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-plus/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-plus/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-plus/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-plus/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-plus/white/front.webp',
+        back: '/electronics/Samsung/s26-plus/white/back.webp',
+        side: '/electronics/Samsung/s26-plus/white/side.webp',
+        top: '/electronics/Samsung/s26-plus/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-006',
-    name: 'Samsung Galaxy Tab S10 Ultra',
-    slug: 'samsung-galaxy-tab-s10-ultra',
-    description: 'Premium Android tablet with Snapdragon 8 Gen 4 and stunning AMOLED display. Perfect for productivity and creativity.',
+    name: 'Samsung Galaxy S26+ 1TB',
+    slug: 'samsung-galaxy-s26-plus-1tb',
+    description: 'A large-screen flagship pairing a 6.7-inch Dynamic AMOLED 2X display with a pro-grade camera system and all-day battery.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 1199.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Graphite', 'Beige', 'Navy'],
+    price: 1945.89,
+    imageUrl: '/electronics/Samsung/s26-plus/black/front.webp',
+    colors: ['Black', 'Silver Shadow', 'Pink Gold', 'Cobalt Violet', 'Sky Blue', 'White'],
     colorImages: {
-      'Graphite': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Black': {
+        front: '/electronics/Samsung/s26-plus/black/front.webp',
+        back: '/electronics/Samsung/s26-plus/black/back.webp',
+        side: '/electronics/Samsung/s26-plus/black/side.webp',
+        top: '/electronics/Samsung/s26-plus/black/top.webp',
       },
-      'Beige': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Silver Shadow': {
+        front: '/electronics/Samsung/s26-plus/silver-shadow/front.webp',
+        back: '/electronics/Samsung/s26-plus/silver-shadow/back.webp',
+        side: '/electronics/Samsung/s26-plus/silver-shadow/side.webp',
+        top: '/electronics/Samsung/s26-plus/silver-shadow/top.webp',
       },
-      'Navy': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Pink Gold': {
+        front: '/electronics/Samsung/s26-plus/pink-gold/front.webp',
+        back: '/electronics/Samsung/s26-plus/pink-gold/back.webp',
+        side: '/electronics/Samsung/s26-plus/pink-gold/side.webp',
+        top: '/electronics/Samsung/s26-plus/pink-gold/top.webp',
+      },
+      'Cobalt Violet': {
+        front: '/electronics/Samsung/s26-plus/cobalt-violet/front.webp',
+        back: '/electronics/Samsung/s26-plus/cobalt-violet/back.webp',
+        side: '/electronics/Samsung/s26-plus/cobalt-violet/side.webp',
+        top: '/electronics/Samsung/s26-plus/cobalt-violet/top.webp',
+      },
+      'Sky Blue': {
+        front: '/electronics/Samsung/s26-plus/sky-blue/front.webp',
+        back: '/electronics/Samsung/s26-plus/sky-blue/back.webp',
+        side: '/electronics/Samsung/s26-plus/sky-blue/side.webp',
+        top: '/electronics/Samsung/s26-plus/sky-blue/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/s26-plus/white/front.webp',
+        back: '/electronics/Samsung/s26-plus/white/back.webp',
+        side: '/electronics/Samsung/s26-plus/white/side.webp',
+        top: '/electronics/Samsung/s26-plus/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-007',
-    name: 'Samsung Galaxy Watch 7 Pro',
-    slug: 'samsung-galaxy-watch-7-pro',
-    description: 'Premium smartwatch with advanced health tracking, LTE connectivity, and rotating bezel. Titanium case.',
+    name: 'Samsung Galaxy S26 FE 128GB',
+    slug: 'samsung-galaxy-s26-fe-128gb',
+    description: 'Fan Edition value with a bright AMOLED display, pro-grade camera and Galaxy AI in a colourful, durable design.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 599.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Titanium Black', 'Titanium Silver', 'Titanium Gold'],
+    price: 837.78,
+    imageUrl: '/electronics/Samsung/s26-fe/blueberry/front.webp',
+    colors: ['Blueberry', 'Graphite'],
     colorImages: {
-      'Titanium Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Blueberry': {
+        front: '/electronics/Samsung/s26-fe/blueberry/front.webp',
+        back: '/electronics/Samsung/s26-fe/blueberry/back.webp',
+        side: '/electronics/Samsung/s26-fe/blueberry/side.webp',
+        top: '/electronics/Samsung/s26-fe/blueberry/top.webp',
       },
-      'Titanium Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
-      },
-      'Titanium Gold': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'Graphite': {
+        front: '/electronics/Samsung/s26-fe/graphite/front.webp',
+        back: '/electronics/Samsung/s26-fe/graphite/back.webp',
+        side: '/electronics/Samsung/s26-fe/graphite/side.webp',
+        top: '/electronics/Samsung/s26-fe/graphite/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-008',
-    name: 'Samsung Galaxy Buds3 Pro',
-    slug: 'samsung-galaxy-buds3-pro',
-    description: 'Premium wireless earbuds with active noise cancellation, 360 Audio, and intelligent ANC. Long battery life.',
+    name: 'Samsung Galaxy S26 FE 256GB',
+    slug: 'samsung-galaxy-s26-fe-256gb',
+    description: 'Fan Edition value with a bright AMOLED display, pro-grade camera and Galaxy AI in a colourful, durable design.',
     category: 'electronics',
     subCategory: 'samsung',
-    price: 249.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Phantom Black', 'Lavender', 'Graphite'],
+    price: 918.86,
+    imageUrl: '/electronics/Samsung/s26-fe/blueberry/front.webp',
+    colors: ['Blueberry', 'Graphite'],
     colorImages: {
-      'Phantom Black': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
-      },
-      'Lavender': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Blueberry': {
+        front: '/electronics/Samsung/s26-fe/blueberry/front.webp',
+        back: '/electronics/Samsung/s26-fe/blueberry/back.webp',
+        side: '/electronics/Samsung/s26-fe/blueberry/side.webp',
+        top: '/electronics/Samsung/s26-fe/blueberry/top.webp',
       },
       'Graphite': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+        front: '/electronics/Samsung/s26-fe/graphite/front.webp',
+        back: '/electronics/Samsung/s26-fe/graphite/back.webp',
+        side: '/electronics/Samsung/s26-fe/graphite/side.webp',
+        top: '/electronics/Samsung/s26-fe/graphite/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-009',
-    name: 'Samsung Galaxy Book4 Ultra',
-    slug: 'samsung-galaxy-book4-ultra',
-    description: 'Premium laptop with Intel Core i9, RTX 4070, and AMOLED display. Perfect for professionals and creators.',
+    name: 'Samsung Galaxy Z Fold8 256GB',
+    slug: 'samsung-galaxy-z-fold8-256gb',
+    description: "Samsung's book-style foldable with a flexible 7.6-inch inner display, refined hinge and multi-window Galaxy AI productivity.",
     category: 'electronics',
     subCategory: 'samsung',
-    price: 2499.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Graphite', 'Silver', 'Beige'],
+    price: 2216.16,
+    imageUrl: '/electronics/Samsung/z-fold8/graphite/front.webp',
+    colors: ['Graphite', 'Lavender', 'White'],
     colorImages: {
       'Graphite': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+        front: '/electronics/Samsung/z-fold8/graphite/front.webp',
+        back: '/electronics/Samsung/z-fold8/graphite/back.webp',
+        side: '/electronics/Samsung/z-fold8/graphite/side.webp',
+        top: '/electronics/Samsung/z-fold8/graphite/top.webp',
       },
-      'Silver': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Lavender': {
+        front: '/electronics/Samsung/z-fold8/lavender/front.webp',
+        back: '/electronics/Samsung/z-fold8/lavender/back.webp',
+        side: '/electronics/Samsung/z-fold8/lavender/side.webp',
+        top: '/electronics/Samsung/z-fold8/lavender/top.webp',
       },
-      'Beige': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'White': {
+        front: '/electronics/Samsung/z-fold8/white/front.webp',
+        back: '/electronics/Samsung/z-fold8/white/back.webp',
+        side: '/electronics/Samsung/z-fold8/white/side.webp',
+        top: '/electronics/Samsung/z-fold8/white/top.webp',
       },
     },
   },
   {
     id: 'electronics-samsung-010',
-    name: 'Samsung Galaxy A55 5G',
-    slug: 'samsung-galaxy-a55-5g',
-    description: 'Mid-range smartphone with premium features. Great camera, long battery life, and 5G connectivity.',
+    name: 'Samsung Galaxy Z Fold8 512GB',
+    slug: 'samsung-galaxy-z-fold8-512gb',
+    description: "Samsung's book-style foldable with a flexible 7.6-inch inner display, refined hinge and multi-window Galaxy AI productivity.",
     category: 'electronics',
     subCategory: 'samsung',
-    price: 499.99,
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with main product image
-    colors: ['Awesome Iceblue', 'Awesome Lilac', 'Awesome Navy'],
+    price: 2486.43,
+    imageUrl: '/electronics/Samsung/z-fold8/graphite/front.webp',
+    colors: ['Graphite', 'Lavender', 'White'],
     colorImages: {
-      'Awesome Iceblue': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=2', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=3',
+      'Graphite': {
+        front: '/electronics/Samsung/z-fold8/graphite/front.webp',
+        back: '/electronics/Samsung/z-fold8/graphite/back.webp',
+        side: '/electronics/Samsung/z-fold8/graphite/side.webp',
+        top: '/electronics/Samsung/z-fold8/graphite/top.webp',
       },
-      'Awesome Lilac': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=4', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=5', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=6',
+      'Lavender': {
+        front: '/electronics/Samsung/z-fold8/lavender/front.webp',
+        back: '/electronics/Samsung/z-fold8/lavender/back.webp',
+        side: '/electronics/Samsung/z-fold8/lavender/side.webp',
+        top: '/electronics/Samsung/z-fold8/lavender/top.webp',
       },
-      'Awesome Navy': {
-        front: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=7', // TODO: Replace with front view image
-        back: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=8', // TODO: Replace with back view image
-        side: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9', // TODO: Replace with side view image
-        top: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80&v=9',
+      'White': {
+        front: '/electronics/Samsung/z-fold8/white/front.webp',
+        back: '/electronics/Samsung/z-fold8/white/back.webp',
+        side: '/electronics/Samsung/z-fold8/white/side.webp',
+        top: '/electronics/Samsung/z-fold8/white/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-samsung-011',
+    name: 'Samsung Galaxy Watch Ultra2',
+    slug: 'samsung-galaxy-watch-ultra2',
+    description: 'Rugged titanium smartwatch with dual-frequency GPS, advanced health sensors, sapphire crystal and long battery life.',
+    category: 'electronics',
+    subCategory: 'samsung',
+    price: 810.76,
+    imageUrl: '/electronics/Samsung/watch-ultra2/titanium-grey/front.webp',
+    colors: ['Titanium Gray', 'Titanium Silver'],
+    colorImages: {
+      'Titanium Gray': {
+        front: '/electronics/Samsung/watch-ultra2/titanium-grey/front.webp',
+        back: '/electronics/Samsung/watch-ultra2/titanium-grey/back.webp',
+        side: '/electronics/Samsung/watch-ultra2/titanium-grey/side.webp',
+        top: '/electronics/Samsung/watch-ultra2/titanium-grey/top.webp',
+      },
+      'Titanium Silver': {
+        front: '/electronics/Samsung/watch-ultra2/titanium-silver/front.webp',
+        back: '/electronics/Samsung/watch-ultra2/titanium-silver/back.webp',
+        side: '/electronics/Samsung/watch-ultra2/titanium-silver/side.webp',
+        top: '/electronics/Samsung/watch-ultra2/titanium-silver/top.webp',
+      },
+    },
+  },
+  {
+    id: 'electronics-samsung-012',
+    name: 'Samsung Galaxy Buds4 Pro',
+    slug: 'samsung-galaxy-buds4-pro',
+    description: 'Pro wireless earbuds with intelligent ANC, 360 Audio and clear-call microphones in a compact charging case.',
+    category: 'electronics',
+    subCategory: 'samsung',
+    price: 270.22,
+    imageUrl: '/electronics/Samsung/buds4-pro/black/front.webp',
+    colors: ['Black', 'Pink Gold', 'White'],
+    colorImages: {
+      'Black': {
+        front: '/electronics/Samsung/buds4-pro/black/front.webp',
+        back: '/electronics/Samsung/buds4-pro/black/back.webp',
+        side: '/electronics/Samsung/buds4-pro/black/side.webp',
+        top: '/electronics/Samsung/buds4-pro/black/top.webp',
+      },
+      'Pink Gold': {
+        front: '/electronics/Samsung/buds4-pro/pink-gold/front.webp',
+        back: '/electronics/Samsung/buds4-pro/pink-gold/back.webp',
+        side: '/electronics/Samsung/buds4-pro/pink-gold/side.webp',
+        top: '/electronics/Samsung/buds4-pro/pink-gold/top.webp',
+      },
+      'White': {
+        front: '/electronics/Samsung/buds4-pro/white/front.webp',
+        back: '/electronics/Samsung/buds4-pro/white/back.webp',
+        side: '/electronics/Samsung/buds4-pro/white/side.webp',
+        top: '/electronics/Samsung/buds4-pro/white/top.webp',
       },
     },
   },

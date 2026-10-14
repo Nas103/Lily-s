@@ -2,5 +2,7 @@
 # BoxRaw raw source assets (unused originals + videos; processed copies live in web public/boxraw)
 my-store/mobile-app/assets/images/products/boxraw/
 my-store/mobile-app/assets/images/products/equipment/
+# Samsung raw source assets (unused originals; processed copies live in web public/electronics/Samsung)
+my-store/mobile-app/assets/images/products/Samsung/
 .vercel
 .env*
