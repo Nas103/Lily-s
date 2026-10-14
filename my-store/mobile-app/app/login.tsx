@@ -3,6 +3,8 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useAuth } from '../src/stores/authStore';
 import { BRAND } from '../src/constants/brand';
+import CountryPicker from '../src/components/CountryPicker';
+import CountryCodePicker from '../src/components/CountryCodePicker';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -11,6 +13,9 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('+27');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -24,12 +29,25 @@ export default function LoginScreen() {
       return;
     }
 
+    if (!isLogin && !country) {
+      Alert.alert('Error', 'Please select your country');
+      return;
+    }
+
     try {
       setLoading(true);
       if (isLogin) {
         await login(email, password);
       } else {
-        await register(email, password, name);
+        // Strip a leading 0 when a country code is present (matches profile).
+        const cleanedPhoneNumber =
+          phoneNumber.startsWith('0') && countryCode
+            ? phoneNumber.substring(1)
+            : phoneNumber;
+        const phoneValue = cleanedPhoneNumber.trim()
+          ? `${countryCode} ${cleanedPhoneNumber.trim()}`
+          : undefined;
+        await register(email, password, name, country, phoneValue);
       }
       router.replace('/(tabs)');
     } catch (error: any) {
@@ -80,6 +98,36 @@ export default function LoginScreen() {
               autoComplete="email"
             />
           </View>
+
+          {!isLogin && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Country</Text>
+              <CountryPicker
+                value={country}
+                onValueChange={setCountry}
+                placeholder="Select your country"
+              />
+            </View>
+          )}
+
+          {!isLogin && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Phone</Text>
+              <View style={styles.phoneContainer}>
+                <CountryCodePicker
+                  value={countryCode}
+                  onValueChange={setCountryCode}
+                />
+                <TextInput
+                  style={[styles.input, styles.phoneInput]}
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  placeholder="Phone number"
+                  keyboardType="phone-pad"
+                />
+              </View>
+            </View>
+          )}
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
@@ -162,6 +210,13 @@ const styles = StyleSheet.create({
     padding: 16,
     fontSize: 16,
     backgroundColor: '#ffffff',
+  },
+  phoneContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  phoneInput: {
+    flex: 1,
   },
   submitButton: {
     backgroundColor: '#000000',

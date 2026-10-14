@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { authAPI } from '../services/api';
+import { useProfile } from './profileStore';
 
 export type User = {
   id: string;
@@ -15,7 +16,13 @@ type AuthStore = {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name?: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    name?: string,
+    country?: string,
+    phone?: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
 };
@@ -36,11 +43,23 @@ export const useAuth = create<AuthStore>((set) => ({
     }
   },
   
-  register: async (email: string, password: string, name?: string) => {
+  register: async (
+    email: string,
+    password: string,
+    name?: string,
+    country?: string,
+    phone?: string
+  ) => {
     try {
-      const user = await authAPI.register(email, password, name);
+      const user = await authAPI.register(email, password, name, country, phone);
       await persistSession(user);
       set({ user, isAuthenticated: true, isLoading: false });
+      // Load the freshly-created profile so country/currency resolve immediately.
+      try {
+        await useProfile.getState().load({ force: true });
+      } catch {
+        // Non-fatal: ProfileSync/useCurrency will retry on mount.
+      }
     } catch (error: any) {
       set({ isLoading: false });
       throw error;

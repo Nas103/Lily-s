@@ -55,8 +55,8 @@ export default function CartScreen() {
         };
       });
       
-      // Get recommendations with limit of 5
-      const data = await recommendationsAPI.getRecommendations(cartItemsWithDetails, 10);
+      // Get recommendations with limit of 5 (pass country so prices convert)
+      const data = await recommendationsAPI.getRecommendations(cartItemsWithDetails, 10, country);
       let recommendedProducts = data.recommendations || [];
       
       // Filter out items already in cart

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { isValidEmail, sanitizeInput, validateText } from "@/lib/security";
+import { isValidEmail, isValidPhone, isValidCountryCode, sanitizeInput, validateText } from "@/lib/security";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { handleApiError, getSafeErrorMessage } from "@/lib/errorHandler";
 import { createAuthResponse } from "@/lib/auth";
@@ -32,10 +32,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    let { email, password, name } = body as {
+    let { email, password, name, country, phone } = body as {
       email?: string;
       password?: string;
       name?: string;
+      country?: string;
+      phone?: string;
     };
 
     if (!email || !password) {
@@ -74,6 +76,34 @@ export async function POST(request: NextRequest) {
       name = nameValidation.sanitized || undefined;
     }
 
+    // Validate and sanitize country (ISO 3166-1 alpha-2)
+    if (country) {
+      const normalizedCountry = sanitizeInput(String(country)).toUpperCase();
+      if (!isValidCountryCode(normalizedCountry)) {
+        return NextResponse.json(
+          { error: "Invalid country code." },
+          { status: 400 }
+        );
+      }
+      country = normalizedCountry;
+    } else {
+      country = undefined;
+    }
+
+    // Validate and sanitize phone number
+    if (phone) {
+      const normalizedPhone = sanitizeInput(String(phone));
+      if (!isValidPhone(normalizedPhone)) {
+        return NextResponse.json(
+          { error: "Invalid phone number format." },
+          { status: 400 }
+        );
+      }
+      phone = normalizedPhone;
+    } else {
+      phone = undefined;
+    }
+
     let existing;
     try {
       existing = await (prisma as any).user.findUnique({
@@ -104,6 +134,8 @@ export async function POST(request: NextRequest) {
         data: {
           email,
           name,
+          phone,
+          country,
           passwordHash,
           role: adminEmail && email === adminEmail ? "ADMIN" : "USER",
         },
@@ -111,6 +143,8 @@ export async function POST(request: NextRequest) {
           id: true,
           email: true,
           name: true,
+          phone: true,
+          country: true,
           role: true,
           createdAt: true,
         },

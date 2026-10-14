@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { applySecurityMiddleware } from "@/lib/middleware";
+import { prisma } from "@/lib/prisma";
 import { convertPrice } from "@/lib/currency";
 import {
   catalogProducts,
@@ -139,10 +140,30 @@ export async function POST(request: NextRequest) {
       recommended = [...recommended, ...filler].slice(0, limit);
     }
 
-    const country =
-      request.headers.get("x-user-country") ||
-      new URL(request.url).searchParams.get("country") ||
-      null;
+    const country = await resolveCountry(request);
+
+    // Derive the origin from the request's Host header (mirrors /api/products):
+    // relative asset paths must be absolute for the mobile app, whose
+    // Image source={{ uri }} cannot resolve paths like /perfumes/<slug>/main.webp.
+    const host = request.headers.get("host");
+    const protocol =
+      request.headers.get("x-forwarded-proto") ??
+      request.nextUrl.protocol.replace(":", "");
+    const origin = host ? `${protocol}://${host}` : request.nextUrl.origin;
+
+    const rebaseImageUrls = (value: string): string =>
+      value.startsWith("/") && !value.startsWith("//") ? `${origin}${value}` : value;
+
+    const rebaseColorImages = (
+      colorImages: CatalogProduct["colorImages"]
+    ): CatalogProduct["colorImages"] => {
+      if (!colorImages) return colorImages;
+      const result: Record<string, string[]> = {};
+      for (const [color, images] of Object.entries(colorImages)) {
+        result[color] = images.map(rebaseImageUrls);
+      }
+      return result;
+    };
 
     const productsWithCurrency = await Promise.all(
       recommended.map(async (product) => {
@@ -159,6 +180,8 @@ export async function POST(request: NextRequest) {
 
         return {
           ...product,
+          imageUrl: rebaseImageUrls(product.imageUrl),
+          colorImages: rebaseColorImages(product.colorImages),
           price: priceInUSD,
           convertedPrice: converted.amount,
           currency: converted.currency,
@@ -181,6 +204,39 @@ export async function POST(request: NextRequest) {
       { error: "Failed to get recommendations", message },
       { status: 500 }
     );
+  }
+}
+
+/**
+ * Resolve the country used for currency conversion: an explicit
+ * `x-user-country` header or `?country=` query wins, otherwise fall back to
+ * the authenticated user's saved country (or their default address). The
+ * mobile app sends x-user-id / x-user-email headers on every request.
+ */
+async function resolveCountry(request: NextRequest): Promise<string | null> {
+  const explicit =
+    request.headers.get("x-user-country") ||
+    new URL(request.url).searchParams.get("country");
+  if (explicit) return explicit;
+
+  const userId = request.headers.get("x-user-id");
+  const userEmail = request.headers.get("x-user-email");
+  if (!prisma || !userId || !userEmail) return null;
+
+  try {
+    const user = await (prisma as any).user.findUnique({
+      where: { id: userId },
+      select: { country: true },
+    });
+    if (user?.country) return user.country;
+
+    const defaultAddress = await (prisma as any).deliveryAddress.findFirst({
+      where: { userId, isDefault: true },
+      select: { country: true },
+    });
+    return defaultAddress?.country ?? null;
+  } catch {
+    return null;
   }
 }
 

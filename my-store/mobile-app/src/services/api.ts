@@ -97,12 +97,20 @@ export const authAPI = {
     }
   },
   
-  register: async (email: string, password: string, name?: string) => {
+  register: async (
+    email: string,
+    password: string,
+    name?: string,
+    country?: string,
+    phone?: string,
+  ) => {
     try {
       const response = await api.post(API_ENDPOINTS.REGISTER, { 
         email, 
         password, 
-        name 
+        name,
+        country,
+        phone,
       });
       return response.data;
     } catch (error: any) {
@@ -311,24 +319,28 @@ export const aiChatAPI = {
 
 // Recommendations API
 export const recommendationsAPI = {
-  getRecommendations: async (cartItems: any[], limit: number = 10) => {
+  getRecommendations: async (cartItems: any[], limit: number = 10, country?: string | null) => {
     const categories = cartItems.map((item) => {
       if (typeof item.category === 'string') return item.category;
       return item.category?.name || item.category?.slug || 'other';
     }).filter(Boolean);
     
-    const response = await api.post(API_ENDPOINTS.RECOMMENDATIONS, {
-      cartItems: cartItems.map((item) => ({
-        id: item.id || item.productId,
-        name: item.name,
-        category: typeof item.category === 'string' 
-          ? item.category 
-          : item.category?.name || item.category?.slug,
-        product: item.product || item,
-      })),
-      categories,
-      limit,
-    });
+    const response = await api.post(
+      API_ENDPOINTS.RECOMMENDATIONS,
+      {
+        cartItems: cartItems.map((item) => ({
+          id: item.id || item.productId,
+          name: item.name,
+          category: typeof item.category === 'string' 
+            ? item.category 
+            : item.category?.name || item.category?.slug,
+          product: item.product || item,
+        })),
+        categories,
+        limit,
+      },
+      country ? { params: { country } } : undefined
+    );
     return response.data;
   },
 };
