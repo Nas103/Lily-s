@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, ShoppingBag, User, Menu, X, LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "@/stores/authStore";
+import { useCart } from "@/stores/cartStore";
+import NeonBorder from "@/components/NeonBorder";
 import { getProfileImageUrl } from "@/lib/getProfileImage";
 import { BRAND } from "@/lib/brand";
 
@@ -53,6 +55,9 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const hasMounted = useHasMounted();
+  const cartCount = useCart((state) =>
+    state.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
 
   useEffect(() => {
     void refresh();
@@ -124,13 +129,41 @@ export function Header() {
             <Heart size={14} className="text-zinc-700" />
             <span className="logo-gradient">Save</span>
           </Link>
-          <Link
-            href="/cart"
-            className="inline-flex items-center gap-1 rounded-full border border-zinc-900 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.3em]"
-          >
-            <ShoppingBag size={14} className="text-zinc-800" />
-            <span className="logo-gradient">Cart</span>
-          </Link>
+          {hasMounted && cartCount > 0 ? (
+            <div className="relative inline-flex">
+              <div className="pointer-events-none absolute -inset-[3px]">
+                <NeonBorder
+                  color="#CC9149"
+                  rounded={100}
+                  thickness={3}
+                  borderSize={36}
+                  glow={70}
+                  movement="continuous"
+                  speed={9}
+                />
+              </div>
+              <Link
+                href="/cart"
+                className="relative inline-flex items-center gap-1.5 rounded-full bg-black px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-zinc-900"
+              >
+                <span>Cart</span>
+                <span
+                  aria-label={`${cartCount} item${cartCount === 1 ? "" : "s"} in cart`}
+                  className="inline-flex min-w-[18px] items-center justify-center rounded-full border border-white/40 px-1 text-[10px] font-bold leading-4 text-white"
+                >
+                  {cartCount}
+                </span>
+              </Link>
+            </div>
+          ) : (
+            <Link
+              href="/cart"
+              className="inline-flex items-center gap-1 rounded-full border border-zinc-900 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.3em]"
+            >
+              <ShoppingBag size={14} className="text-zinc-800" />
+              <span className="logo-gradient">Cart</span>
+            </Link>
+          )}
           {hasMounted && user ? (
             <div className="flex items-center gap-3">
               <Link
