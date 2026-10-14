@@ -8,7 +8,7 @@ import { getDynamicPrice } from "@/lib/aiPricing";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { sanitizeInput } from "@/lib/security";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth-middleware";
+import { requireAuth } from "@/lib/auth-middleware";
 import { currencyCodeForCountry } from "@/lib/currency";
 import { generateOrderNumber } from "@/lib/orders";
 import { loadCatalog } from "@/lib/catalog";
@@ -37,6 +37,13 @@ export async function POST(request: NextRequest) {
   if (securityResponse) {
     return securityResponse;
   }
+
+  // Checkout requires a signed-in user so the order can be recorded and
+  // reconciled (matches the Stripe checkout routes).
+  const auth = await requireAuth(request);
+  if (auth instanceof NextResponse) return auth;
+  const { user } = auth;
+
   const body = await request.json();
   const { items, shipping = {} } = body;
 
@@ -79,9 +86,8 @@ export async function POST(request: NextRequest) {
   // shopper's local currency so order history can render the right symbol.
   const ipAddress = request.headers.get("x-forwarded-for") ?? undefined;
 
-  const user = await getCurrentUser(request);
   let profileCountry: string | null = null;
-  if (user && prisma) {
+  if (prisma) {
     try {
       const profile = await (prisma as any).user.findUnique({
         where: { id: user.id },
@@ -166,7 +172,7 @@ export async function POST(request: NextRequest) {
   // Persist the order when the shopper is authenticated so it appears in
   // their history and can be reconciled by the PayFast webhook.
   try {
-    if (user && prisma) {
+    if (prisma) {
       await (prisma as any).order.create({
         data: {
           orderNumber,
