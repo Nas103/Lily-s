@@ -12,7 +12,7 @@ export default function CartPage() {
       <main className="mx-auto max-w-5xl px-6 py-16">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+            <p className="text-xs uppercase tracking-[0.35em] text-zinc-700">
               Step 0
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight h1-gradient">
@@ -21,7 +21,7 @@ export default function CartPage() {
           </div>
           <Link
             href="/checkout"
-            className="rounded-full border border-zinc-900 px-6 py-2 text-xs font-semibold uppercase tracking-[0.35em]"
+            className="rounded-full border border-zinc-900 px-6 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-zinc-800 transition hover:bg-zinc-900 hover:text-white"
           >
             Checkout
           </Link>
@@ -29,7 +29,7 @@ export default function CartPage() {
         <div className="mt-10">
           <CartSummary />
         </div>
-        <RecommendationsRail />
+        <RecommendationsRail className="mt-16" />
       </main>
     </div>
   );

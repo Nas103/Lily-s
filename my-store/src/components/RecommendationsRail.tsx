@@ -66,8 +66,10 @@ function localRecommendations(
 
 export function RecommendationsRail({
   overrides,
+  className,
 }: {
   overrides?: AdminOverrides;
+  className?: string;
 }) {
   const items = useCart((state) => state.items);
   const recentlyViewedIds = useRecommendationStore(
@@ -164,15 +166,17 @@ export function RecommendationsRail({
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-20 space-y-12">
+    <section
+      className={`mx-auto max-w-6xl px-6 pb-20 space-y-12 ${className ?? ""}`}
+    >
       {recommended.length ? (
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
+              <p className="text-xs uppercase tracking-[0.4em] text-zinc-700">
                 Recommended for you
               </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900">
                 Pairs well with your cart
               </h2>
             </div>
@@ -187,10 +191,10 @@ export function RecommendationsRail({
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-zinc-500">
+              <p className="text-xs uppercase tracking-[0.4em] text-zinc-700">
                 Recently viewed
               </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900">
                 Pick up where you left off
               </h2>
             </div>

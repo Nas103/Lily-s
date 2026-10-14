@@ -17,7 +17,7 @@ export function CartSummary() {
 
   if (!items.length) {
     return (
-      <div className="rounded-3xl border border-dashed border-zinc-200 p-10 text-center text-sm text-zinc-500">
+      <div className="rounded-3xl border border-dashed border-zinc-200 p-10 text-center text-sm text-zinc-700">
         Cart is empty.{" "}
         <Link href="/" className="underline underline-offset-4">
           Continue shopping
@@ -32,12 +32,12 @@ export function CartSummary() {
         {items.map((item) => (
           <div
             key={`${item.id}-${item.size ?? "default"}-${item.color ?? "default"}`}
-            className="flex items-start justify-between gap-3 text-sm text-zinc-700"
+            className="flex items-start justify-between gap-3 text-sm text-zinc-800"
           >
             <div className="space-y-1">
               {/* TODO: Swap product name with final merchandising copy. */}
               <p className="font-medium text-zinc-900">{item.name}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-zinc-700">
                 Qty {item.quantity} · {/* TODO: Confirm the price for this SKU. */}
                 {convertPrice ? convertPrice(item.price).formatted : formatPrice(item.price)}
                 {item.size ? ` · Size ${item.size}` : ""}
@@ -54,7 +54,7 @@ export function CartSummary() {
               <button
                 type="button"
                 onClick={() => removeItem(item.id, item.size, item.color)}
-                className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400 hover:text-zinc-900"
+                className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600 transition hover:text-zinc-900"
               >
                 Remove
               </button>
@@ -63,7 +63,7 @@ export function CartSummary() {
         ))}
       </div>
       <div className="flex items-center justify-between border-t border-zinc-100 pt-4 text-sm">
-        <p className="text-zinc-500">Subtotal</p>
+        <p className="text-zinc-700">Subtotal</p>
         <p className="text-base font-semibold text-zinc-900">
           {formattedSubtotal}
         </p>
