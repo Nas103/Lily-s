@@ -1,11 +1,21 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ProductGrid } from "@/components/ProductGrid";
+import { AlternatingVideoBanner } from "@/components/AlternatingVideoBanner";
 import { getCategoryMeta, getCatalogByCategory, toGridProduct } from "@/data/catalog";
 import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
 
 const meta = getCategoryMeta("boxraw")!;
 const subCategories = meta.subCategories ?? [];
+
+const HEADER_CLIPS = [
+  "/boxraw/thumbnail/header_thumbnail/8f95e372ef624fa690f4c27af4a222f1.HD-720p-2.1Mbps-84475284.mp4",
+  "/boxraw/thumbnail/header_thumbnail/ac0c93496fcf45918f948a949e140b1a.HD-1080p-2.5Mbps-96585604.mp4",
+];
+
+const EQUIPMENT_CLIPS = [
+  "/boxraw/thumbnail/equipement_thumbnail/3c4eeacbf4ec4a1eb1d824329c463085.HD-720p-1.6Mbps-65714972.mp4",
+  "/boxraw/thumbnail/equipement_thumbnail/f79d09283eb94f7c97698222ab27ce4e.mp4",
+];
 
 export const metadata = {
   title: meta.label,
@@ -26,6 +36,8 @@ export default async function BoxrawPage({
   const overrides = await loadProductOverrides();
   const products = applyOverrides(getCatalogByCategory("boxraw", active), overrides).map(toGridProduct);
 
+  const clips = active === "equipment" ? EQUIPMENT_CLIPS : HEADER_CLIPS;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white">
       <section className="mx-auto max-w-6xl px-6 py-16">
@@ -39,15 +51,8 @@ export default async function BoxrawPage({
 
         <SubCategoryTabs basePath="/boxraw" active={active} items={subCategories} />
 
-        <div className="mt-10 overflow-hidden rounded-[28px] border border-zinc-200 shadow-lg ring-1 ring-black/5">
-          <Image
-            src="/boxraw/thumbnail/boxraw_pc_thumnail.webp"
-            alt={`${meta.label} collection`}
-            width={1400}
-            height={788}
-            priority
-            className="h-auto w-full object-cover"
-          />
+        <div className="mt-10">
+          <AlternatingVideoBanner sources={clips} />
         </div>
 
         <div className="mt-10">
