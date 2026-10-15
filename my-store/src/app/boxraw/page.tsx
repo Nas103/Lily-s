@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ProductGrid } from "@/components/ProductGrid";
 import { getCategoryMeta, getCatalogByCategory, toGridProduct } from "@/data/catalog";
 import { applyOverrides, loadProductOverrides } from "@/lib/productOverrides";
@@ -37,6 +38,17 @@ export default async function BoxrawPage({
         <p className="mt-2 max-w-xl text-sm text-zinc-800">{meta.blurb}</p>
 
         <SubCategoryTabs basePath="/boxraw" active={active} items={subCategories} />
+
+        <div className="mt-10 overflow-hidden rounded-[28px] border border-zinc-200 shadow-lg ring-1 ring-black/5">
+          <Image
+            src="/boxraw/thumbnail/boxraw_pc_thumnail.webp"
+            alt={`${meta.label} collection`}
+            width={1400}
+            height={788}
+            priority
+            className="h-auto w-full object-cover"
+          />
+        </div>
 
         <div className="mt-10">
           <ProductGrid products={products} />
