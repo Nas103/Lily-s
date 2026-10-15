@@ -8,8 +8,7 @@ import { RecommendationsRail } from "@/components/RecommendationsRail";
 import StarfieldButton from "@/components/StarfieldButton";
 import { MoltenHero } from "@/components/MoltenHero";
 import ReflectShader from "@/components/ReflectShader";
-import Vortex from "@/components/Vortex";
-import MagneticIconCarousel from "@/components/MagneticIconCarousel";
+import ShopIconsLaser from "@/components/ShopIconsLaser";
 import CategoryGrid from "@/components/CategoryGrid";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
@@ -200,46 +199,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="relative overflow-hidden rounded-[40px] bg-[#0B0701]">
-          <div className="absolute inset-0" aria-hidden="true">
-            <Vortex
-              background="#0B0701"
-              style={{ position: "absolute", inset: 0 }}
-            />
-          </div>
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/70" />
-          <div className="relative z-10 p-7 md:p-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.4em] text-amber-300/70">
-                  Shop our icons
-                </p>
-                <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-                  Globally loved silhouettes
-                </h2>
-              </div>
-              <div className="flex gap-2 text-xs uppercase tracking-[0.35em] text-white/55">
-                <Link href="/men" className="transition hover:text-white">
-                  Men
-                </Link>
-                <span>·</span>
-                <Link href="/women" className="transition hover:text-white">
-                  Women
-                </Link>
-              </div>
-            </div>
-            <MagneticIconCarousel
-              items={icons.map((icon) => ({
-                id: icon.id,
-                name: icon.name,
-                category: String(icon.category),
-                price: icon.price,
-                imageUrl: icon.imageUrl,
-              }))}
-            />
-          </div>
-        </div>
+      <section className="relative overflow-hidden bg-black">
+        <ShopIconsLaser
+          items={icons.map((icon) => ({
+            id: icon.id,
+            name: icon.name,
+            category: String(icon.category),
+            price: icon.price,
+            imageUrl: icon.imageUrl,
+          }))}
+        />
       </section>
 
       {/* AI-ready recommendations, powered by browsing and add-to-cart events. */}
