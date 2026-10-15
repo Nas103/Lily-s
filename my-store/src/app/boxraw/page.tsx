@@ -36,7 +36,12 @@ export default async function BoxrawPage({
   const overrides = await loadProductOverrides();
   const products = applyOverrides(getCatalogByCategory("boxraw", active), overrides).map(toGridProduct);
 
-  const clips = active === "equipment" ? EQUIPMENT_CLIPS : HEADER_CLIPS;
+  const clips =
+    active === "equipment"
+      ? EQUIPMENT_CLIPS
+      : active === "clothing"
+        ? HEADER_CLIPS
+        : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white">
@@ -51,9 +56,11 @@ export default async function BoxrawPage({
 
         <SubCategoryTabs basePath="/boxraw" active={active} items={subCategories} />
 
-        <div className="mt-10">
-          <AlternatingVideoBanner sources={clips} />
-        </div>
+        {clips ? (
+          <div className="mt-10">
+            <AlternatingVideoBanner sources={clips} />
+          </div>
+        ) : null}
 
         <div className="mt-10">
           <ProductGrid products={products} />

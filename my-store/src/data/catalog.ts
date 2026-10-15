@@ -65,6 +65,7 @@ export const CATEGORY_META: {
     subCategories: [
       { id: "clothing", label: "Clothing" },
       { id: "equipment", label: "Equipment" },
+      { id: "bivol", label: "Bivol X Boxraw" },
     ],
   },
   {

@@ -1,9 +1,11 @@
 /**
  * BoxRaw Products Data
  *
- * 21 real clothing products and 17 real equipment products with local
- * images under /public/boxraw/<slug>/<color>/{main,2,3,4}.jpg. Prices
- * were given in ZAR and converted to the store's USD base
+ * 21 real clothing products, 17 real equipment products and 4 Bivol x
+ * BOXRAW products. Most images live under
+ * /public/boxraw/<slug>/<color>/{main,2,3,4}.jpg; the Bivol x BOXRAW set
+ * uses its own /public/boxraw/bivol_x_boxraw/tops/<slug>/<color>/ paths.
+ * Prices were given in ZAR and converted to the store's USD base
  * (1 USD = 18.5 ZAR). colorImages uses the front/back/side/top angle set.
  */
 
@@ -423,6 +425,112 @@ export const boxrawProducts: Product[] = [
     tags: ['boxraw', 'clothing', 'boxing-is-love-oversized-hoodie'],
     badge: 'BOXRAW',
     imageUrl: '/boxraw/boxing-is-love-oversized-hoodie/black/main.jpg',
+  },
+
+  // Bivol x BOXRAW Sub-category (4 products)
+  {
+    id: 'boxraw-bivol-x-boxraw-elite-t-shirt',
+    name: 'Bivol x BOXRAW Elite T-Shirt',
+    slug: 'bivol-x-boxraw-elite-t-shirt',
+    description: 'Designed and developed alongside Undisputed Light-Heavyweight World Champion, Dmitry Bivol. The Bivol x BOXRAW Elite T-Shirt belongs to the BOXRAW Elite range, reserved for the champions BOXRAW works alongside. A stylised outline sits at the left chest, paired with Dmitry\'s name and \'The Art of Controlled Aggression\' set in small type beside it. BOXRAW ELITE runs vertically down the right side seam, with Plan, Execute and Dominate at the rear featured in crosshair targets.\n\nProduct details:\n* \'BOXRAW Elite\' graphic print\n* Short sleeve\n* Regular fit\n* Branded neck tape\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'bivol',
+    brand: 'BOXRAW',
+    price: 58.97,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White'],
+    colorImages: {
+      'Black': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/black/BOXRAW_BIVOL_ELITE_TEE_BLACK-1.webp',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/black/BOXRAW_BIVOL_ELITE_TEE_BLACK-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/black/BOXRAW_BIVOL_ELITE_TEE_BLACK-3.webp',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/black/BOXRAW_BIVOL_ELITE_TEE_BLACK-4.jpg',
+      },
+      'White': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/white/BOXRAW_BIVOL_ELITE_TEE_WHITE-1.jpg',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/white/BOXRAW_BIVOL_ELITE_TEE_WHITE-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/white/BOXRAW_BIVOL_ELITE_TEE_WHITE-3.jpg',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/white/BOXRAW_BIVOL_ELITE_TEE_WHITE-4.jpg',
+      },
+    },
+    tags: ['boxraw', 'bivol', 'bivol-x-boxraw-elite-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_elite_tee/black/BOXRAW_BIVOL_ELITE_TEE_BLACK-1.webp',
+  },
+  {
+    id: 'boxraw-bivol-x-boxraw-pendulum-t-shirt',
+    name: 'Bivol x BOXRAW Pendulum T-Shirt',
+    slug: 'bivol-x-boxraw-pendulum-t-shirt',
+    description: 'Designed and developed alongside Undisputed Light-Heavyweight World Champion, Dmitry Bivol. The Bivol x BOXRAW Pendulum T-Shirt carries a hand-drawn motion-sequence of Dmitry Bivol across the front - stance, weave and strike, frame by frame. Constructed with a regular fit that sits firm across the upper body but relaxed around the abdomen, holding its shape through training and the rounds it takes.\n\nProduct details:\n* \'Pendulum\' graphic print\n* Short sleeve\n* Regular fit\n* Ribbed neck\n* Branded neck tape\n* 92% Combed Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'bivol',
+    brand: 'BOXRAW',
+    price: 58.81,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['White', 'Black'],
+    colorImages: {
+      'White': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/white/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_WHITE-1.jpg',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/white/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_WHITE-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/white/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_WHITE-3.jpg',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/white/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_WHITE-4.jpg',
+      },
+      'Black': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/black/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_BLACK-1.jpg',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/black/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_BLACK-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/black/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_BLACK-3.jpg',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/black/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_BLACK-4.jpg',
+      },
+    },
+    tags: ['boxraw', 'bivol', 'bivol-x-boxraw-pendulum-t-shirt'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum/white/BOXRAW_BIVOL_FITTED_PENDULUM_TEE_WHITE-1.jpg',
+  },
+  {
+    id: 'boxraw-bivol-x-boxraw-pendulum-oversized-hoodie',
+    name: 'Bivol x BOXRAW Pendulum Oversized Hoodie',
+    slug: 'bivol-x-boxraw-pendulum-oversized-hoodie',
+    description: 'Designed and developed alongside Undisputed Light-Heavyweight World Champion, Dmitry Bivol. The Bivol x BOXRAW Pendulum Oversized Hoodie carries a hand-drawn motion-sequence of Dmitry Bivol across the front - stance, weave and strike, frame by frame. It features our signature hidden zipped pocket inside the kangaroo pouch, while upside-down Strike logos on the sleeves show themselves correctly when your guard is raised.\n\nProduct details:\n* \'Pendulum\' graphic print\n* Oversized fit\n* Ribbed cuffs & waistband\n* Kangaroo pouch\n* Patented secret zip pocket\n* Embroidered Strike logos on sleeves\n* Branded neck tape\n* Metal plate at back neck\n* 92% Cotton, 8% Elastane',
+    category: 'boxraw',
+    subCategory: 'bivol',
+    brand: 'BOXRAW',
+    price: 72.38,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['White'],
+    colorImages: {
+      'White': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum_hoodie/white/BOXRAW_BIVOL_PENDULUM_HOODIE_WHITE-1.jpg',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum_hoodie/white/BOXRAW_BIVOL_PENDULUM_HOODIE_WHITE-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum_hoodie/white/BOXRAW_BIVOL_PENDULUM_HOODIE_WHITE-3.jpg',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum_hoodie/white/BOXRAW_BIVOL_PENDULUM_HOODIE_WHITE-4.jpg',
+      },
+    },
+    tags: ['boxraw', 'bivol', 'bivol-x-boxraw-pendulum-oversized-hoodie'],
+    badge: 'BOXRAW',
+    imageUrl: '/boxraw/bivol_x_boxraw/tops/boxraw_x_bivol_pendulum_hoodie/white/BOXRAW_BIVOL_PENDULUM_HOODIE_WHITE-1.jpg',
+  },
+  {
+    id: 'boxraw-bivol-x-sparring-club-oversized-t-shirt',
+    name: 'Bivol x Sparring Club Oversized T-Shirt',
+    slug: 'bivol-x-sparring-club-oversized-t-shirt',
+    description: 'Designed and developed alongside Undisputed Light-Heavyweight World Champion, Dmitry Bivol while in camp at Issyk Kul, Kyrgyzstan. The Bivol x Sparring Club Oversized T-Shirt is a limited edition piece carrying a hand-drawn portrait of Bivol across the back, layered behind the Sparring Club mark, overlaid with \'The Art of Controlled Aggression\'. This washed oversized fit is limited to the camp.\n\nProduct details:\n* Bivol x Sparring Club® graphic print\n* Drop shoulder\n* Oversized fit\n* Ribbed neck\n* Branded neck tape\n* Washed fabric\n* 100% Cotton',
+    category: 'boxraw',
+    subCategory: 'bivol',
+    brand: 'BOXRAW',
+    price: 63.35,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Washed Black'],
+    colorImages: {
+      'Washed Black': {
+        front: '/boxraw/bivol_x_boxraw/tops/boxraw_bivol_sparring_club/black/BOXRAW_BIVOL_SPARRINGCLUB_TEE_BLACKXGREEN-1.jpg',
+        back: '/boxraw/bivol_x_boxraw/tops/boxraw_bivol_sparring_club/black/BOXRAW_BIVOL_SPARRINGCLUB_TEE_BLACKXGREEN-2.jpg',
+        side: '/boxraw/bivol_x_boxraw/tops/boxraw_bivol_sparring_club/black/BOXRAW_BIVOL_SPARRINGCLUB_TEE_BLACKXGREEN-3.jpg',
+        top: '/boxraw/bivol_x_boxraw/tops/boxraw_bivol_sparring_club/black/BOXRAW_BIVOL_SPARRINGCLUB_TEE_BLACKXGREEN-4.jpg',
+      },
+    },
+    tags: ['boxraw', 'bivol', 'bivol-x-sparring-club-oversized-t-shirt'],
+    badge: 'Sold Out',
+    imageUrl: '/boxraw/bivol_x_boxraw/tops/boxraw_bivol_sparring_club/black/BOXRAW_BIVOL_SPARRINGCLUB_TEE_BLACKXGREEN-1.jpg',
   },
 
   // Equipment Sub-category (17 products)
