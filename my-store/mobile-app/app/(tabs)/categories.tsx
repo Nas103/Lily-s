@@ -10,6 +10,7 @@ import { useWishlist } from '../../src/stores/wishlistStore';
 import { useCurrency } from '../../src/hooks/useCurrency';
 import AddToCartConfirmation from '../../src/components/AddToCartConfirmation';
 import WishlistConfirmation from '../../src/components/WishlistConfirmation';
+import BoxrawVideoSlideshow from '../../src/components/BoxrawVideoSlideshow';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48 - 16) / 2; // 2 columns with padding (16px each side) and 16px gap between columns
@@ -421,6 +422,7 @@ export default function CategoriesScreen() {
           contentContainerStyle={[styles.productsGrid, { paddingBottom: insets.bottom + 96 }]}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={({ item }) => renderProduct(item)}
+          ListHeaderComponent={BoxrawVideoSlideshow}
         />
       ) : selectedCategory === 'electronics' ? (
         <FlatList

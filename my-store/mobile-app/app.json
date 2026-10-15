@@ -68,7 +68,8 @@
           "merchantIdentifier": "merchant.com.naso.app",
           "enableGooglePay": false
         }
-      ]
+      ],
+      "expo-video"
     ],
     "scheme": "naso",
     "extra": {
