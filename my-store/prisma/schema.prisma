@@ -95,13 +95,18 @@ model Product {
 }
 
 // Admin-editable overrides for the static product catalog. Keyed by the
-// catalog product id; only name/price are editable. Price is in USD.
+// catalog product id. Price/discount are in USD. `soldOutSizes` and
+// `soldOutColors` are JSON-encoded string arrays of variants that are sold out.
 model ProductOverride {
-  productId String   @id
-  name      String?
-  price     Decimal? @db.Decimal(10, 2)
-  updatedBy String?
-  updatedAt DateTime @updatedAt
+  productId       String   @id
+  name            String?
+  price           Decimal? @db.Decimal(10, 2)
+  discountPercent Decimal? @db.Decimal(5, 2)
+  soldOut         Boolean  @default(false)
+  soldOutSizes    String?
+  soldOutColors   String?
+  updatedBy       String?
+  updatedAt       DateTime @updatedAt
 }
 
 model PaymentMethod {

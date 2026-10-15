@@ -2,7 +2,28 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { requireAdminUser } from "@/lib/adminAuth";
 import { getCatalogProduct } from "@/data/catalog";
-import { saveProductOverride, resetProductOverride } from "@/lib/productOverrides";
+import {
+  saveProductOverride,
+  resetProductOverride,
+  type SaveProductOverrideInput,
+} from "@/lib/productOverrides";
+
+const MAX_VARIANTS = 60;
+const MAX_VARIANT_LENGTH = 40;
+
+function validateVariantList(value: unknown): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) throw new Error("Invalid variant list.");
+  if (value.length > MAX_VARIANTS) throw new Error("Too many variants.");
+  const cleaned = value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (cleaned.some((item) => item.length > MAX_VARIANT_LENGTH)) {
+    throw new Error("Variant name is too long.");
+  }
+  return Array.from(new Set(cleaned));
+}
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +43,10 @@ export async function PATCH(
   const body = (await request.json()) as {
     name?: string | null;
     price?: number | null;
+    discountPercent?: number | null;
+    soldOut?: boolean;
+    soldOutSizes?: string[];
+    soldOutColors?: string[];
   };
 
   if (typeof body.name === "string") {
@@ -49,13 +74,45 @@ export async function PATCH(
     }
   }
 
+  if (body.discountPercent !== undefined && body.discountPercent !== null) {
+    if (
+      typeof body.discountPercent !== "number" ||
+      !Number.isFinite(body.discountPercent) ||
+      body.discountPercent < 0 ||
+      body.discountPercent > 90
+    ) {
+      return NextResponse.json(
+        { error: "Invalid discount. Must be between 0 and 90 percent." },
+        { status: 400 }
+      );
+    }
+  }
+
+  let soldOutSizes: string[] | undefined;
+  let soldOutColors: string[] | undefined;
   try {
-    const saved = await saveProductOverride({
-      productId: id,
-      name: body.name,
-      price: body.price,
-      updatedBy: admin.email,
-    });
+    soldOutSizes = validateVariantList(body.soldOutSizes);
+    soldOutColors = validateVariantList(body.soldOutColors);
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Invalid variants." },
+      { status: 400 }
+    );
+  }
+
+  const payload: SaveProductOverrideInput = {
+    productId: id,
+    name: body.name ?? null,
+    price: body.price ?? null,
+    discountPercent: body.discountPercent ?? null,
+    soldOut: Boolean(body.soldOut),
+    soldOutSizes,
+    soldOutColors,
+    updatedBy: admin.email,
+  };
+
+  try {
+    const saved = await saveProductOverride(payload);
     return NextResponse.json({
       id,
       hasOverride: true,
@@ -63,6 +120,10 @@ export async function PATCH(
       price: saved.price ?? product.price,
       overrideName: saved.name,
       overridePrice: saved.price,
+      discountPercent: saved.discountPercent,
+      soldOut: saved.soldOut,
+      soldOutSizes: saved.soldOutSizes,
+      soldOutColors: saved.soldOutColors,
     });
   } catch (error) {
     console.error("[admin/products] update failed:", error);
@@ -94,5 +155,9 @@ export async function DELETE(
     price: product.price,
     overrideName: null,
     overridePrice: null,
+    discountPercent: null,
+    soldOut: false,
+    soldOutSizes: [],
+    soldOutColors: [],
   });
 }

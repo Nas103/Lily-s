@@ -17,7 +17,14 @@ type GridProduct = ReturnType<typeof toGridProduct>;
 /** Admin overrides keyed by product id (from src/lib/productOverrides). */
 export type AdminOverrides = Record<
   string,
-  { name?: string | null; price?: number | null }
+  {
+    name?: string | null;
+    price?: number | null;
+    discountPercent?: number | null;
+    soldOut?: boolean;
+    soldOutSizes?: string[];
+    soldOutColors?: string[];
+  }
 >;
 
 const norm = (value?: string | null) => (value || "").trim().toLowerCase();
@@ -33,6 +40,14 @@ const applyOverrides = (
     ...product,
     name: override.name ?? product.name,
     price: override.price ?? product.price,
+    discountPercent: override.discountPercent ?? product.discountPercent ?? null,
+    soldOut: override.soldOut || Boolean(product.soldOut),
+    soldOutSizes: override.soldOutSizes?.length
+      ? override.soldOutSizes
+      : product.soldOutSizes ?? [],
+    soldOutColors: override.soldOutColors?.length
+      ? override.soldOutColors
+      : product.soldOutColors ?? [],
   };
 };
 

@@ -28,6 +28,10 @@ export type ProductRecord = {
   colors?: string[];
   colorImages?: Record<string, string[]>; // Maps color name to array of 4 image URLs
   brand?: string;
+  discountPercent?: number | null;
+  soldOut?: boolean;
+  soldOutSizes?: string[];
+  soldOutColors?: string[];
 };
 
 const adjectives = [

@@ -12,10 +12,12 @@ type AddToCartButtonProps = {
   size?: string;
   color?: string;
   variant?: "pill" | "minimal";
+  disabled?: boolean;
 };
 
 export function AddToCartButton({
   variant = "pill",
+  disabled,
   ...props
 }: AddToCartButtonProps) {
   const addItem = useCart((state) => state.addItem);
@@ -41,14 +43,14 @@ export function AddToCartButton({
           })
         )
       }
-      className={`${baseClasses} ${variantClasses}`}
-      disabled={pending}
+      className={`${baseClasses} ${variantClasses} ${disabled ? "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-zinc-900" : ""}`}
+      disabled={pending || disabled}
       onMouseUp={() => {
         // Lightweight behavior tracking for AI recommendations.
         trackAddToCart(props.id);
       }}
     >
-      {pending ? "Adding…" : "Add"}
+      {disabled ? "Sold Out" : pending ? "Adding…" : "Add"}
     </button>
   );
 }

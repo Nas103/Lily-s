@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { products as staticProducts } from "@/data/products";
-import { loadProductOverrides } from "@/lib/productOverrides";
+import { effectivePrice, loadProductOverrides } from "@/lib/productOverrides";
 
 /**
  * Server-side price catalog.
@@ -97,12 +97,13 @@ export const loadCatalog = cache(
     const overrides = await loadProductOverrides();
     for (const [id, override] of overrides) {
       const existing = map.get(id);
-      const price = override.price ?? existing?.price;
-      if (price === null || price === undefined) continue;
+      const basePrice = override.price ?? existing?.price;
+      if (basePrice === null || basePrice === undefined) continue;
       map.set(id, {
         id,
         name: override.name ?? existing?.name ?? "",
-        price,
+        // Apply the admin discount so the charged price matches the storefront.
+        price: effectivePrice(basePrice, override.discountPercent),
       });
     }
 

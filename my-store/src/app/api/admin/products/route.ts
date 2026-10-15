@@ -22,9 +22,15 @@ export async function GET(request: NextRequest) {
       category: product.category,
       subCategory: product.subCategory ?? null,
       brand: product.brand ?? null,
+      sizes: product.sizes ?? [],
+      colors: product.colors ?? [],
       hasOverride: Boolean(override),
       overrideName: override?.name ?? null,
       overridePrice: override?.price ?? null,
+      discountPercent: override?.discountPercent ?? null,
+      soldOut: override?.soldOut ?? false,
+      soldOutSizes: override?.soldOutSizes ?? [],
+      soldOutColors: override?.soldOutColors ?? [],
     };
   });
 

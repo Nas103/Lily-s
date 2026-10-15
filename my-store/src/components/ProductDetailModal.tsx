@@ -11,6 +11,7 @@ import type { ProductCardProps } from "./ProductCard";
 import { useRecommendationStore } from "@/stores/recommendationStore";
 import { useCurrency } from "@/hooks/useCurrency";
 import { BRAND } from "@/lib/brand";
+import { effectivePrice } from "@/lib/discount";
 
 type ProductDetailModalProps = {
   product: (ProductCardProps & { description?: string; tags?: string[]; sizes?: string[]; colors?: string[]; colorImages?: Record<string, string[]> }) | null;
@@ -53,10 +54,25 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
 
   // Early return after all hooks
   if (!product) return null;
-  
+
+  const discountPercent = product.discountPercent ?? 0;
+  const hasDiscount = discountPercent > 0;
+  const saleUsd = effectivePrice(product.price, discountPercent);
+  const soldOutSizes = product.soldOutSizes ?? [];
+  const soldOutColors = product.soldOutColors ?? [];
+  const productSoldOut = Boolean(product.soldOut);
+  const isSizeSoldOut = (size?: string) =>
+    productSoldOut || (size ? soldOutSizes.includes(size) : false);
+  const isColorSoldOut = (color?: string) =>
+    productSoldOut || (color ? soldOutColors.includes(color) : false);
+  const variantSoldOut = isSizeSoldOut(activeSize) || isColorSoldOut(activeColor);
+
   // Convert price into the user's currency (base catalog prices are USD).
-  const converted = convertPrice ? convertPrice(product.price) : null;
-  const formattedPrice = converted ? converted.formatted : formatPrice(product.price);
+  const converted = convertPrice ? convertPrice(saleUsd) : null;
+  const formattedPrice = converted ? converted.formatted : formatPrice(saleUsd);
+  const originalPrice = hasDiscount
+    ? convertPrice(product.price).formatted
+    : null;
 
   const sizes = product.sizes; // Only use sizes if they exist (not for perfumes)
 
@@ -159,9 +175,21 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
               <p className="text-sm text-zinc-700">{product.highlight}</p>
             </div>
             {/* TODO: Lock in final retail price. */}
-            <p className="text-3xl font-semibold text-zinc-900">
-              {formattedPrice}
-            </p>
+            <div className="flex flex-wrap items-baseline gap-3">
+              <p className="text-3xl font-semibold text-zinc-900">
+                {formattedPrice}
+              </p>
+              {originalPrice ? (
+                <>
+                  <p className="text-lg text-zinc-400 line-through">
+                    {originalPrice}
+                  </p>
+                  <span className="rounded-full bg-rose-600 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+                    -{Math.round(discountPercent)}%
+                  </span>
+                </>
+              ) : null}
+            </div>
             <p className="text-sm leading-relaxed text-zinc-800">
               {product.description ??
                 `Designed for the ${BRAND.name} capsule: balanced cushioning, premium fabrics, and studio-grade finishing.`}
@@ -186,20 +214,27 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                     Size
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {sizes.map((size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        onClick={() => setActiveSize(size)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
-                          activeSize === size
-                            ? "bg-black text-white"
-                            : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                    {sizes.map((size) => {
+                      const unavailable = isSizeSoldOut(size);
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => setActiveSize(size)}
+                          disabled={unavailable}
+                          title={unavailable ? "Sold out" : undefined}
+                          className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
+                            unavailable
+                              ? "cursor-not-allowed border border-zinc-200 text-zinc-300 line-through"
+                              : activeSize === size
+                                ? "bg-black text-white"
+                                : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ) : null}
@@ -208,47 +243,62 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                   Color
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {colors.slice(0, 5).map((color) => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => setActiveColor(color)}
-                      className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
-                        activeColor === color
-                          ? "bg-black text-white"
-                          : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
-                      }`}
-                    >
-                      {color}
-                    </button>
-                  ))}
+                  {colors.slice(0, 5).map((color) => {
+                    const unavailable = isColorSoldOut(color);
+                    return (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setActiveColor(color)}
+                        disabled={unavailable}
+                        title={unavailable ? "Sold out" : undefined}
+                        className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
+                          unavailable
+                            ? "cursor-not-allowed border border-zinc-200 text-zinc-300 line-through"
+                            : activeColor === color
+                              ? "bg-black text-white"
+                              : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3 pb-2 md:pb-0">
+              {variantSoldOut ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-rose-600">
+                  Sold out — {productSoldOut ? "this item" : "this selection"} is
+                  unavailable
+                </p>
+              ) : null}
               <div className="flex gap-2 md:flex-col">
                 <AddToCartButton
                   id={product.id}
                   name={product.name}
-                  price={product.price}
+                  price={saleUsd}
                   imageUrl={mainImageUrl}
                   size={activeSize}
                   color={activeColor}
+                  disabled={variantSoldOut}
                 />
                 <QuickBuyButton
                   id={product.id}
                   name={product.name}
-                  price={product.price}
+                  price={saleUsd}
                   imageUrl={mainImageUrl}
                   size={activeSize}
                   color={activeColor}
+                  disabled={variantSoldOut}
                 />
               </div>
               <AddToWishlistButton
                 id={product.id}
                 name={product.name}
-                price={product.price}
+                price={saleUsd}
                 imageUrl={mainImageUrl}
               />
             </div>

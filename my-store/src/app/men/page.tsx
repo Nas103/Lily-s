@@ -23,6 +23,10 @@ export default async function MenPage() {
     sizes: product.sizes,
     colors: product.colors,
     colorImages: product.colorImages,
+    discountPercent: product.discountPercent ?? null,
+    soldOut: product.soldOut ?? false,
+    soldOutSizes: product.soldOutSizes ?? [],
+    soldOutColors: product.soldOutColors ?? [],
   }));
 
   return (

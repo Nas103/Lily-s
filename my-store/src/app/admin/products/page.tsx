@@ -15,9 +15,15 @@ type AdminProduct = {
   category: string;
   subCategory: string | null;
   brand: string | null;
+  sizes: string[];
+  colors: string[];
   hasOverride: boolean;
   overrideName: string | null;
   overridePrice: number | null;
+  discountPercent: number | null;
+  soldOut: boolean;
+  soldOutSizes: string[];
+  soldOutColors: string[];
 };
 
 const categories = [
@@ -105,8 +111,9 @@ export default function AdminProductsPage() {
           Products
         </h1>
         <p className="text-sm text-zinc-600">
-          Edit names and prices. Prices are stored in USD — shoppers automatically
-          see them converted into their own currency.
+          Edit names and prices, apply a percentage discount, or mark sizes and
+          colors sold out. Prices are stored in USD — shoppers automatically see
+          them converted into their own currency.
         </p>
       </div>
 
@@ -158,6 +165,34 @@ export default function AdminProductsPage() {
   );
 }
 
+const sameSet = (a: string[], b: string[]) =>
+  a.length === b.length && [...a].sort().join("|") === [...b].sort().join("|");
+
+function VariantChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.15em] transition ${
+        active
+          ? "bg-rose-600 text-white"
+          : "border border-zinc-300 text-zinc-700 hover:border-zinc-900"
+      }`}
+      title={active ? "Marked sold out — click to restore" : "Click to mark sold out"}
+    >
+      {label}
+    </button>
+  );
+}
+
 function ProductRow({
   product,
   onSaved,
@@ -170,13 +205,36 @@ function ProductRow({
 
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(String(product.price));
+  const [discount, setDiscount] = useState(
+    product.discountPercent != null ? String(product.discountPercent) : ""
+  );
+  const [soldOut, setSoldOut] = useState(product.soldOut);
+  const [soldOutSizes, setSoldOutSizes] = useState<string[]>(product.soldOutSizes);
+  const [soldOutColors, setSoldOutColors] = useState<string[]>(product.soldOutColors);
+  const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<"saved" | "error" | null>(null);
+
+  const toggle = (
+    value: string,
+    list: string[],
+    setList: (next: string[]) => void
+  ) => {
+    setFeedback(null);
+    setList(
+      list.includes(value) ? list.filter((item) => item !== value) : [...list, value]
+    );
+  };
 
   const save = async () => {
     if (!user || !isAdmin() || saving) return;
     const priceValue = parseFloat(price);
-    if (!name.trim()) {
+    const discountValue = discount.trim() === "" ? null : parseFloat(discount);
+    if (!name.trim() || Number.isNaN(priceValue)) {
+      setFeedback("error");
+      return;
+    }
+    if (discountValue !== null && (Number.isNaN(discountValue) || discountValue < 0 || discountValue > 90)) {
       setFeedback("error");
       return;
     }
@@ -190,7 +248,14 @@ function ProductRow({
           "x-user-id": user.id,
           "x-user-email": user.email,
         },
-        body: JSON.stringify({ name: name.trim(), price: priceValue }),
+        body: JSON.stringify({
+          name: name.trim(),
+          price: priceValue,
+          discountPercent: discountValue,
+          soldOut,
+          soldOutSizes,
+          soldOutColors,
+        }),
       });
       if (!res.ok) throw new Error("Save failed");
       const updated = (await res.json()) as AdminProduct;
@@ -202,6 +267,10 @@ function ProductRow({
         hasOverride: true,
         overrideName: updated.overrideName,
         overridePrice: updated.overridePrice,
+        discountPercent: updated.discountPercent,
+        soldOut: updated.soldOut,
+        soldOutSizes: updated.soldOutSizes,
+        soldOutColors: updated.soldOutColors,
       });
       setFeedback("saved");
     } catch {
@@ -227,6 +296,10 @@ function ProductRow({
       const updated = (await res.json()) as AdminProduct;
       setName(updated.name);
       setPrice(String(updated.price));
+      setDiscount("");
+      setSoldOut(false);
+      setSoldOutSizes([]);
+      setSoldOutColors([]);
       onSaved(product.id, {
         name: updated.name,
         baseName: updated.baseName,
@@ -235,6 +308,10 @@ function ProductRow({
         hasOverride: false,
         overrideName: null,
         overridePrice: null,
+        discountPercent: null,
+        soldOut: false,
+        soldOutSizes: [],
+        soldOutColors: [],
       });
       setFeedback("saved");
     } catch {
@@ -244,96 +321,207 @@ function ProductRow({
     }
   };
 
+  const parsedPrice = parseFloat(price);
+  const parsedDiscount = discount.trim() === "" ? null : parseFloat(discount);
   const isDirty =
     name.trim() !== product.name ||
-    (parseFloat(price) !== product.price && !Number.isNaN(parseFloat(price)));
+    (parsedPrice !== product.price && !Number.isNaN(parsedPrice)) ||
+    (parsedDiscount === null ? null : parsedDiscount) !== (product.discountPercent ?? null) ||
+    soldOut !== product.soldOut ||
+    !sameSet(soldOutSizes, product.soldOutSizes) ||
+    !sameSet(soldOutColors, product.soldOutColors);
+
+  const hasVariants = product.sizes.length > 0 || product.colors.length > 0;
 
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm">
-      <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-zinc-100">
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          fill
-          sizes="44px"
-          className="object-cover"
-        />
-      </div>
-
-      <div className="grid min-w-0 flex-1 gap-x-4 gap-y-1 md:grid-cols-[1fr_140px_auto]">
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
-            {product.category}
-            {product.subCategory ? ` · ${product.subCategory}` : ""}
-          </p>
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-              setFeedback(null);
-            }}
-            className="w-full rounded-lg border border-transparent bg-transparent px-2 py-1 text-sm font-medium text-zinc-900 outline-none transition hover:border-zinc-200 focus:border-zinc-900"
+    <div className="rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm">
+      <div className="flex items-center gap-4">
+        <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-zinc-100">
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            sizes="44px"
+            className="object-cover"
           />
-          <p className="px-2 text-[11px] text-zinc-400">
-            {product.brand ? `${product.brand} · ` : ""}stores at {money(product.basePrice)}
-          </p>
         </div>
 
-        <div>
-          <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
-            Price (USD)
-          </label>
-          <div className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 focus-within:border-zinc-900">
-            <span className="text-zinc-500">$</span>
+        <div className="grid min-w-0 flex-1 gap-x-4 gap-y-1 md:grid-cols-[1fr_140px_120px_auto]">
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              {product.category}
+              {product.subCategory ? ` · ${product.subCategory}` : ""}
+            </p>
             <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={price}
+              type="text"
+              value={name}
               onChange={(event) => {
-                setPrice(event.target.value);
+                setName(event.target.value);
                 setFeedback(null);
               }}
-              className="w-full bg-transparent text-sm text-zinc-900 outline-none"
+              className="w-full rounded-lg border border-transparent bg-transparent px-2 py-1 text-sm font-medium text-zinc-900 outline-none transition hover:border-zinc-200 focus:border-zinc-900"
             />
+            <p className="px-2 text-[11px] text-zinc-400">
+              {product.brand ? `${product.brand} · ` : ""}stores at {money(product.basePrice)}
+            </p>
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              Price (USD)
+            </label>
+            <div className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 focus-within:border-zinc-900">
+              <span className="text-zinc-500">$</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={price}
+                onChange={(event) => {
+                  setPrice(event.target.value);
+                  setFeedback(null);
+                }}
+                className="w-full bg-transparent text-sm text-zinc-900 outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              Discount %
+            </label>
+            <div className="flex items-center gap-1 rounded-lg border border-zinc-200 px-2 py-1 focus-within:border-zinc-900">
+              <input
+                type="number"
+                min="0"
+                max="90"
+                step="1"
+                placeholder="0"
+                value={discount}
+                onChange={(event) => {
+                  setDiscount(event.target.value);
+                  setFeedback(null);
+                }}
+                className="w-full bg-transparent text-sm text-zinc-900 outline-none"
+              />
+              <span className="text-zinc-500">%</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-end md:pb-0.5">
+            {product.soldOut || soldOut ? (
+              <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-white">
+                Sold out
+              </span>
+            ) : null}
+            {product.discountPercent || (parsedDiscount ?? 0) > 0 ? (
+              <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-rose-700">
+                Sale
+              </span>
+            ) : null}
+            {product.hasOverride ? (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-amber-700">
+                Edited
+              </span>
+            ) : null}
+            {feedback === "saved" ? (
+              <span className="text-[11px] font-medium text-emerald-600">Saved</span>
+            ) : null}
+            {feedback === "error" ? (
+              <span className="text-[11px] font-medium text-red-600">
+                Check fields
+              </span>
+            ) : null}
+            {isDirty ? (
+              <button
+                type="button"
+                onClick={() => void save()}
+                disabled={saving}
+                className="rounded-full bg-black px-4 py-1.5 text-xs font-semibold text-white transition hover:opacity-80 disabled:opacity-50"
+              >
+                {saving ? "Saving…" : "Save"}
+              </button>
+            ) : null}
+            {product.hasOverride ? (
+              <button
+                type="button"
+                onClick={() => void revert()}
+                disabled={saving}
+                className="rounded-full border border-zinc-300 px-4 py-1.5 text-xs font-semibold text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-50"
+              >
+                Revert
+              </button>
+            ) : null}
+            {hasVariants ? (
+              <button
+                type="button"
+                onClick={() => setExpanded((value) => !value)}
+                className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900"
+              >
+                {expanded ? "Hide variants" : "Variants"}
+              </button>
+            ) : null}
           </div>
         </div>
-
-        <div className="flex items-center gap-2 self-end md:pb-0.5">
-          {product.hasOverride ? (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-amber-700">
-              Edited
-            </span>
-          ) : null}
-          {feedback === "saved" ? (
-            <span className="text-[11px] font-medium text-emerald-600">Saved</span>
-          ) : null}
-          {feedback === "error" ? (
-            <span className="text-[11px] font-medium text-red-600">Error</span>
-          ) : null}
-          {isDirty ? (
-            <button
-              type="button"
-              onClick={() => void save()}
-              disabled={saving}
-              className="rounded-full bg-black px-4 py-1.5 text-xs font-semibold text-white transition hover:opacity-80 disabled:opacity-50"
-            >
-              {saving ? "Saving…" : "Save"}
-            </button>
-          ) : null}
-          {product.hasOverride ? (
-            <button
-              type="button"
-              onClick={() => void revert()}
-              disabled={saving}
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-xs font-semibold text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-50"
-            >
-              Revert
-            </button>
-          ) : null}
-        </div>
       </div>
+
+      {expanded ? (
+        <div className="mt-3 space-y-3 border-t border-zinc-100 pt-3 pl-16">
+          <label className="flex items-center gap-2 text-xs font-medium text-zinc-700">
+            <input
+              type="checkbox"
+              checked={soldOut}
+              onChange={(event) => {
+                setSoldOut(event.target.checked);
+                setFeedback(null);
+              }}
+              className="h-4 w-4 rounded border-zinc-300"
+            />
+            Entire product sold out
+          </label>
+
+          {product.sizes.length ? (
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+                Sizes sold out
+              </p>
+              <div className="mt-1 flex flex-wrap gap-2">
+                {product.sizes.map((size) => (
+                  <VariantChip
+                    key={size}
+                    label={size}
+                    active={soldOutSizes.includes(size)}
+                    onClick={() => toggle(size, soldOutSizes, setSoldOutSizes)}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {product.colors.length ? (
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+                Colors sold out
+              </p>
+              <div className="mt-1 flex flex-wrap gap-2">
+                {product.colors.map((color) => (
+                  <VariantChip
+                    key={color}
+                    label={color}
+                    active={soldOutColors.includes(color)}
+                    onClick={() => toggle(color, soldOutColors, setSoldOutColors)}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <p className="text-[11px] text-zinc-400">
+            Click a size or color to toggle it sold out. Shoppers can no longer add
+            an unavailable variant. Set a discount above to show a sale price.
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

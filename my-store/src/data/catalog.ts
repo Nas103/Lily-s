@@ -36,6 +36,10 @@ export type CatalogProduct = {
   colors?: string[];
   colorImages?: Record<string, string[]>;
   brand?: string;
+  discountPercent?: number | null;
+  soldOut?: boolean;
+  soldOutSizes?: string[];
+  soldOutColors?: string[];
 };
 
 export const CATEGORY_META: {
@@ -119,6 +123,7 @@ const normalizeMobileProduct = (product: Product): CatalogProduct => {
     colors: product.colors,
     colorImages: normalizeColorImages(product.colorImages),
     brand: product.brand,
+    discountPercent: product.discountPercent ?? null,
   };
 };
 
@@ -188,5 +193,9 @@ export function toGridProduct(product: CatalogProduct) {
     sizes: product.sizes,
     colors: product.colors,
     colorImages: product.colorImages,
+    discountPercent: product.discountPercent ?? null,
+    soldOut: product.soldOut ?? false,
+    soldOutSizes: product.soldOutSizes ?? [],
+    soldOutColors: product.soldOutColors ?? [],
   };
 }
