@@ -93,8 +93,8 @@ export default function ShopIconsLaser({
             flipsPerChar={8}
             order="left"
             align="left"
-            tileStyle="board"
-            tileColor="#111827"
+            tileStyle="minimal"
+            tileColor="transparent"
             textColor="#f8fafc"
             glare={0}
             depth={0.5}
