@@ -45,7 +45,7 @@ export default async function BoxrawPage({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white">
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-6 pt-16">
         <p className="text-xs uppercase tracking-[0.4em] text-zinc-700">
           Collection
         </p>
@@ -55,16 +55,16 @@ export default async function BoxrawPage({
         <p className="mt-2 max-w-xl text-sm text-zinc-800">{meta.blurb}</p>
 
         <SubCategoryTabs basePath="/boxraw" active={active} items={subCategories} />
+      </section>
 
-        {clips ? (
-          <div className="mt-10">
-            <AlternatingVideoBanner sources={clips} />
-          </div>
-        ) : null}
-
-        <div className="mt-10">
-          <ProductGrid products={products} />
+      {clips ? (
+        <div className="mt-10 w-full">
+          <AlternatingVideoBanner sources={clips} bleed />
         </div>
+      ) : null}
+
+      <section className="mx-auto max-w-6xl px-6 pb-16 pt-10">
+        <ProductGrid products={products} />
       </section>
     </div>
   );

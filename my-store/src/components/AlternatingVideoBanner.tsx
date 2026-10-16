@@ -5,6 +5,8 @@ import { useCallback, useState } from "react";
 type AlternatingVideoBannerProps = {
   sources: string[];
   className?: string;
+  /** Edge-to-edge full-width banner: drops rounding, border, shadow. */
+  bleed?: boolean;
 };
 
 /**
@@ -14,6 +16,7 @@ type AlternatingVideoBannerProps = {
 export function AlternatingVideoBanner({
   sources,
   className,
+  bleed = false,
 }: AlternatingVideoBannerProps) {
   const [index, setIndex] = useState(0);
 
@@ -25,9 +28,11 @@ export function AlternatingVideoBanner({
 
   return (
     <div
-      className={`aspect-video overflow-hidden rounded-[28px] border border-zinc-200 bg-black shadow-lg ring-1 ring-black/5 ${
-        className ?? ""
-      }`}
+      className={`aspect-video overflow-hidden bg-black ${
+        bleed
+          ? ""
+          : "rounded-[28px] border border-zinc-200 shadow-lg ring-1 ring-black/5"
+      } ${className ?? ""}`}
     >
       <video
         key={sources[index]}
