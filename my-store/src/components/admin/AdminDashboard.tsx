@@ -433,9 +433,9 @@ export function AdminDashboard({ initial }: { initial: AdminStats | null }) {
 function DashboardHeading() {
   return (
     <div className="space-y-2">
-      <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Live analytics</p>
-      <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">Dashboard</h1>
-      <p className="text-sm text-zinc-600">
+      <p className="text-xs uppercase tracking-[0.35em] text-zinc-400">Live analytics</p>
+      <h1 className="text-3xl font-semibold tracking-tight text-white">Dashboard</h1>
+      <p className="text-sm text-zinc-300">
         Revenue, orders, and customers streaming in from your store in real time.
       </p>
     </div>
