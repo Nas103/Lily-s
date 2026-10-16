@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
 import { 
   User, Mail, Shield, CreditCard, MapPin, ShoppingBag, 
@@ -18,6 +17,7 @@ import { PaymentMethodList } from "./components/PaymentMethodList";
 import { OrderHistory } from "./components/OrderHistory";
 import { ProfileSettings } from "./settings/ProfileSettings";
 import { BRAND } from "@/lib/brand";
+import Lightfall from "@/components/Lightfall";
 
 type SettingsSection = 
   | "profile" 
@@ -43,16 +43,20 @@ const settingsMenu = [
 ];
 
 export default function ProfilePage() {
-  const router = useRouter();
   const user = useAuth((state) => state.user);
   const [activeSection, setActiveSection] = useState<SettingsSection>("profile");
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
 
+  // The /profile server layout already gates unauthenticated visitors. If the
+  // persisted store has not rehydrated yet (e.g. right after a refresh), sync
+  // the user from the server session instead of bouncing them to /login.
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    if (user) return;
+    void useAuth.getState().refresh();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
 
     // Fetch profile image
     const fetchProfileImage = async () => {
@@ -74,7 +78,7 @@ export default function ProfilePage() {
     };
 
     fetchProfileImage();
-  }, [user, router]);
+  }, [user]);
 
   if (!user) {
     return null;
@@ -91,10 +95,37 @@ export default function ProfilePage() {
     : "Recently";
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <Lightfall
+          colors={["#ffffff"]}
+          backgroundColor="#94a3b8"
+          speed={0.3}
+          streakCount={2}
+          streakWidth={0.8}
+          twinkle={0.3}
+          backgroundGlow={0.1}
+          headGlow={0.6}
+          bloom={0.35}
+          mouseInteraction
+          holdToWarp
+          intro
+          streakLength={1}
+          density={0.6}
+          glow={1}
+          depth={0.5}
+          zoom={3}
+          mouseStrength={0.4}
+          mouseRadius={0.45}
+          lens={0.5}
+          fade={0}
+          lightMode={false}
+        />
+      </div>
+      <div className="relative mx-auto max-w-6xl px-6 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900">Settings</h1>
+        <h1 className="text-3xl font-bold text-zinc-200">Settings</h1>
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -111,7 +142,7 @@ export default function ProfilePage() {
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition ${
                     isActive
                       ? "bg-zinc-900 text-white"
-                      : "text-zinc-800 hover:bg-zinc-100"
+                      : "text-zinc-300 hover:bg-white/10"
                   }`}
                 >
                   <Icon size={20} />
@@ -128,8 +159,8 @@ export default function ProfilePage() {
           {activeSection === "profile" && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">Profile</h2>
-                <p className="text-zinc-800">
+                <h2 className="text-2xl font-bold text-zinc-200 mb-2">Profile</h2>
+                <p className="text-zinc-300">
                   Your {BRAND.name} profile represents you across the platform.
                 </p>
               </div>
@@ -220,7 +251,7 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-zinc-200">Order History</h2>
-                <p className="text-zinc-800">
+                <p className="text-zinc-300">
                   Review past orders and track their delivery status.
                 </p>
               </div>
@@ -249,6 +280,7 @@ export default function ProfilePage() {
             activeSection
           ) && <ProfileSettings section={activeSection} />}
         </main>
+      </div>
       </div>
     </div>
   );
