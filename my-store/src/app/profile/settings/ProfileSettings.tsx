@@ -34,7 +34,7 @@ function SectionShell({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="rounded-2xl border border-zinc-200 bg-white p-8"
     >
-      <h2 className="text-lg font-semibold text-zinc-900">{title}</h2>
+      <h2 className="text-lg font-semibold text-zinc-200">{title}</h2>
       <p className="mt-1 text-sm text-zinc-500">{description}</p>
       <div className="mt-6">{children}</div>
     </motion.div>

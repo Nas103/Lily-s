@@ -152,7 +152,7 @@ export function PaymentMethodList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-900 mb-2">Payment Methods</h2>
+          <h2 className="text-2xl font-bold text-zinc-200 mb-2">Payment Methods</h2>
           <p className="text-zinc-800">
             Securely manage your payment methods. Card numbers are never fully stored.
           </p>

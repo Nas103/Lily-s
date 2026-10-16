@@ -206,7 +206,7 @@ export default function ProfilePage() {
           {activeSection === "account" && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-zinc-900 mb-2">Account Details</h2>
+                <h2 className="text-2xl font-bold text-zinc-200 mb-2">Account Details</h2>
               </div>
 
               <div className="rounded-2xl border border-zinc-200 bg-white p-8">
@@ -219,7 +219,7 @@ export default function ProfilePage() {
           {activeSection === "orders" && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-zinc-900">Order History</h2>
+                <h2 className="text-2xl font-bold text-zinc-200">Order History</h2>
                 <p className="text-zinc-800">
                   Review past orders and track their delivery status.
                 </p>
