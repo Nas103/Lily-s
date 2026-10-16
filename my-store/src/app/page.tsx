@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
-import { CATEGORY_META } from "@/data/catalog";
+import { CATEGORY_META, getCatalogBrands } from "@/data/catalog";
+import { BRAND } from "@/lib/brand";
 import { applyOverrides, loadProductOverrides, serializeOverrides } from "@/lib/productOverrides";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
 import StarfieldButton from "@/components/StarfieldButton";
@@ -37,6 +38,10 @@ export default async function Home() {
   })), overrides);
 
   const icons = applyOverrides(products.slice(20, 28), overrides);
+
+  const brandWords = [BRAND.name, ...getCatalogBrands()]
+    .filter((brand, index, all) => all.indexOf(brand) === index)
+    .map((brand) => brand.toUpperCase());
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-zinc-50 to-white text-zinc-900">
@@ -208,6 +213,7 @@ export default async function Home() {
             price: icon.price,
             imageUrl: icon.imageUrl,
           }))}
+          brands={brandWords}
         />
       </section>
 

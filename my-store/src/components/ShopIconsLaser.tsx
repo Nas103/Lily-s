@@ -5,9 +5,18 @@ import Link from "next/link";
 import Vortex from "./Vortex";
 import ShopIconsCarousel, { type ShopIcon } from "./ShopIconsCarousel";
 import LaserFlow from "./LaserFlow";
+import SplitFlapText from "./SplitFlapText";
 
-export default function ShopIconsLaser({ items }: { items: ShopIcon[] }) {
+export default function ShopIconsLaser({
+  items,
+  brands = [],
+}: {
+  items: ShopIcon[];
+  brands?: string[];
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const brandWords = brands.filter((brand) => brand.trim().length > 0);
+  const padTo = brandWords.reduce((max, word) => Math.max(max, word.length), 1);
 
   return (
     <div className="relative overflow-hidden px-6 py-24 md:py-36">
@@ -72,6 +81,32 @@ export default function ShopIconsLaser({ items }: { items: ShopIcon[] }) {
           <ShopIconsCarousel items={items} />
         </div>
       </div>
+
+      {brandWords.length > 0 && (
+        <div className="relative mt-12 flex justify-center">
+          <SplitFlapText
+            words={brandWords}
+            flipDuration={0.12}
+            stagger={0.06}
+            cycleDelay={2400}
+            charset="alphanumeric"
+            flipsPerChar={8}
+            order="left"
+            align="left"
+            tileStyle="board"
+            tileColor="#111827"
+            textColor="#f8fafc"
+            glare={0}
+            depth={0.5}
+            tileRadius={8}
+            gap={6}
+            fontSize="clamp(24px, 5vw, 52px)"
+            loop
+            padTo={padTo}
+            intro
+          />
+        </div>
+      )}
     </div>
   );
 }
