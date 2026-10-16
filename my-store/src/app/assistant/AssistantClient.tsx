@@ -88,8 +88,8 @@ export function AssistantClient() {
         <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.4em] text-zinc-400">
           <Sparkles size={14} /> {BRAND.name}
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-zinc-900">AI Stylist</h1>
-        <p className="mt-2 text-sm text-zinc-500">
+        <h1 className="mt-2 text-3xl font-bold text-white">AI Stylist</h1>
+        <p className="mt-2 text-sm text-zinc-300">
           Your personal {BRAND.name} concierge for styling, sizing and orders.
         </p>
       </header>
@@ -130,7 +130,7 @@ export function AssistantClient() {
               key={prompt}
               type="button"
               onClick={() => sendMessage(prompt)}
-              className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900"
+              className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:border-white hover:text-white"
             >
               {prompt}
             </button>
