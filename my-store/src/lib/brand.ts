@@ -8,3 +8,15 @@ export const BRAND = {
 } as const;
 
 export const BRAND_NAME = BRAND.name;
+
+export const STOREFRONT_BRANDS = [
+  "Under Armour",
+  "Apple",
+  "EL HAYUM",
+  "Wahhid",
+  "Boxraw",
+  "Armani",
+  "Heritage",
+  "Nike",
+  "Puma",
+] as const;

@@ -179,14 +179,6 @@ export function getCategoryMeta(category: CatalogCategory) {
   return CATEGORY_META.find((meta) => meta.id === category);
 }
 
-export function getCatalogBrands(): string[] {
-  const brands = new Set<string>();
-  for (const product of catalogProducts) {
-    if (product.brand) brands.add(product.brand);
-  }
-  return Array.from(brands).sort((a, b) => a.localeCompare(b));
-}
-
 export function toGridProduct(product: CatalogProduct) {
   return {
     id: product.id,
