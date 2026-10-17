@@ -47,7 +47,19 @@ export function ProductCard({
   const displayBadge = soldOut ? "Sold Out" : badge;
   return (
     <article className="group overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-lg ring-1 ring-black/5 transition hover:-translate-y-1 hover:ring-black/10">
-      <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100">
+      <div
+        className="relative aspect-[4/5] cursor-pointer overflow-hidden bg-zinc-100"
+        onClick={onPreview}
+        role="button"
+        aria-label={`View ${name}`}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if ((e.key === "Enter" || e.key === " ") && onPreview) {
+            e.preventDefault();
+            onPreview();
+          }
+        }}
+      >
         {/* TODO: Update imagery to match each product drop. */}
         <Image
           src={imageUrl}
@@ -97,7 +109,19 @@ export function ProductCard({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-1 px-5 pb-5 pt-4">
+      <div
+        className="flex cursor-pointer flex-col gap-1 px-5 pb-5 pt-4"
+        onClick={onPreview}
+        role="button"
+        aria-label={`View ${name}`}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if ((e.key === "Enter" || e.key === " ") && onPreview) {
+            e.preventDefault();
+            onPreview();
+          }
+        }}
+      >
         {/* TODO: Replace name copy with final product title. */}
         <h3 className="text-base font-semibold tracking-tight text-zinc-900">
           {name}

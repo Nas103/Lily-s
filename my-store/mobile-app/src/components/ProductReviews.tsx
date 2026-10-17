@@ -18,6 +18,12 @@ type Review = {
   body?: string | null;
   createdAt: string;
   userName: string;
+  verified?: boolean;
+};
+
+type Viewer = {
+  purchased: boolean;
+  reviewed: boolean;
 };
 
 type Summary = {
@@ -44,6 +50,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
   const { isAuthenticated } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [viewer, setViewer] = useState<Viewer | null>(null);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState('');
@@ -56,6 +63,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
       const data = await reviewsAPI.getForProduct(productId);
       setReviews(data.reviews || []);
       setSummary(data.summary || null);
+      setViewer(data.viewer ?? null);
     } catch {
       // ignore
     } finally {
@@ -76,7 +84,11 @@ export default function ProductReviews({ productId }: { productId: string }) {
       setBody('');
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to save review');
+      // Prefer the API's own message (e.g. the purchase-gate 403), otherwise
+      // fall back to a generic one.
+      const apiError = (err as { response?: { data?: { error?: string } } })
+        ?.response?.data?.error;
+      setError(apiError || (err instanceof Error ? err.message : 'Unable to save review'));
     } finally {
       setSaving(false);
     }
@@ -96,7 +108,17 @@ export default function ProductReviews({ productId }: { productId: string }) {
         ) : null}
       </View>
 
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
+        <Text style={styles.hint}>Sign in to write a review.</Text>
+      ) : viewer && !viewer.purchased ? (
+        <View style={styles.locked}>
+          <Ionicons name="lock-closed-outline" size={16} color="#737373" />
+          <Text style={styles.lockedText}>
+            Only customers who bought this item can leave a review. It unlocks
+            once your order for it is paid.
+          </Text>
+        </View>
+      ) : (
         <View style={styles.form}>
           <View style={styles.stars}>
             {[1, 2, 3, 4, 5].map((star) => (
@@ -122,6 +144,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
             onChangeText={setBody}
             multiline
           />
+          {viewer?.reviewed ? (
+            <Text style={styles.alreadyReviewed}>
+              You have already reviewed this item. Submitting updates your
+              review.
+            </Text>
+          ) : null}
           {error ? <Text style={styles.error}>{error}</Text> : null}
           <TouchableOpacity
             style={styles.submit}
@@ -135,8 +163,6 @@ export default function ProductReviews({ productId }: { productId: string }) {
             )}
           </TouchableOpacity>
         </View>
-      ) : (
-        <Text style={styles.hint}>Sign in to write a review.</Text>
       )}
 
       {loading ? (
@@ -147,6 +173,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
             <View style={styles.reviewHeader}>
               <Stars value={review.rating} size={12} />
               <Text style={styles.reviewAuthor}>{review.userName}</Text>
+              {review.verified ? (
+                <View style={styles.verified}>
+                  <Ionicons name="checkmark-circle" size={12} color="#047857" />
+                  <Text style={styles.verifiedText}>Verified purchase</Text>
+                </View>
+              ) : null}
             </View>
             {review.title ? (
               <Text style={styles.reviewTitle}>{review.title}</Text>
@@ -214,6 +246,25 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   hint: { fontSize: 13, color: '#737373' },
+  locked: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 4,
+  },
+  lockedText: { flex: 1, fontSize: 12, color: '#737373', lineHeight: 18 },
+  alreadyReviewed: { fontSize: 12, color: '#737373' },
+  verified: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  verifiedText: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: '#047857',
+  },
   review: {
     borderWidth: 1,
     borderColor: '#f0f0f0',

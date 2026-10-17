@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Star, Loader2 } from "lucide-react";
+import { Star, Loader2, BadgeCheck, Lock } from "lucide-react";
 import { useAuth } from "@/stores/authStore";
 
 type Review = {
@@ -12,6 +13,12 @@ type Review = {
   createdAt: string;
   userName: string;
   userId: string;
+  verified?: boolean;
+};
+
+type Viewer = {
+  purchased: boolean;
+  reviewed: boolean;
 };
 
 type Summary = {
@@ -42,6 +49,7 @@ export function ProductReviews({ productId }: { productId: string }) {
   const user = useAuth((state) => state.user);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [viewer, setViewer] = useState<Viewer | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -51,6 +59,7 @@ export function ProductReviews({ productId }: { productId: string }) {
       const data = await res.json();
       setReviews(data.reviews || []);
       setSummary(data.summary || null);
+      setViewer(data.viewer ?? null);
     } finally {
       setLoading(false);
     }
@@ -77,15 +86,34 @@ export function ProductReviews({ productId }: { productId: string }) {
         )}
       </div>
 
-      {user ? (
-        <ReviewForm productId={productId} onSubmitted={load} />
-      ) : (
+      {!user ? (
         <p className="mt-4 text-sm text-zinc-700">
-          <a href="/login" className="underline underline-offset-4">
+          <Link href="/login" className="underline underline-offset-4">
             Sign in
-          </a>{" "}
+          </Link>{" "}
           to write a review.
         </p>
+      ) : viewer && !viewer.purchased ? (
+        <div className="mt-4 flex items-start gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+          <Lock size={16} className="mt-0.5 shrink-0 text-zinc-500" />
+          <div>
+            <p className="text-sm font-medium text-zinc-900">
+              Only customers who bought this item can leave a review
+            </p>
+            <p className="mt-1 text-xs text-zinc-600">
+              Once your order for this item is paid, it will unlock here.{" "}
+              <Link href="/orders" className="underline underline-offset-4">
+                View your orders
+              </Link>
+            </p>
+          </div>
+        </div>
+      ) : (
+        <ReviewForm
+          productId={productId}
+          onSubmitted={load}
+          hasExistingReview={viewer?.reviewed ?? false}
+        />
       )}
 
       <div className="mt-6 space-y-4">
@@ -105,6 +133,12 @@ export function ProductReviews({ productId }: { productId: string }) {
                   <span className="text-sm font-medium text-zinc-900">
                     {review.userName}
                   </span>
+                  {review.verified && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-700">
+                      <BadgeCheck size={11} />
+                      Verified purchase
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs text-zinc-600">
                   {new Date(review.createdAt).toLocaleDateString()}
@@ -133,9 +167,11 @@ export function ProductReviews({ productId }: { productId: string }) {
 function ReviewForm({
   productId,
   onSubmitted,
+  hasExistingReview,
 }: {
   productId: string;
   onSubmitted: () => void;
+  hasExistingReview?: boolean;
 }) {
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState("");
@@ -207,6 +243,11 @@ function ReviewForm({
         rows={3}
         className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm placeholder:text-zinc-600"
       />
+      {hasExistingReview && (
+        <p className="text-xs text-zinc-600">
+          You have already reviewed this item. Submitting updates your review.
+        </p>
+      )}
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="flex items-center gap-3">
         <button

@@ -19,7 +19,7 @@ export default function ShopIconsLaser({
   const padTo = brandWords.reduce((max, word) => Math.max(max, word.length), 1);
 
   return (
-    <div className="relative overflow-hidden px-6 py-24 md:py-36">
+    <div className="relative overflow-hidden px-6 py-24 md:py-36 lg:py-44">
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_60%_-10%,rgba(249,115,26,0.18),transparent_65%)]"
         aria-hidden="true"
@@ -50,7 +50,7 @@ export default function ShopIconsLaser({
 
       <div
         ref={cardRef}
-        className="relative mx-auto h-[314px] max-w-6xl overflow-hidden rounded-[40px] border border-white/5 bg-[#0B0701] sm:h-[381px] md:h-[437px]"
+        className="relative mx-auto h-[560px] max-w-6xl overflow-hidden rounded-[40px] border border-white/5 bg-[#0B0701] sm:h-[680px] md:h-[780px]"
       >
         <div className="absolute inset-0" aria-hidden="true">
           <Vortex background="#0B0701" style={{ position: "absolute", inset: 0 }} />
