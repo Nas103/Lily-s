@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { useCart } from "@/stores/cartStore";
 import { useRecommendationStore } from "@/stores/recommendationStore";
+import { useToastStore } from "@/stores/toastStore";
 
 type AddToCartButtonProps = {
   id: string;
@@ -21,6 +22,7 @@ export function AddToCartButton({
   ...props
 }: AddToCartButtonProps) {
   const addItem = useCart((state) => state.addItem);
+  const showToast = useToastStore((state) => state.showToast);
   const [pending, startTransition] = useTransition();
   const trackAddToCart = useRecommendationStore(
     (state) => state.trackAddToCart
@@ -33,16 +35,27 @@ export function AddToCartButton({
       ? "flex-1 md:w-full border-zinc-900 px-4 py-2.5 md:py-2 text-xs font-medium text-zinc-900 hover:bg-zinc-900 hover:text-white"
       : "border-zinc-200 px-3 py-2 text-[10px] font-semibold text-zinc-600 hover:border-zinc-900 hover:text-zinc-900";
 
+  const handleAddToCart = () => {
+    startTransition(() =>
+      addItem({
+        ...props,
+        quantity: 1,
+      })
+    );
+
+    const variants = [props.size, props.color].filter(Boolean).join(" · ");
+    showToast({
+      title: "Added to cart",
+      description: variants ? `${props.name} — ${variants}` : props.name,
+      imageUrl: props.imageUrl,
+      href: "/cart",
+      linkLabel: "View cart",
+    });
+  };
+
   return (
     <button
-      onClick={() =>
-        startTransition(() =>
-          addItem({
-            ...props,
-            quantity: 1,
-          })
-        )
-      }
+      onClick={handleAddToCart}
       className={`${baseClasses} ${variantClasses} ${disabled ? "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-zinc-900" : ""}`}
       disabled={pending || disabled}
       onMouseUp={() => {

@@ -58,6 +58,13 @@ export function Header() {
   const cartCount = useCart((state) =>
     state.items.reduce((sum, item) => sum + item.quantity, 0)
   );
+  const [lastCartCount, setLastCartCount] = useState(cartCount);
+  const [cartBump, setCartBump] = useState(false);
+
+  if (cartCount !== lastCartCount) {
+    setLastCartCount(cartCount);
+    setCartBump(cartCount > lastCartCount);
+  }
 
   useEffect(() => {
     void refresh();
@@ -144,7 +151,8 @@ export function Header() {
               </div>
               <Link
                 href="/cart"
-                className="relative inline-flex items-center gap-1.5 rounded-full bg-black px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-zinc-900"
+                onAnimationEnd={() => setCartBump(false)}
+                className={`relative inline-flex items-center gap-1.5 rounded-full bg-black px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-zinc-900 ${cartBump ? "animate-cart-bump" : ""}`}
               >
                 <span>Cart</span>
                 <span
