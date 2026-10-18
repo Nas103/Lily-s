@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/stores/authStore";
 import { 
-  User, Mail, Shield, CreditCard, MapPin, ShoppingBag, 
-  Bell, Lock, Link as LinkIcon, Settings, Edit, 
-  Calendar, Phone, Globe
+  User, CreditCard, MapPin, ShoppingBag, 
+  Bell, Lock, Link as LinkIcon, Edit, Loader2
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import { getGravatarUrlSync } from "@/lib/gravatar-client";
 import { getProfileImageUrl } from "@/lib/getProfileImage";
@@ -80,10 +78,6 @@ export default function ProfilePage() {
     fetchProfileImage();
   }, [user]);
 
-  if (!user) {
-    return null;
-  }
-
   const profilePictureUrl = user?.email 
     ? getProfileImageUrl(user.email, profileImageUrl, 200)
     : "/placeholder-avatar.png";
@@ -95,11 +89,11 @@ export default function ProfilePage() {
     : "Recently";
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10">
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <Lightfall
           colors={["#ffffff"]}
-          backgroundColor="#94a3b8"
+          backgroundColor="#000000"
           speed={0.3}
           streakCount={2}
           streakWidth={0.8}
@@ -122,12 +116,18 @@ export default function ProfilePage() {
           lightMode={false}
         />
       </div>
-      <div className="relative mx-auto max-w-6xl px-6 py-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-zinc-200">Settings</h1>
       </div>
 
+      {!user ? (
+        <div className="flex items-center gap-3 text-sm text-zinc-400">
+          <Loader2 size={16} className="animate-spin" />
+          Loading settings…
+        </div>
+      ) : (
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Left Sidebar - Settings Menu */}
         <aside className="w-full lg:w-64">
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
+              <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
                 <div className="flex items-center gap-6 mb-8">
                   <div className="relative">
                     <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-800 flex-shrink-0">
@@ -240,7 +240,7 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-bold text-zinc-200 mb-2">Account Details</h2>
               </div>
 
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
+              <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
                 <AccountDetailsForm />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                   Review past orders and track their delivery status.
                 </p>
               </div>
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
+              <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
                 <OrderHistory />
               </div>
             </div>
@@ -263,14 +263,14 @@ export default function ProfilePage() {
 
           {/* Payment Methods Section */}
           {activeSection === "payment" && (
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
+            <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
               <PaymentMethodList />
             </div>
           )}
 
           {/* Delivery Addresses Section */}
           {activeSection === "address" && (
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
+            <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
               <DeliveryAddressList />
             </div>
           )}
@@ -281,6 +281,7 @@ export default function ProfilePage() {
           ) && <ProfileSettings section={activeSection} />}
         </main>
       </div>
+      )}
       </div>
     </div>
   );
