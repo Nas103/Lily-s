@@ -32,10 +32,10 @@ function SectionShell({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="rounded-2xl border border-zinc-200 bg-white p-8"
+      className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md"
     >
-      <h2 className="text-lg font-semibold text-zinc-200">{title}</h2>
-      <p className="mt-1 text-sm text-zinc-500">{description}</p>
+      <h2 className="text-lg font-semibold text-zinc-100">{title}</h2>
+      <p className="mt-1 text-sm text-zinc-400">{description}</p>
       <div className="mt-6">{children}</div>
     </motion.div>
   );
@@ -49,7 +49,7 @@ function SavingBadge({ saving }: { saving: boolean }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="inline-flex items-center gap-1 text-xs text-zinc-500"
+          className="inline-flex items-center gap-1 text-xs text-zinc-400"
         >
           <Loader2 className="h-3 w-3 animate-spin" /> Saving
         </motion.span>
@@ -122,25 +122,25 @@ function ChangePasswordCard() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-zinc-900";
+    "w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-white";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.15 }}
-      className="mt-6 rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
+      className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4"
     >
       <div className="flex items-center gap-3">
-        <ShieldCheck className="h-5 w-5 text-zinc-700" />
+        <ShieldCheck className="h-5 w-5 text-zinc-300" />
         <div className="flex-1">
-          <p className="text-sm font-medium text-zinc-900">Password</p>
-          <p className="text-xs text-zinc-500">Change your password regularly</p>
+          <p className="text-sm font-medium text-zinc-100">Password</p>
+          <p className="text-xs text-zinc-400">Change your password regularly</p>
         </div>
         <button
           type="button"
           onClick={() => (open ? close() : setOpen(true))}
-          className="rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700 hover:border-zinc-900"
+          className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-200 hover:border-white hover:text-white"
         >
           {open ? "Cancel" : "Manage"}
         </button>
@@ -157,9 +157,9 @@ function ChangePasswordCard() {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-4 space-y-3 border-t border-zinc-200 pt-4">
+            <div className="mt-4 space-y-3 border-t border-zinc-800 pt-4">
               <div>
-                <label className="mb-1 block text-xs font-medium text-zinc-600">
+                <label className="mb-1 block text-xs font-medium text-zinc-400">
                   Current password
                 </label>
                 <input
@@ -172,7 +172,7 @@ function ChangePasswordCard() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium text-zinc-600">
+                <label className="mb-1 block text-xs font-medium text-zinc-400">
                   New password
                 </label>
                 <input
@@ -183,10 +183,10 @@ function ChangePasswordCard() {
                   className={inputClass}
                   required
                 />
-                <p className="mt-1 text-[11px] text-zinc-400">At least 8 characters</p>
+                <p className="mt-1 text-[11px] text-zinc-500">At least 8 characters</p>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium text-zinc-600">
+                <label className="mb-1 block text-xs font-medium text-zinc-400">
                   Confirm new password
                 </label>
                 <input
@@ -202,7 +202,7 @@ function ChangePasswordCard() {
               {status && (
                 <p
                   className={`text-xs ${
-                    status.type === "success" ? "text-green-600" : "text-red-600"
+                    status.type === "success" ? "text-green-400" : "text-red-400"
                   }`}
                 >
                   {status.message}
@@ -213,7 +213,7 @@ function ChangePasswordCard() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-white disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900 hover:bg-zinc-200 disabled:opacity-60"
                 >
                   {submitting && <Loader2 className="h-3 w-3 animate-spin" />}
                   Update password
@@ -304,7 +304,7 @@ export function ProfileSettings({ section }: { section: string }) {
       >
         <div className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
               Currency
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -315,8 +315,8 @@ export function ProfileSettings({ section }: { section: string }) {
                   onClick={() => save({ preferredCurrency: currency })}
                   className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
                     p.preferredCurrency === currency
-                      ? "bg-zinc-900 text-white"
-                      : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                      ? "bg-white text-zinc-900"
+                      : "border border-zinc-700 text-zinc-300 hover:border-white hover:text-white"
                   }`}
                 >
                   {currency}
@@ -331,7 +331,7 @@ export function ProfileSettings({ section }: { section: string }) {
             { title: "Favourite categories", key: "preferredCategories" as const, items: CATEGORIES },
           ].map((group) => (
             <div key={group.key}>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
                 {group.title}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -345,8 +345,8 @@ export function ProfileSettings({ section }: { section: string }) {
                       onClick={() => toggleListItem(group.key, item)}
                       className={`inline-flex items-center gap-1 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
                         active
-                          ? "bg-zinc-900 text-white"
-                          : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                          ? "bg-white text-zinc-900"
+                          : "border border-zinc-700 text-zinc-300 hover:border-white hover:text-white"
                       }`}
                     >
                       {active && <Check className="h-3 w-3" />}
@@ -360,7 +360,7 @@ export function ProfileSettings({ section }: { section: string }) {
 
           <div className="flex items-center justify-between">
             <SavingBadge saving={saving} />
-            {error && <span className="text-xs text-red-600">{error}</span>}
+            {error && <span className="text-xs text-red-400">{error}</span>}
           </div>
         </div>
       </SectionShell>
@@ -444,7 +444,7 @@ export function ProfileSettings({ section }: { section: string }) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
-                className="flex items-center justify-between rounded-2xl border border-zinc-100 p-4"
+                className="flex items-center justify-between rounded-2xl border border-zinc-800 p-4"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -454,8 +454,8 @@ export function ProfileSettings({ section }: { section: string }) {
                     {provider.name[0]}
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-zinc-900">{provider.name}</p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-sm font-medium text-zinc-100">{provider.name}</p>
+                    <p className="text-xs text-zinc-400">
                       {linked ? "Connected" : "Not connected"}
                     </p>
                   </div>
@@ -466,8 +466,8 @@ export function ProfileSettings({ section }: { section: string }) {
                   onClick={() => toggleLink(provider.id)}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition disabled:opacity-50 ${
                     linked
-                      ? "border border-zinc-200 text-zinc-700 hover:border-red-300 hover:text-red-600"
-                      : "bg-zinc-900 text-white hover:bg-zinc-800"
+                      ? "border border-zinc-700 text-zinc-300 hover:border-red-500 hover:text-red-400"
+                      : "bg-white text-zinc-900 hover:bg-zinc-200"
                   }`}
                 >
                   {linkBusy === provider.id ? (

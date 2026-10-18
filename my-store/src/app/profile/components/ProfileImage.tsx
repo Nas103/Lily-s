@@ -49,7 +49,7 @@ export function ProfileImage({ size = 96, className = "", showEditButton = false
   if (loading) {
     return (
       <div 
-        className={`rounded-full bg-zinc-100 animate-pulse ${className}`}
+        className={`rounded-full bg-zinc-800 animate-pulse ${className}`}
         style={{ width: size, height: size }}
       />
     );
@@ -58,7 +58,7 @@ export function ProfileImage({ size = 96, className = "", showEditButton = false
   return (
     <div className={`relative ${className}`}>
       <div 
-        className="rounded-full overflow-hidden bg-zinc-100 flex-shrink-0"
+        className="rounded-full overflow-hidden bg-zinc-800 flex-shrink-0"
         style={{ width: size, height: size }}
       >
         <Image
@@ -72,7 +72,7 @@ export function ProfileImage({ size = 96, className = "", showEditButton = false
         />
       </div>
       {showEditButton && (
-        <button className="absolute bottom-0 right-0 p-2 bg-zinc-900 text-white rounded-full hover:bg-zinc-800 transition">
+        <button className="absolute bottom-0 right-0 p-2 bg-white text-zinc-900 rounded-full hover:bg-zinc-200 transition">
           <Edit size={16} />
         </button>
       )}

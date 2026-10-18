@@ -96,10 +96,10 @@ export default function ProfilePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-black">
         <Lightfall
           colors={["#ffffff"]}
-          backgroundColor="#94a3b8"
+          backgroundColor="#000000"
           speed={0.3}
           streakCount={2}
           streakWidth={0.8}
@@ -141,7 +141,7 @@ export default function ProfilePage() {
                   onClick={() => setActiveSection(item.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left rounded-lg transition ${
                     isActive
-                      ? "bg-zinc-900 text-white"
+                      ? "bg-white text-zinc-900"
                       : "text-zinc-300 hover:bg-white/10"
                   }`}
                 >
@@ -165,10 +165,10 @@ export default function ProfilePage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
                 <div className="flex items-center gap-6 mb-8">
                   <div className="relative">
-                    <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-100 flex-shrink-0">
+                    <div className="h-24 w-24 rounded-full overflow-hidden bg-zinc-800 flex-shrink-0">
                       <Image
                         src={profilePictureUrl}
                         alt={user?.name || user?.email || "Profile"}
@@ -186,46 +186,46 @@ export default function ProfilePage() {
                         }}
                       />
                     </div>
-                    <button className="absolute bottom-0 right-0 p-2 bg-zinc-900 text-white rounded-full hover:bg-zinc-800 transition">
+                    <button className="absolute bottom-0 right-0 p-2 bg-white text-zinc-900 rounded-full hover:bg-zinc-200 transition">
                       <Edit size={16} />
                     </button>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-zinc-900">
+                    <h3 className="text-xl font-semibold text-zinc-100">
                       {user.name || "User"}
                     </h3>
-                    <p className="text-zinc-800">{user.email}</p>
-                    <p className="text-sm text-zinc-700 mt-1">
+                    <p className="text-zinc-300">{user.email}</p>
+                    <p className="text-sm text-zinc-400 mt-1">
                       {BRAND.name} Member Since {memberSince}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4 pt-6 border-t border-zinc-200">
+                <div className="space-y-4 pt-6 border-t border-zinc-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-zinc-900">Email</p>
-                      <p className="text-sm text-zinc-800">{user.email}</p>
+                      <p className="font-medium text-zinc-100">Email</p>
+                      <p className="text-sm text-zinc-300">{user.email}</p>
                     </div>
-                    <button className="text-sm text-zinc-800 hover:text-zinc-900">
+                    <button className="text-sm text-zinc-300 hover:text-white">
                       Edit
                     </button>
                   </div>
                   {user.name && (
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-zinc-900">Name</p>
-                        <p className="text-sm text-zinc-800">{user.name}</p>
+                        <p className="font-medium text-zinc-100">Name</p>
+                        <p className="text-sm text-zinc-300">{user.name}</p>
                       </div>
-                      <button className="text-sm text-zinc-800 hover:text-zinc-900">
+                      <button className="text-sm text-zinc-300 hover:text-white">
                         Edit
                       </button>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-zinc-900">Role</p>
-                      <p className="text-sm text-zinc-800">{user.role}</p>
+                      <p className="font-medium text-zinc-100">Role</p>
+                      <p className="text-sm text-zinc-300">{user.role}</p>
                     </div>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-bold text-zinc-200 mb-2">Account Details</h2>
               </div>
 
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
                 <AccountDetailsForm />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                   Review past orders and track their delivery status.
                 </p>
               </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
                 <OrderHistory />
               </div>
             </div>
@@ -263,14 +263,14 @@ export default function ProfilePage() {
 
           {/* Payment Methods Section */}
           {activeSection === "payment" && (
-            <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
               <PaymentMethodList />
             </div>
           )}
 
           {/* Delivery Addresses Section */}
           {activeSection === "address" && (
-            <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
               <DeliveryAddressList />
             </div>
           )}

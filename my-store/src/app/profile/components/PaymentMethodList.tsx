@@ -143,7 +143,7 @@ export function PaymentMethodList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-600" size={24} />
+        <Loader2 className="animate-spin text-zinc-400" size={24} />
       </div>
     );
   }
@@ -152,15 +152,15 @@ export function PaymentMethodList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-200 mb-2">Payment Methods</h2>
-          <p className="text-zinc-800">
+          <h2 className="text-2xl font-bold text-zinc-100 mb-2">Payment Methods</h2>
+          <p className="text-zinc-400">
             Securely manage your payment methods. Card numbers are never fully stored.
           </p>
         </div>
         {!showForm && (
           <button
             onClick={handleAddNew}
-            className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition flex items-center gap-2"
+            className="px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition flex items-center gap-2"
           >
             <Plus size={18} />
             Add Payment Method
@@ -169,13 +169,13 @@ export function PaymentMethodList() {
       </div>
 
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-          <p className="text-sm text-red-600">{error}</p>
+        <div className="rounded-lg bg-red-950/40 border border-red-900 p-4">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
       {showForm ? (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
           <PaymentMethodForm
             paymentMethod={editingMethod || undefined}
             onSuccess={handleFormSuccess}
@@ -185,21 +185,21 @@ export function PaymentMethodList() {
       ) : (
         <>
           {paymentMethods.length === 0 ? (
-            <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
-              <CreditCard className="mx-auto text-zinc-600 mb-4" size={48} />
-              <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-12 text-center backdrop-blur-md">
+              <CreditCard className="mx-auto text-zinc-500 mb-4" size={48} />
+              <h3 className="text-lg font-semibold text-zinc-100 mb-2">
                 No payment methods
               </h3>
-              <p className="text-zinc-800 mb-6">
+              <p className="text-zinc-400 mb-6">
                 Add a payment method for faster checkout.
               </p>
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-700 mb-6">
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 mb-6">
                 <Shield size={14} />
                 <span>Your payment information is encrypted and secure</span>
               </div>
               <button
                 onClick={handleAddNew}
-                className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition inline-flex items-center gap-2"
+                className="px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition inline-flex items-center gap-2"
               >
                 <Plus size={18} />
                 Add Your First Payment Method
@@ -212,27 +212,27 @@ export function PaymentMethodList() {
                   key={method.id}
                   className={`rounded-2xl border p-6 ${
                     method.isDefault
-                      ? "border-zinc-900 bg-zinc-50"
-                      : "border-zinc-200 bg-white"
+                      ? "border-zinc-600 bg-zinc-900"
+                      : "border-zinc-800 bg-zinc-950/70"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-3 bg-zinc-100 rounded-lg">
-                        <CreditCard className="text-zinc-800" size={24} />
+                      <div className="p-3 bg-zinc-800 rounded-lg">
+                        <CreditCard className="text-zinc-200" size={24} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-zinc-900">
+                          <h3 className="font-semibold text-zinc-100">
                             {method.cardBrand}
                           </h3>
                           {method.isDefault && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-zinc-900 text-white rounded">
+                            <span className="px-2 py-0.5 text-xs font-medium bg-white text-zinc-900 rounded">
                               Default
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-zinc-800">
+                        <p className="text-sm text-zinc-300">
                           {maskCardNumber("****" + method.cardLast4)}
                         </p>
                       </div>
@@ -240,14 +240,14 @@ export function PaymentMethodList() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(method)}
-                        className="p-2 text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
+                        className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition"
                         title="Edit payment method"
                       >
                         <Edit size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(method.id)}
-                        className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
+                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition"
                         title="Delete payment method"
                       >
                         <Trash2 size={16} />
@@ -255,7 +255,7 @@ export function PaymentMethodList() {
                     </div>
                   </div>
 
-                  <div className="space-y-1 text-sm text-zinc-800">
+                  <div className="space-y-1 text-sm text-zinc-300">
                     {method.holderName && <p>Name: {method.holderName}</p>}
                     <p>Expires: {formatExpiry(method.expiryMonth, method.expiryYear)}</p>
                   </div>
@@ -263,7 +263,7 @@ export function PaymentMethodList() {
                   {!method.isDefault && (
                     <button
                       onClick={() => handleSetDefault(method.id)}
-                      className="mt-4 text-sm text-zinc-800 hover:text-zinc-900 underline"
+                      className="mt-4 text-sm text-zinc-300 hover:text-white underline"
                     >
                       Set as default
                     </button>

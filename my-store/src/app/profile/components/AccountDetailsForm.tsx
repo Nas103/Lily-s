@@ -155,7 +155,7 @@ export function AccountDetailsForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-600" size={24} />
+        <Loader2 className="animate-spin text-zinc-400" size={24} />
       </div>
     );
   }
@@ -163,30 +163,30 @@ export function AccountDetailsForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-          <p className="text-sm text-red-600">{error}</p>
+        <div className="rounded-lg bg-red-950/40 border border-red-900 p-4">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
       {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 p-4">
-          <p className="text-sm text-green-600">Profile updated successfully!</p>
+        <div className="rounded-lg bg-green-950/40 border border-green-900 p-4">
+          <p className="text-sm text-green-400">Profile updated successfully!</p>
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Email *
         </label>
         <input
           type="email"
           value={user?.email || ""}
           disabled
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900 bg-zinc-50"
+          className="w-full rounded-lg border border-zinc-800 px-4 py-3 text-zinc-400 bg-zinc-900 cursor-not-allowed"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Name
         </label>
         <input
@@ -194,12 +194,12 @@ export function AccountDetailsForm() {
           value={formData.name || ""}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Enter your name"
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Phone Number
         </label>
         <input
@@ -207,31 +207,31 @@ export function AccountDetailsForm() {
           value={formData.phone || ""}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           placeholder="Enter phone number"
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Date of Birth *
         </label>
         <input
           type="date"
           value={formData.dateOfBirth || ""}
           onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 focus:border-white [color-scheme:dark]"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             Country/Region *
           </label>
           <select
             value={formData.country || ""}
             onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 focus:border-white [color-scheme:dark]"
           >
             <option value="">Select country</option>
             <option value="US">United States</option>
@@ -242,7 +242,7 @@ export function AccountDetailsForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             Town/City
           </label>
           <input
@@ -250,11 +250,11 @@ export function AccountDetailsForm() {
             value={formData.city || ""}
             onChange={(e) => setFormData({ ...formData, city: e.target.value })}
             placeholder="Enter city"
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             Postcode
           </label>
           <input
@@ -262,13 +262,13 @@ export function AccountDetailsForm() {
             value={formData.postcode || ""}
             onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
             placeholder="Enter postcode"
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Address Line 1
         </label>
         <input
@@ -276,12 +276,12 @@ export function AccountDetailsForm() {
           value={formData.addressLine1 || ""}
           onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
           placeholder="Street address"
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Address Line 2
         </label>
         <input
@@ -289,12 +289,12 @@ export function AccountDetailsForm() {
           value={formData.addressLine2 || ""}
           onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
           placeholder="Apartment, suite, etc. (optional)"
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Profile Image URL
         </label>
         <input
@@ -302,21 +302,21 @@ export function AccountDetailsForm() {
           value={formData.profileImageUrl || ""}
           onChange={(e) => setFormData({ ...formData, profileImageUrl: e.target.value })}
           placeholder="https://example.com/your-image.jpg"
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
-        <p className="mt-1 text-xs text-zinc-700">
+        <p className="mt-1 text-xs text-zinc-400">
           Enter a URL to your profile image. Leave empty to use Gravatar.
         </p>
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+      <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
         <div>
-          <p className="font-medium text-zinc-900">Delete Account</p>
-          <p className="text-sm text-zinc-800">Permanently delete your account</p>
+          <p className="font-medium text-zinc-100">Delete Account</p>
+          <p className="text-sm text-zinc-400">Permanently delete your account</p>
         </div>
         <button
           type="button"
-          className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700"
+          className="px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300"
         >
           Delete
         </button>
@@ -325,7 +325,7 @@ export function AccountDetailsForm() {
       <button
         type="submit"
         disabled={saving}
-        className="w-full md:w-auto px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+        className="w-full md:w-auto px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
       >
         {saving ? (
           <>

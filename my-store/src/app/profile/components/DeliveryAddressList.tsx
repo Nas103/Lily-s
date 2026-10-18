@@ -135,7 +135,7 @@ export function DeliveryAddressList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-zinc-600" size={24} />
+        <Loader2 className="animate-spin text-zinc-400" size={24} />
       </div>
     );
   }
@@ -144,15 +144,15 @@ export function DeliveryAddressList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-200 mb-2">Delivery Addresses</h2>
-          <p className="text-zinc-800">
+          <h2 className="text-2xl font-bold text-zinc-100 mb-2">Delivery Addresses</h2>
+          <p className="text-zinc-400">
             Manage your delivery addresses for faster checkout.
           </p>
         </div>
         {!showForm && (
           <button
             onClick={handleAddNew}
-            className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition flex items-center gap-2"
+            className="px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition flex items-center gap-2"
           >
             <Plus size={18} />
             Add Address
@@ -161,13 +161,13 @@ export function DeliveryAddressList() {
       </div>
 
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-          <p className="text-sm text-red-600">{error}</p>
+        <div className="rounded-lg bg-red-950/40 border border-red-900 p-4">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
       {showForm ? (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-8">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md">
           <DeliveryAddressForm
             address={editingAddress || undefined}
             onSuccess={handleFormSuccess}
@@ -177,17 +177,17 @@ export function DeliveryAddressList() {
       ) : (
         <>
           {addresses.length === 0 ? (
-            <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
-              <MapPin className="mx-auto text-zinc-600 mb-4" size={48} />
-              <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-12 text-center backdrop-blur-md">
+              <MapPin className="mx-auto text-zinc-500 mb-4" size={48} />
+              <h3 className="text-lg font-semibold text-zinc-100 mb-2">
                 No delivery addresses
               </h3>
-              <p className="text-zinc-800 mb-6">
+              <p className="text-zinc-400 mb-6">
                 Add your first delivery address to get started.
               </p>
               <button
                 onClick={handleAddNew}
-                className="px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition inline-flex items-center gap-2"
+                className="px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition inline-flex items-center gap-2"
               >
                 <Plus size={18} />
                 Add Your First Address
@@ -200,33 +200,33 @@ export function DeliveryAddressList() {
                   key={address.id}
                   className={`rounded-2xl border p-6 ${
                     address.isDefault
-                      ? "border-zinc-900 bg-zinc-50"
-                      : "border-zinc-200 bg-white"
+                      ? "border-zinc-600 bg-zinc-900"
+                      : "border-zinc-800 bg-zinc-950/70"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-zinc-900">{address.label}</h3>
+                        <h3 className="font-semibold text-zinc-100">{address.label}</h3>
                         {address.isDefault && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-zinc-900 text-white rounded">
+                          <span className="px-2 py-0.5 text-xs font-medium bg-white text-zinc-900 rounded">
                             Default
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-zinc-800">{address.fullName}</p>
+                      <p className="text-sm text-zinc-300">{address.fullName}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(address)}
-                        className="p-2 text-zinc-800 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
+                        className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition"
                         title="Edit address"
                       >
                         <Edit size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(address.id)}
-                        className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
+                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-lg transition"
                         title="Delete address"
                       >
                         <Trash2 size={16} />
@@ -234,7 +234,7 @@ export function DeliveryAddressList() {
                     </div>
                   </div>
 
-                  <div className="space-y-1 text-sm text-zinc-800">
+                  <div className="space-y-1 text-sm text-zinc-300">
                     <p>{address.addressLine1}</p>
                     {address.addressLine2 && <p>{address.addressLine2}</p>}
                     <p>
@@ -249,7 +249,7 @@ export function DeliveryAddressList() {
                   {!address.isDefault && (
                     <button
                       onClick={() => handleSetDefault(address.id)}
-                      className="mt-4 text-sm text-zinc-800 hover:text-zinc-900 underline"
+                      className="mt-4 text-sm text-zinc-300 hover:text-white underline"
                     >
                       Set as default
                     </button>

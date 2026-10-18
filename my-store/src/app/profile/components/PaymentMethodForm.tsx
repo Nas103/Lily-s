@@ -143,17 +143,17 @@ export function PaymentMethodForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-4">
-          <p className="text-sm text-red-600">{error}</p>
+        <div className="rounded-lg bg-red-950/40 border border-red-900 p-4">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Card Number *
         </label>
         <div className="relative">
-          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-600" size={20} />
+          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" size={20} />
           <input
             type="text"
             value={formData.cardNumber}
@@ -161,15 +161,15 @@ export function PaymentMethodForm({
             placeholder="1234 5678 9012 3456"
             required
             maxLength={19}
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 pl-12 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 pl-12 text-zinc-100 placeholder:text-zinc-500 focus:border-white disabled:cursor-not-allowed disabled:text-zinc-400"
             disabled={!!paymentMethod?.id} // Can't change card number after creation
           />
         </div>
         {cardBrand && (
-          <p className="mt-1 text-xs text-zinc-700">Card type: {cardBrand}</p>
+          <p className="mt-1 text-xs text-zinc-400">Card type: {cardBrand}</p>
         )}
         {paymentMethod?.cardLast4 && (
-          <p className="mt-1 text-xs text-zinc-700">
+          <p className="mt-1 text-xs text-zinc-400">
             Current: {maskCardNumber("****" + paymentMethod.cardLast4)}
           </p>
         )}
@@ -177,14 +177,14 @@ export function PaymentMethodForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             Expiry Month *
           </label>
           <select
             value={formData.expiryMonth}
             onChange={(e) => setFormData({ ...formData, expiryMonth: e.target.value })}
             required
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 focus:border-white [color-scheme:dark]"
             disabled={!!paymentMethod?.id}
           >
             <option value="">Month</option>
@@ -197,14 +197,14 @@ export function PaymentMethodForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             Expiry Year *
           </label>
           <select
             value={formData.expiryYear}
             onChange={(e) => setFormData({ ...formData, expiryYear: e.target.value })}
             required
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 focus:border-white [color-scheme:dark]"
             disabled={!!paymentMethod?.id}
           >
             <option value="">Year</option>
@@ -222,7 +222,7 @@ export function PaymentMethodForm({
 
       {!paymentMethod?.id && (
         <div>
-          <label className="block text-sm font-medium text-zinc-900 mb-2">
+          <label className="block text-sm font-medium text-zinc-100 mb-2">
             CVV *
           </label>
           <input
@@ -237,16 +237,16 @@ export function PaymentMethodForm({
             placeholder="123"
             required
             maxLength={4}
-            className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
           />
-          <p className="mt-1 text-xs text-zinc-700">
-            CVV is never stored. It's only used for validation.
+          <p className="mt-1 text-xs text-zinc-400">
+            CVV is never stored. It&apos;s only used for validation.
           </p>
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-zinc-900 mb-2">
+        <label className="block text-sm font-medium text-zinc-100 mb-2">
           Cardholder Name
         </label>
         <input
@@ -255,7 +255,7 @@ export function PaymentMethodForm({
           onChange={(e) => setFormData({ ...formData, holderName: e.target.value })}
           placeholder="Name on card"
           maxLength={50}
-          className="w-full rounded-lg border border-zinc-200 px-4 py-3 text-zinc-900"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 focus:border-white"
         />
       </div>
 
@@ -265,9 +265,9 @@ export function PaymentMethodForm({
           id="isDefault"
           checked={formData.isDefault}
           onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-          className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+          className="h-4 w-4 rounded border-zinc-600 bg-zinc-900 text-zinc-100 focus:ring-zinc-400"
         />
-        <label htmlFor="isDefault" className="ml-2 text-sm text-zinc-900">
+        <label htmlFor="isDefault" className="ml-2 text-sm text-zinc-100">
           Set as default payment method
         </label>
       </div>
@@ -276,7 +276,7 @@ export function PaymentMethodForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 px-6 py-3 bg-zinc-900 text-white rounded-lg font-medium hover:bg-zinc-800 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 px-6 py-3 bg-white text-zinc-900 rounded-lg font-medium hover:bg-zinc-200 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
@@ -294,7 +294,7 @@ export function PaymentMethodForm({
           type="button"
           onClick={onCancel}
           disabled={loading}
-          className="px-6 py-3 border border-zinc-200 text-zinc-900 rounded-lg font-medium hover:bg-zinc-50 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-6 py-3 border border-zinc-700 text-zinc-200 rounded-lg font-medium hover:bg-zinc-800 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <X size={18} />
           Cancel
