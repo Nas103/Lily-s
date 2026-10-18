@@ -90,7 +90,7 @@ export default function ProfilePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
         <FluxLines
           colors={["#ffffff","#ffffff","#ffffff"]}
           glow={2}
