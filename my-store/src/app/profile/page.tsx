@@ -96,10 +96,10 @@ export default function ProfilePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-black">
+      <div className="pointer-events-none fixed inset-0 -z-10">
         <Lightfall
           colors={["#ffffff"]}
-          backgroundColor="#000000"
+          backgroundColor="#94a3b8"
           speed={0.3}
           streakCount={2}
           streakWidth={0.8}
