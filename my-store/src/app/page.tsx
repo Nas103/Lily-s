@@ -11,7 +11,6 @@ import { MoltenHero } from "@/components/MoltenHero";
 import ReflectShader from "@/components/ReflectShader";
 import ShopIconsLaser from "@/components/ShopIconsLaser";
 import CategoryGrid from "@/components/CategoryGrid";
-import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 
 const heroTiles: { label: string; href: string; category: ProductCategory }[] = [
   { label: "Shop Men's", href: "/men", category: "men" },
@@ -189,14 +188,14 @@ export default async function Home() {
             </h2>
           </div>
           <Link
-            href="/men"
+            href="/featured"
             className="text-xs font-semibold uppercase tracking-[0.35em]"
           >
             View all
           </Link>
         </div>
         <div className="mt-10">
-          <FeaturedCarousel products={featured} />
+          <ProductGrid products={featured} />
         </div>
       </section>
 
