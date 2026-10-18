@@ -34,8 +34,12 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
   // Reset state when product changes
   useEffect(() => {
     if (product) {
-      setActiveSize(product.sizes?.[0]);
-      setActiveColor(product.colors?.[0] ?? DEFAULT_COLORS[0]);
+      const availableSize = product.sizes?.find((s) => !(product.soldOutSizes ?? []).includes(s)) ?? product.sizes?.[0];
+      const availableColor = (product.colors ?? DEFAULT_COLORS).find(
+        (c) => !(product.soldOutColors ?? []).includes(c)
+      ) ?? (product.colors ?? DEFAULT_COLORS)[0];
+      setActiveSize(availableSize);
+      setActiveColor(availableColor);
       setSelectedImageIndex(0);
     }
   }, [product?.id]);
@@ -65,7 +69,8 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
     productSoldOut || (size ? soldOutSizes.includes(size) : false);
   const isColorSoldOut = (color?: string) =>
     productSoldOut || (color ? soldOutColors.includes(color) : false);
-  const variantSoldOut = isSizeSoldOut(activeSize) || isColorSoldOut(activeColor);
+  const variantSoldOut =
+    isSizeSoldOut(activeSize) || isColorSoldOut(activeColor) || productSoldOut;
 
   // Convert price into the user's currency (base catalog prices are USD).
   const converted = convertPrice ? convertPrice(saleUsd) : null;
@@ -222,14 +227,14 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                           type="button"
                           onClick={() => setActiveSize(size)}
                           disabled={unavailable}
-                          title={unavailable ? "Sold out" : undefined}
-                          className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
-                            unavailable
-                              ? "cursor-not-allowed border border-zinc-200 text-zinc-300 line-through"
-                              : activeSize === size
-                                ? "bg-black text-white"
-                                : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
-                          }`}
+                           title={unavailable ? "Sold out" : undefined}
+                           className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
+                             unavailable
+                               ? "cursor-not-allowed border border-zinc-200 text-zinc-400 line-through opacity-60"
+                               : activeSize === size
+                                 ? "bg-black text-white"
+                                 : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                           }`}
                         >
                           {size}
                         </button>
@@ -251,14 +256,14 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                         type="button"
                         onClick={() => setActiveColor(color)}
                         disabled={unavailable}
-                        title={unavailable ? "Sold out" : undefined}
-                        className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
-                          unavailable
-                            ? "cursor-not-allowed border border-zinc-200 text-zinc-300 line-through"
-                            : activeColor === color
-                              ? "bg-black text-white"
-                              : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
-                        }`}
+                         title={unavailable ? "Sold out" : undefined}
+                         className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] ${
+                           unavailable
+                             ? "cursor-not-allowed border border-zinc-200 text-zinc-400 line-through opacity-60"
+                             : activeColor === color
+                               ? "bg-black text-white"
+                               : "border border-zinc-200 text-zinc-700 hover:border-zinc-900"
+                         }`}
                       >
                         {color}
                       </button>
