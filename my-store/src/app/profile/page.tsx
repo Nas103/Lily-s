@@ -15,7 +15,7 @@ import { PaymentMethodList } from "./components/PaymentMethodList";
 import { OrderHistory } from "./components/OrderHistory";
 import { ProfileSettings } from "./settings/ProfileSettings";
 import { BRAND } from "@/lib/brand";
-import Lightfall from "@/components/Lightfall";
+import FluxLines from "@/components/FluxLines";
 
 type SettingsSection = 
   | "profile" 
@@ -91,28 +91,23 @@ export default function ProfilePage() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <Lightfall
-          colors={["#ffffff"]}
-          backgroundColor="#000000"
-          speed={0.3}
-          streakCount={2}
-          streakWidth={0.8}
-          twinkle={0.3}
-          backgroundGlow={0.1}
-          headGlow={0.6}
-          bloom={0.35}
+        <FluxLines
+          colors={["#ffffff","#ffffff","#ffffff"]}
+          glow={2}
+          rimWidth={0.2}
+          lineWidth={1}
+          flowDirection="down"
           mouseInteraction
-          holdToWarp
+          clickSwirl
+          speed={0.5}
+          scale={1.6}
+          turbulence={1}
+          fluidity={0.1}
+          sharpness={2.5}
+          shimmer={1.5}
+          mouseStrength={1}
+          mouseRadius={0.35}
           intro
-          streakLength={1}
-          density={0.6}
-          glow={1}
-          depth={0.5}
-          zoom={3}
-          mouseStrength={0.4}
-          mouseRadius={0.45}
-          lens={0.5}
-          fade={0}
           lightMode={false}
         />
       </div>
