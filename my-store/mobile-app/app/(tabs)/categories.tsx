@@ -84,7 +84,7 @@ export default function CategoriesScreen() {
       }
     } else if (selectedCategory === 'boxraw') {
       // If subCategory is not one of the valid boxraw sub-categories, set to 'clothing'
-      if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment') {
+      if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment' && selectedSubCategory !== 'bivol') {
         setSelectedSubCategory('clothing');
         return; // Wait for subCategory to update before loading
       }
@@ -110,7 +110,7 @@ export default function CategoriesScreen() {
             }
           } else if (selectedCategory === 'boxraw') {
             // If subCategory is not valid for boxraw, default to 'clothing'
-            if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment') {
+            if (selectedSubCategory !== 'clothing' && selectedSubCategory !== 'equipment' && selectedSubCategory !== 'bivol') {
               validSubCategory = 'clothing';
               setSelectedSubCategory('clothing'); // Update state for next render
             }
@@ -239,6 +239,9 @@ export default function CategoriesScreen() {
   const boxrawEquipmentProducts = selectedCategory === 'boxraw'
     ? products.filter(p => p.subCategory === 'equipment')
     : [];
+  const boxrawBivolProducts = selectedCategory === 'boxraw'
+    ? products.filter(p => p.subCategory === 'bivol')
+    : [];
 
   // Filter products by subCategory for Electronics category
   // Since API already filters by subCategory, use products directly from API response
@@ -315,6 +318,22 @@ export default function CategoriesScreen() {
               ]}
             >
               Equipment
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.subCategoryButton,
+              selectedSubCategory === 'bivol' && styles.subCategoryButtonActive,
+            ]}
+            onPress={() => setSelectedSubCategory('bivol')}
+          >
+            <Text
+              style={[
+                styles.subCategoryButtonText,
+                selectedSubCategory === 'bivol' && styles.subCategoryButtonTextActive,
+              ]}
+            >
+              Bivol X Boxraw
             </Text>
           </TouchableOpacity>
         </View>
@@ -416,7 +435,13 @@ export default function CategoriesScreen() {
         </ScrollView>
       ) : selectedCategory === 'boxraw' ? (
         <FlatList
-          data={selectedSubCategory === 'clothing' ? boxrawClothingProducts : boxrawEquipmentProducts}
+          data={
+            selectedSubCategory === 'clothing'
+              ? boxrawClothingProducts
+              : selectedSubCategory === 'equipment'
+                ? boxrawEquipmentProducts
+                : boxrawBivolProducts
+          }
           numColumns={2}
           keyExtractor={(item) => item.id}
           contentContainerStyle={[styles.productsGrid, { paddingBottom: insets.bottom + 96 }]}
