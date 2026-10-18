@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductGrid } from "@/components/ProductGrid";
 import { products, getProductsByCategory, type ProductCategory } from "@/data/products";
-import { CATEGORY_META } from "@/data/catalog";
+import { CATEGORY_META, catalogProducts, toGridProduct, type CatalogProduct } from "@/data/catalog";
 import { STOREFRONT_BRANDS } from "@/lib/brand";
 import { applyOverrides, loadProductOverrides, serializeOverrides } from "@/lib/productOverrides";
 import { RecommendationsRail } from "@/components/RecommendationsRail";
@@ -22,20 +22,34 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const overrides = await loadProductOverrides();
-  const featured = applyOverrides(products.slice(0, 6).map((item) => ({
-    id: item.id,
-    name: item.name,
-    price: item.price,
-    imageUrl: item.imageUrl,
-    category: item.category.toUpperCase(),
-    highlight: item.highlight,
-    badge: item.badge,
-    description: item.description,
-    tags: item.tags,
-    sizes: item.sizes,
-    colors: item.colors,
-    colorImages: item.colorImages,
-  })), overrides);
+
+  // Curated "Featured arrivals" — one stream per house brand (BOXRAW,
+  // Wahhid, Under Armour, Nike), interleaved across the grid.
+  const brandBuckets: CatalogProduct[][] = [[], [], [], []];
+  for (const product of catalogProducts) {
+    if (product.category === "boxraw") {
+      brandBuckets[0].push(product);
+    } else if (product.brand === "Wahhid") {
+      brandBuckets[1].push(product);
+    } else if (product.badge === "Under Armour") {
+      brandBuckets[2].push(product);
+    } else if (/^Nike/i.test(product.name)) {
+      brandBuckets[3].push(product);
+    }
+  }
+  const featuredPicks: CatalogProduct[] = [];
+  for (let i = 0; featuredPicks.length < 6; i += 1) {
+    let pickedAny = false;
+    for (const bucket of brandBuckets) {
+      const candidate = bucket[i];
+      if (candidate && featuredPicks.length < 6) {
+        featuredPicks.push(candidate);
+        pickedAny = true;
+      }
+    }
+    if (!pickedAny) break;
+  }
+  const featured = applyOverrides(featuredPicks.map(toGridProduct), overrides);
 
   const icons = applyOverrides(products.slice(20, 28), overrides);
 
