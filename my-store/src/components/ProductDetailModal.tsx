@@ -33,21 +33,25 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
 
   // Reset state when product changes
   useEffect(() => {
-    if (product) {
-      const availableSize = product.sizes?.find((s) => !(product.soldOutSizes ?? []).includes(s)) ?? product.sizes?.[0];
-      const availableColor = (product.colors ?? DEFAULT_COLORS).find(
-        (c) => !(product.soldOutColors ?? []).includes(c)
-      ) ?? (product.colors ?? DEFAULT_COLORS)[0];
-      setActiveSize(availableSize);
-      setActiveColor(availableColor);
+    if (!product) return;
+
+    const nextSize = product.sizes?.find((s) => !(product.soldOutSizes ?? []).includes(s)) ?? product.sizes?.[0];
+    const nextColor = (product.colors ?? DEFAULT_COLORS).find(
+      (c) => !(product.soldOutColors ?? []).includes(c)
+    ) ?? (product.colors ?? DEFAULT_COLORS)[0];
+
+    setTimeout(() => {
+      setActiveSize(nextSize);
+      setActiveColor(nextColor);
       setSelectedImageIndex(0);
-    }
+    }, 0);
   }, [product?.id]);
 
   // Reset selected image index when color changes
   useEffect(() => {
-    setSelectedImageIndex(0);
-  }, [activeColor]);
+    const t=setTimeout(()=>setSelectedImageIndex(0),0);
+    return ()=>clearTimeout(t);
+  }, [product?.id, activeColor]);
 
   // Track deep product views for AI personalization
   useEffect(() => {
@@ -289,6 +293,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                   size={activeSize}
                   color={activeColor}
                   disabled={variantSoldOut}
+                  showToast={true}
                 />
                 <QuickBuyButton
                   id={product.id}

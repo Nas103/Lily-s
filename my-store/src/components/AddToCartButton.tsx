@@ -14,15 +14,19 @@ type AddToCartButtonProps = {
   color?: string;
   variant?: "pill" | "minimal";
   disabled?: boolean;
+  showToast?: boolean;
+  onAdded?: () => void;
 };
 
 export function AddToCartButton({
   variant = "pill",
   disabled,
+  showToast = true,
+  onAdded,
   ...props
 }: AddToCartButtonProps) {
   const addItem = useCart((state) => state.addItem);
-  const showToast = useToastStore((state) => state.showToast);
+  const pushToast = useToastStore((state) => state.showToast);
   const [pending, startTransition] = useTransition();
   const trackAddToCart = useRecommendationStore(
     (state) => state.trackAddToCart
@@ -43,14 +47,17 @@ export function AddToCartButton({
       })
     );
 
-    const variants = [props.size, props.color].filter(Boolean).join(" · ");
-    showToast({
-      title: "Added to cart",
-      description: variants ? `${props.name} — ${variants}` : props.name,
-      imageUrl: props.imageUrl,
-      href: "/cart",
-      linkLabel: "View cart",
-    });
+    if (showToast) {
+      const variants = [props.size, props.color].filter(Boolean).join(" · ");
+      pushToast({
+        title: "Added to cart",
+        description: variants ? `${props.name} — ${variants}` : props.name,
+        imageUrl: props.imageUrl,
+        href: "/cart",
+        linkLabel: "View cart",
+      });
+    }
+    onAdded?.();
   };
 
   return (

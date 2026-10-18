@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
 import { AddToCartButton } from "./AddToCartButton";
 import { AddToWishlistButton } from "./AddToWishlistButton";
 import { QuickBuyButton } from "./QuickBuyButton";
@@ -17,6 +19,9 @@ export type ProductCardProps = {
   description?: string;
   badge?: string;
   tags?: string[];
+  sizes?: string[];
+  colors?: string[];
+  colorImages?: Record<string, string[]>;
   discountPercent?: number | null;
   soldOut?: boolean;
   soldOutSizes?: string[];
@@ -34,9 +39,32 @@ export function ProductCard({
   badge,
   discountPercent,
   soldOut,
+  soldOutSizes,
+  soldOutColors,
   onPreview,
+  sizes,
+  colors,
 }: ProductCardProps) {
   const { formatPrice, convertPrice } = useCurrency();
+
+  const [showAddedFlash, setShowAddedFlash] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleAddedWithoutVariants = () => {
+    setShowAddedFlash(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setShowAddedFlash(false), 900);
+  };
+
+  const hasVariants = Boolean(
+    (sizes && sizes.length > 0) || (colors && colors.length > 0)
+  );
 
   const hasDiscount = Boolean(discountPercent && discountPercent > 0);
   const saleUsd = effectivePrice(price, discountPercent);
@@ -48,17 +76,20 @@ export function ProductCard({
   return (
     <article className="group overflow-hidden rounded-[28px] border border-zinc-200 bg-white shadow-lg ring-1 ring-black/5 transition hover:-translate-y-1 hover:ring-black/10">
       <div
-        className="relative aspect-[4/5] cursor-pointer overflow-hidden bg-zinc-100"
+         className={`relative aspect-[4/5] cursor-pointer overflow-hidden bg-zinc-100 ${
+           !hasVariants && !soldOut ? "cursor-default" : "cursor-pointer"
+         }`}
         onClick={onPreview}
         role="button"
         aria-label={`View ${name}`}
         tabIndex={0}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && onPreview) {
-            e.preventDefault();
-            onPreview();
-          }
-        }}
+         onKeyDown={(e) => {
+           if (!hasVariants && !soldOut) return;
+           if ((e.key === "Enter" || e.key === " ") && onPreview) {
+             e.preventDefault();
+             onPreview();
+           }
+         }}
       >
         {/* TODO: Update imagery to match each product drop. */}
         <Image
@@ -100,27 +131,78 @@ export function ProductCard({
             )}
             {onPreview ? (
               <button
-                onClick={onPreview}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPreview?.();
+                }}
                 className="rounded-full bg-white/80 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-zinc-900 backdrop-blur transition hover:bg-white"
               >
                 View
               </button>
             ) : null}
           </div>
+          <AnimatePresence>
+            {showAddedFlash && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.16, ease: "easeOut" }}
+                className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/10"
+              >
+                <motion.div
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 520,
+                    damping: 24,
+                    delay: 0.02,
+                  }}
+                  className="flex h-20 w-20 items-center justify-center rounded-full border border-white/70 bg-white/95 shadow-xl shadow-black/20 backdrop-blur"
+                >
+                  <svg
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <motion.path
+                      d="M5 13l4 4L19 7"
+                      stroke="#000000"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                    />
+                  </svg>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
       <div
-        className="flex cursor-pointer flex-col gap-1 px-5 pb-5 pt-4"
-        onClick={onPreview}
-        role="button"
-        aria-label={`View ${name}`}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && onPreview) {
-            e.preventDefault();
-            onPreview();
-          }
-        }}
+       className={`flex flex-col gap-1 px-5 pb-5 pt-4 ${
+         !hasVariants && !soldOut ? "cursor-default" : "cursor-pointer"
+       }`}
+       onClick={() => {
+         if (!hasVariants && !soldOut) return;
+         onPreview?.();
+       }}
+       role={onPreview ? "button" : undefined}
+       aria-label={onPreview ? `View ${name}` : undefined}
+       tabIndex={onPreview && hasVariants && !soldOut ? 0 : undefined}
+       onKeyDown={(e) => {
+         if (!onPreview || (!hasVariants && !soldOut)) return;
+         if (e.key === "Enter" || e.key === " ") {
+           e.preventDefault();
+           onPreview();
+         }
+       }}
       >
         {/* TODO: Replace name copy with final product title. */}
         <h3 className="text-base font-semibold tracking-tight text-zinc-900">
@@ -147,6 +229,8 @@ export function ProductCard({
               imageUrl={imageUrl}
               variant="minimal"
               disabled={soldOut}
+              showToast={!hasVariants}
+              onAdded={hasVariants ? undefined : handleAddedWithoutVariants}
             />
             <QuickBuyButton
               id={id}
