@@ -32,10 +32,10 @@ function SectionShell({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-8 backdrop-blur-md"
+      className="rounded-2xl border border-zinc-900 bg-zinc-900/95 p-8 shadow-lg backdrop-blur-sm"
     >
       <h2 className="text-lg font-semibold text-zinc-100">{title}</h2>
-      <p className="mt-1 text-sm text-zinc-400">{description}</p>
+      <p className="mt-1 text-sm text-zinc-300">{description}</p>
       <div className="mt-6">{children}</div>
     </motion.div>
   );
@@ -129,7 +129,7 @@ function ChangePasswordCard() {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: 0.15 }}
-      className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4"
+      className="mt-6 rounded-2xl border border-zinc-900 bg-zinc-900/95 p-4 shadow-md backdrop-blur-sm"
     >
       <div className="flex items-center gap-3">
         <ShieldCheck className="h-5 w-5 text-zinc-300" />
