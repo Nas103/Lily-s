@@ -1,8 +1,9 @@
 import OpenAI from "openai";
 import { BRAND } from "@/lib/brand";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 const apiKey = process.env.OPENROUTER_API_KEY;
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = getSiteUrl();
 const model = process.env.OPENROUTER_MODEL || "openai/gpt-4o";
 
 export const OPENROUTER_MODEL = model;

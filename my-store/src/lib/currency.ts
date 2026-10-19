@@ -5,6 +5,8 @@
  * Uses real-time exchange rates from forex API
  */
 
+import { getSiteUrl } from "@/lib/siteUrl";
+
 // Fallback exchange rates (base: USD - US Dollar)
 // These are used if the API is unavailable
 // Format: 1 USD = X target currency
@@ -195,7 +197,7 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
 
   try {
     // Use absolute URL for server-side fetch
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const currencyUrl = `${baseUrl}/api/currency`;
     
     const response = await fetch(currencyUrl, {

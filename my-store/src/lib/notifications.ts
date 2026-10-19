@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { BRAND } from "@/lib/brand";
 import { statusLabel } from "@/lib/orders";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type SendResult = { ok: boolean; reason?: string };
 
@@ -15,7 +16,7 @@ export async function sendOrderStatusEmail(input: {
   trackingNumber?: string | null;
   amount?: string;
 }): Promise<SendResult> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const status = statusLabel(input.status);
   const trackingUrl = `${siteUrl}/track-order`;
   const trackHref = input.trackingNumber

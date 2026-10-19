@@ -6,6 +6,7 @@ import { sanitizeInput } from "@/lib/security";
 import { generateOrderNumber } from "@/lib/orders";
 import { loadCatalog } from "@/lib/catalog";
 import { createBrandOrders } from "@/lib/marketplace";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type CheckoutItem = {
   id?: string;
@@ -19,7 +20,7 @@ type CheckoutItem = {
 };
 
 const STRIPE_CURRENCY = (process.env.STRIPE_CURRENCY ?? "usd").toLowerCase();
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = getSiteUrl();
 
 /**
  * Stripe requires absolute image URLs. Product data uses site-relative paths

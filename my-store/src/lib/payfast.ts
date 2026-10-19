@@ -1,20 +1,17 @@
 import crypto from "crypto";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 // PayFast configuration
+const siteUrl = getSiteUrl();
+
 export const PAYFAST_CONFIG = {
   merchantId: process.env.PAYFAST_MERCHANT_ID ?? "",
   merchantKey: process.env.PAYFAST_MERCHANT_KEY ?? "",
   passphrase: process.env.PAYFAST_PASSPHRASE ?? "",
   sandbox: process.env.PAYFAST_SANDBOX === "true",
-  returnUrl: process.env.NEXT_PUBLIC_SITE_URL
-    ? `${process.env.NEXT_PUBLIC_SITE_URL}/checkout?status=success`
-    : "http://localhost:3000/checkout?status=success",
-  cancelUrl: process.env.NEXT_PUBLIC_SITE_URL
-    ? `${process.env.NEXT_PUBLIC_SITE_URL}/checkout?status=cancelled`
-    : "http://localhost:3000/checkout?status=cancelled",
-  notifyUrl: process.env.NEXT_PUBLIC_SITE_URL
-    ? `${process.env.NEXT_PUBLIC_SITE_URL}/api/payfast/notify`
-    : "http://localhost:3000/api/payfast/notify",
+  returnUrl: `${siteUrl}/checkout?status=success`,
+  cancelUrl: `${siteUrl}/checkout?status=cancelled`,
+  notifyUrl: `${siteUrl}/api/payfast/notify`,
 };
 
 // PayFast payment URLs

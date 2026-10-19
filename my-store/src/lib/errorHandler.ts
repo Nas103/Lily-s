@@ -16,6 +16,20 @@ export function getSafeErrorMessage(error: any, defaultMessage: string = "Someth
   // In production, never expose internal error details
   const isProduction = process.env.NODE_ENV === "production";
 
+  // Handle Stripe errors first: they also carry a `.code`, so without this the
+  // Prisma switch below would misreport them as "Database error (...)".
+  if (typeof error?.type === "string" && error.type.startsWith("Stripe")) {
+    // Permission/config problems are deployment issues, not the caller's fault.
+    if (error.type === "StripePermissionError" || error.code === "more_permissions_required") {
+      return isProduction
+        ? defaultMessage
+        : `Stripe key is missing required permissions. ${error.message || ""}`.trim();
+    }
+    // Other Stripe errors (validation, resource_missing, card errors, …) carry
+    // user-safe messages; surface them in dev, fall back to the default in prod.
+    return isProduction ? defaultMessage : error.message || defaultMessage;
+  }
+
   // Handle Prisma errors
   if (error?.code) {
     switch (error.code) {
