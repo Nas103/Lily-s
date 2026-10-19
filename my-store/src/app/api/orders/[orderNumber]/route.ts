@@ -22,7 +22,10 @@ export async function GET(
 
     const order = await (prisma as any).order.findUnique({
       where: { orderNumber },
-      include: { orderItems: true },
+      include: {
+        orderItems: true,
+        brandOrders: { include: { brand: { select: { name: true } } } },
+      },
     });
 
     if (!order) {

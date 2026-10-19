@@ -19,6 +19,17 @@ export function serializeOrder(order: any) {
       ...item,
       price: Number(item.price ?? 0),
     })),
+    // Per-brand fulfilment slices (marketplace orders). House-only orders
+    // serialize as []. brandName comes from the included brand relation.
+    brandOrders: (order.brandOrders ?? []).map((bo: any) => ({
+      id: bo.id,
+      brandId: bo.brandId,
+      brandName: bo.brand?.name ?? bo.brandName ?? null,
+      status: bo.status,
+      trackingNumber: bo.trackingNumber ?? null,
+      createdAt: bo.createdAt?.toISOString?.() ?? bo.createdAt,
+      updatedAt: bo.updatedAt?.toISOString?.() ?? bo.updatedAt,
+    })),
   };
 }
 

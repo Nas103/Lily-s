@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  MessageSquare,
   Package,
   ShieldAlert,
   ShoppingCart,
+  Store,
   Users,
 } from "lucide-react";
 
@@ -14,6 +16,8 @@ const links = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/brands", label: "Brands", icon: Store },
+  { href: "/admin/messages", label: "Messages", icon: MessageSquare },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/risk-review", label: "Risk review", icon: ShieldAlert },
 ];

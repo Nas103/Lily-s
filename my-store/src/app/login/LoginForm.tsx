@@ -72,6 +72,8 @@ export function LoginForm() {
           : null;
       if (user.role === "ADMIN") {
         router.push(safeNext ?? "/admin/users");
+      } else if (user.role === "BRAND") {
+        router.push(safeNext ?? "/brand");
       } else {
         router.push(safeNext ?? "/");
       }

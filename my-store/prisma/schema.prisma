@@ -46,6 +46,7 @@ model User {
   deliveryAddresses   DeliveryAddress[]
   paymentMethods      PaymentMethod[]
   reviews             Review[]
+  brand               Brand?
 }
 
 model DeliveryAddress {
@@ -71,6 +72,151 @@ model DeliveryAddress {
 enum UserRole {
   USER
   ADMIN
+  BRAND
+}
+
+enum BrandStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+  REJECTED
+}
+
+enum VerificationStatus {
+  UNSUBMITTED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  REJECTED
+}
+
+enum BrandOrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// A seller account on the marketplace. One per User (role = BRAND).
+// Products with brandId = null remain the house/static catalog.
+model Brand {
+  id                  String             @id @default(uuid())
+  userId              String             @unique
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String
+  slug                String             @unique
+  description         String?
+  logoUrl             String?
+  website             String?
+  contactEmail        String
+  contactPhone        String?
+  country             String?
+  status              BrandStatus        @default(PENDING)
+  verificationStatus  VerificationStatus @default(UNSUBMITTED)
+  verificationDocUrl  String?
+  businessName        String?
+  taxId               String?
+  rejectionReason     String?
+  reviewedBy          String?
+  reviewedAt          DateTime?
+  // Stripe Connect account (express). Created during signup onboarding.
+  stripeAccountId     String?
+  // Platform take rate for this brand. FREE tier = 15, PRO tier = 8.
+  commissionRate      Decimal            @default(15) @db.Decimal(5, 2)
+  subscriptionTier    SubscriptionTier   @default(FREE)
+  subscriptionExpiresAt DateTime?
+  stripeSubscriptionId String?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  products    Product[]
+  brandOrders BrandOrder[]
+  payouts     Payout[]
+  messages    BrandMessage[]
+
+  @@index([status])
+}
+
+// Per-brand slice of an order. A single customer order containing items from
+// multiple brands gets one BrandOrder per brand, so each brand manages only
+// its own fulfilment (status + tracking) without seeing other brands' items.
+model BrandOrder {
+  id             String           @id @default(uuid())
+  orderId        String
+  order          Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  brandId        String
+  brand          Brand            @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  status         BrandOrderStatus @default(PENDING)
+  trackingNumber String?
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([orderId, brandId])
+  @@index([brandId])
+}
+
+// Settlement of a brand's share of an order after fulfilment + dispute window.
+// amount = brand subtotal minus platformFee (commission).
+model Payout {
+  id                String       @id @default(uuid())
+  brandId           String
+  brand             Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  orderId           String
+  order             Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount            Decimal      @db.Decimal(10, 2)
+  platformFee       Decimal      @db.Decimal(10, 2)
+  // Currency of `amount` (matches the parent order's charge currency).
+  currency          String       @default("USD")
+  status            PayoutStatus @default(PENDING)
+  stripeTransferId  String?
+  failureReason     String?
+  // Earliest moment the payout may be released (delivery + dispute window).
+  availableAt       DateTime?
+  createdAt         DateTime     @default(now())
+  paidAt            DateTime?
+
+  @@unique([brandId, orderId])
+  @@index([brandId])
+  @@index([orderId])
+  @@index([status])
+}
+
+// Message thread between a client, a brand and/or platform admin.
+// orderId is optional so general pre-sale enquiries are supported.
+model BrandMessage {
+  id         String   @id @default(uuid())
+  brandId    String
+  brand      Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  orderId    String?
+  fromUserId String
+  fromRole   UserRole
+  toUserId   String?
+  body       String
+  readAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([brandId, createdAt])
+  @@index([orderId])
+  @@index([fromUserId])
 }
 
 model Category {
@@ -82,16 +228,37 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
-  slug        String   @unique
+  slug        String        @unique
   description String
-  price       Decimal  @db.Decimal(10, 2)
+  price       Decimal       @db.Decimal(10, 2)
   imageUrl    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category      @relation(fields: [categoryId], references: [id])
+
+  // Marketplace ownership. null = house catalog (admin-managed rows only;
+  // the static data-file catalog is separate and untouched).
+  brandId     String?
+  brand       Brand?        @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  status      ProductStatus @default(ACTIVE)
+
+  // Catalog fields matching the static/mobile Product shape so brand products
+  // serialize identically to house products on the storefront.
+  highlight       String?
+  subCategory     String?
+  gender          String?
+  badge           String?
+  tags            String[]  @default([])
+  sizes           String[]  @default([])
+  colors          String[]  @default([])
+  colorImages     Json?
+  discountPercent Decimal?  @db.Decimal(5, 2)
+
+  @@index([brandId])
+  @@index([status])
 }
 
 // Admin-editable overrides for the static product catalog. Keyed by the
@@ -182,6 +349,8 @@ model Order {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   orderItems OrderItem[]
+  brandOrders BrandOrder[]
+  payouts    Payout[]
 
   @@index([userId])
 }
@@ -197,8 +366,11 @@ model OrderItem {
   color     String?
   quantity  Int
   price     Decimal @db.Decimal(10, 2)
+  // Owning brand of the purchased product. null = house catalog item.
+  brandId   String?
 
   @@index([orderId])
+  @@index([brandId])
 }
 
 model Review {

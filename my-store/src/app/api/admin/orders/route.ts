@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
     include: {
       orderItems: true,
       user: { select: { id: true, email: true, name: true } },
+      brandOrders: { include: { brand: { select: { name: true } } } },
     },
     orderBy: { createdAt: "desc" },
   });

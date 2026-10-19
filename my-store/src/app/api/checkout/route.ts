@@ -12,6 +12,7 @@ import { requireAuth } from "@/lib/auth-middleware";
 import { currencyCodeForCountry } from "@/lib/currency";
 import { generateOrderNumber } from "@/lib/orders";
 import { loadCatalog } from "@/lib/catalog";
+import { createBrandOrders } from "@/lib/marketplace";
 
 type CheckoutItem = {
   id?: string;
@@ -118,6 +119,7 @@ export async function POST(request: NextRequest) {
     color?: string;
     quantity: number;
     price: number;
+    brandId: string | null;
   }[] = [];
 
   let totalAmount = 0;
@@ -157,6 +159,7 @@ export async function POST(request: NextRequest) {
       color: item.color,
       quantity: item.quantity,
       price: charged,
+      brandId: entry.brandId ?? null,
     });
   }
   totalAmount = Math.round(totalAmount * 100) / 100;
@@ -173,7 +176,7 @@ export async function POST(request: NextRequest) {
   // their history and can be reconciled by the PayFast webhook.
   try {
     if (prisma) {
-      await (prisma as any).order.create({
+      const order = await (prisma as any).order.create({
         data: {
           orderNumber,
           userId: user.id,
@@ -202,10 +205,13 @@ export async function POST(request: NextRequest) {
               color: item.color,
               quantity: item.quantity,
               price: item.price,
+              brandId: item.brandId,
             })),
           },
         },
       });
+      // Split fulfilment per owning brand (house items excluded).
+      await createBrandOrders(order.id, resolvedItems);
     }
   } catch (persistError) {
     console.error("checkout: failed to persist order", persistError);

@@ -135,8 +135,9 @@ export async function GET(request: NextRequest) {
   // the latest admin edits.
   const overrides = await loadProductOverrides();
 
-  // Helper function to return static products with currency conversion
-  const getStaticProducts = async () => {
+  // Helper: house catalog from static data files — filter + normalise shape
+  // (currency is applied later, once, to the merged list).
+  const getStaticProducts = () => {
     // Merge static products with new products, deduplicating by id
     const allProducts = [
       ...new Map(
@@ -161,7 +162,7 @@ export async function GET(request: NextRequest) {
     });
     
     // Map products to consistent format
-    const mappedProducts = filtered.map((product: any) => {
+    return filtered.map((product: any) => {
       // If product already has category object, use it; otherwise create one
       const categoryObj = typeof product.category === 'string'
         ? { name: product.category, slug: product.category }
@@ -172,82 +173,81 @@ export async function GET(request: NextRequest) {
         category: categoryObj,
       };
     });
-    
-    // Add currency conversion to products
-    const productsWithCurrency = await Promise.all(
-      applyOverrides(mappedProducts as any[], overrides).map(async (product: any) => {
-        const priceInUSD = typeof product.price === 'number' ? product.price : parseFloat(product.price);
-        const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
-          amount: priceInUSD,
-          currency: "USD",
-          symbol: "$",
-          formatted: `$${priceInUSD.toFixed(2)}`,
-        };
-        return {
-          ...product,
-          price: priceInUSD, // Keep original price
-          convertedPrice: converted.amount,
-          currency: converted.currency,
-          currencySymbol: converted.symbol,
-          formattedPrice: converted.formatted,
-        };
-      })
-    );
-    
-    return productsWithCurrency;
   };
 
-  // If no database, use static products
-  if (!process.env.DATABASE_URL || !prisma) {
-    const productsWithCurrency = await getStaticProducts();
-    return NextResponse.json(productsWithCurrency);
-  }
-
-  // Try to get products from database, fallback to static if it fails
-  let products;
-  try {
-    products = await (prisma as any).product.findMany({
-      where: {
-        ...(search && {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } },
+  // Marketplace (database) products: brand-owned rows plus any admin-created
+  // DB rows. NEVER replaces the house catalog — merged below so the static
+  // storefront keeps working once brands start publishing.
+  // Returns [] when there is no database or the query fails (house catalog
+  // alone is always a valid response).
+  const getDbProducts = async (): Promise<any[]> => {
+    if (!process.env.DATABASE_URL || !prisma) return [];
+    try {
+      const rows = await (prisma as any).product.findMany({
+        where: {
+          status: 'ACTIVE',
+          AND: [
+            // Brand products only surface while the brand is approved.
+            { OR: [{ brandId: null }, { brand: { status: 'APPROVED' } }] },
+            ...(search
+              ? [{
+                  OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { description: { contains: search, mode: 'insensitive' } },
+                  ],
+                }]
+              : []),
+            ...(category ? [{ category: { slug: category } }] : []),
+            ...(subCategory ? [{ subCategory }] : []),
           ],
-        }),
-        ...(category && {
-          category: {
-            slug: category,
-          },
-        }),
-      },
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  } catch (error) {
-    // Database connection failed, fallback to static products
-    console.warn('[products] Database query failed, using static products:', error);
-    const productsWithCurrency = await getStaticProducts();
-    return NextResponse.json(productsWithCurrency);
-  }
+        },
+        include: {
+          category: true,
+          brand: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return rows.map((product: any) => {
+        const { brand, ...rest } = product;
+        return {
+          ...rebaseProductImages({
+            ...rest,
+            // Serialize the relation as the free-text label the storefront
+            // expects (mobile Product.brand is a string, not an object).
+            brand: brand?.name ?? undefined,
+            price: parseFloat(product.price.toString()),
+            discountPercent: product.discountPercent
+              ? parseFloat(product.discountPercent.toString())
+              : null,
+          }),
+          category: product.category,
+        };
+      });
+    } catch (error) {
+      // Database connection failed: serve the house catalog alone.
+      console.warn('[products] Database query failed, using house catalog:', error);
+      return [];
+    }
+  };
 
-  if (!products.length) {
-    // Use static products (which now includes new products)
-    const productsWithCurrency = await getStaticProducts();
-    return NextResponse.json(productsWithCurrency);
-  }
+  const houseProducts = getStaticProducts();
+  const dbProducts = await getDbProducts();
 
-  // Add currency conversion to database products
-  // Prices are stored in USD, convert only if user has country set
-  // (Discount pricing is intentionally not applied; a custom discount system
-  // will be implemented separately.)
-  const overriddenProducts = applyOverrides(products as any[], overrides);
+  // Later sources win on id collision — matches loadCatalog() so the price
+  // charged at checkout is the price shown here.
+  const mergedProducts = [
+    ...new Map(
+      [...houseProducts, ...dbProducts].map((product) => [product.id, product])
+    ).values(),
+  ];
+
+  // Apply admin overrides (keyed by static catalog id) and currency conversion.
+  const overriddenProducts = applyOverrides(mergedProducts as any[], overrides);
   const productsWithCurrency = await Promise.all(
     overriddenProducts.map(async (product: any) => {
-      const priceInUSD = parseFloat(product.price.toString());
+      const priceInUSD = typeof product.price === 'number' ? product.price : parseFloat(product.price);
       // Only convert if user has a country set
       const converted = userCountry ? await convertPrice(priceInUSD, userCountry) : {
         amount: priceInUSD,
@@ -256,7 +256,7 @@ export async function GET(request: NextRequest) {
         formatted: `$${priceInUSD.toFixed(2)}`,
       };
       return {
-        ...rebaseProductImages(product),
+        ...product,
         price: priceInUSD, // Keep original price in USD
         convertedPrice: converted.amount,
         currency: converted.currency,

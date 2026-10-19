@@ -5,6 +5,7 @@ import { handleApiError } from "@/lib/errorHandler";
 import { generateOrderNumber, serializeOrder } from "@/lib/orders";
 import { sanitizeInput } from "@/lib/security";
 import { loadCatalog } from "@/lib/catalog";
+import { createBrandOrders } from "@/lib/marketplace";
 
 type OrderItemInput = {
   id?: string;
@@ -34,7 +35,10 @@ export async function GET(request: NextRequest) {
     const orders = await (prisma as any).order.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
-      include: { orderItems: true },
+      include: {
+        orderItems: true,
+        brandOrders: { include: { brand: { select: { name: true } } } },
+      },
     });
 
     return NextResponse.json({ orders: orders.map(serializeOrder) });
@@ -75,6 +79,7 @@ export async function POST(request: NextRequest) {
       color?: string;
       quantity: number;
       price: number;
+      brandId: string | null;
     }[] = [];
 
     let subtotal = 0;
@@ -107,6 +112,7 @@ export async function POST(request: NextRequest) {
         color: item.color,
         quantity,
         price,
+        brandId: entry.brandId ?? null,
       });
     }
     subtotal = Math.round(subtotal * 100) / 100;
@@ -146,11 +152,18 @@ export async function POST(request: NextRequest) {
             color: item.color,
             quantity: item.quantity,
             price: item.price,
+            brandId: item.brandId,
           })),
         },
       },
-      include: { orderItems: true },
+      include: {
+        orderItems: true,
+        brandOrders: { include: { brand: { select: { name: true } } } },
+      },
     });
+
+    // Split fulfilment per owning brand (house items excluded).
+    await createBrandOrders(order.id, resolvedItems);
 
     return NextResponse.json({ order: serializeOrder(order) }, { status: 201 });
   } catch (error: any) {

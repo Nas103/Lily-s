@@ -7,7 +7,7 @@ export type User = {
   id: string;
   email: string;
   name?: string | null;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "BRAND";
   createdAt?: string;
 };
 
@@ -17,6 +17,7 @@ type AuthStore = {
   logout: () => void;
   refresh: () => Promise<void>;
   isAdmin: () => boolean;
+  isBrand: () => boolean;
 };
 
 export const useAuth = create<AuthStore>()(
@@ -45,6 +46,7 @@ export const useAuth = create<AuthStore>()(
         }
       },
       isAdmin: () => get().user?.role === "ADMIN",
+      isBrand: () => get().user?.role === "BRAND" || get().user?.role === "ADMIN",
     }),
     { name: "auth-storage" }
   )

@@ -241,6 +241,9 @@ export default function ProductDetailScreen() {
         </Text>
         {/* TODO: Add comment here for product title editing */}
         <Text style={styles.name}>{product.name}</Text>
+        {product.brand ? (
+          <Text style={styles.soldBy}>Sold by {product.brand}</Text>
+        ) : null}
         <View style={styles.priceContainer}>
           {product.discountPercent && product.discountPercent > 0 ? (
             <>
@@ -452,6 +455,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000000',
     marginBottom: 12,
+  },
+  soldBy: {
+    fontSize: 12,
+    color: '#737373',
+    marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
   },
   priceContainer: {
     flexDirection: 'row',

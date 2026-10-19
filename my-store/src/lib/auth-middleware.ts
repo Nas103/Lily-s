@@ -5,7 +5,7 @@ import { prisma } from "./prisma";
 export type AuthenticatedUser = {
   id: string;
   email: string;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "BRAND";
   name?: string | null;
 };
 
@@ -53,6 +53,22 @@ export async function requireAdmin(
   const result = await requireAuth(req);
   if (result instanceof NextResponse) return result;
   if (result.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  return result;
+}
+
+/**
+ * Brand accounts (and admins) only. Brand-level "is this account attached to
+ * an approved Brand row?" lives in brandAuth.ts (requireApprovedBrand) so this
+ * helper stays a pure role gate usable at the edge-unaware route layer.
+ */
+export async function requireBrand(
+  req: NextRequest
+): Promise<{ user: AuthenticatedUser } | NextResponse> {
+  const result = await requireAuth(req);
+  if (result instanceof NextResponse) return result;
+  if (result.user.role !== "BRAND" && result.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   return result;

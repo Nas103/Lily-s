@@ -21,6 +21,15 @@ type OrderItem = {
   price: number;
   size?: string | null;
   color?: string | null;
+  brandId?: string | null;
+};
+
+type BrandOrder = {
+  id: string;
+  brandId: string;
+  brandName: string | null;
+  status: string;
+  trackingNumber: string | null;
 };
 
 type Order = {
@@ -40,6 +49,7 @@ type Order = {
   shippingPostcode?: string | null;
   shippingCountry?: string | null;
   orderItems: OrderItem[];
+  brandOrders?: BrandOrder[];
 };
 
 const STEPS = ['PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
@@ -134,6 +144,43 @@ export default function OrderDetailScreen() {
             </Text>
           ) : null}
 
+          {(order.brandOrders?.length ?? 0) > 0 ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Fulfilled by our brands</Text>
+              {order.brandOrders!.map((bo) => (
+                <View key={bo.id} style={styles.brandRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.brandName}>{bo.brandName ?? 'Brand'}</Text>
+                    <Text style={styles.brandMeta}>
+                      {bo.trackingNumber
+                        ? `Tracking: ${bo.trackingNumber}`
+                        : 'Not shipped yet'}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.brandStatusChip,
+                      bo.status === 'DELIVERED' && styles.brandStatusDelivered,
+                      bo.status === 'SHIPPED' && styles.brandStatusShipped,
+                      bo.status === 'CANCELLED' && styles.brandStatusCancelled,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.brandStatusText,
+                        bo.status === 'DELIVERED' && { color: '#047857' },
+                        bo.status === 'SHIPPED' && { color: '#1d4ed8' },
+                        bo.status === 'CANCELLED' && { color: '#b91c1c' },
+                      ]}
+                    >
+                      {bo.status}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : null}
+
           <View style={styles.section}>
             {order.orderItems.map((item) => (
               <View key={item.id} style={styles.itemRow}>
@@ -148,6 +195,12 @@ export default function OrderDetailScreen() {
                     Qty {item.quantity}
                     {item.size ? ` · Size ${item.size}` : ''}
                     {item.color ? ` · ${item.color}` : ''}
+                    {item.brandId
+                      ? ` · ${
+                          order.brandOrders?.find((bo) => bo.brandId === item.brandId)
+                            ?.brandName ?? 'Brand'
+                        }`
+                      : ''}
                   </Text>
                 </View>
                 <Text style={styles.itemPrice}>
@@ -267,4 +320,19 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   address: { fontSize: 13, color: '#404040' },
+  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  brandName: { fontSize: 14, fontWeight: '600', color: '#000000' },
+  brandMeta: { fontSize: 12, color: '#737373', marginTop: 2 },
+  brandStatusChip: {
+    borderWidth: 1,
+    borderColor: '#e5e5e5',
+    backgroundColor: '#f4f4f5',
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  brandStatusDelivered: { backgroundColor: '#ecfdf5', borderColor: '#a7f3d0' },
+  brandStatusShipped: { backgroundColor: '#eff6ff', borderColor: '#bfdbfe' },
+  brandStatusCancelled: { backgroundColor: '#fef2f2', borderColor: '#fecaca' },
+  brandStatusText: { fontSize: 10, fontWeight: '700', color: '#525252' },
 });

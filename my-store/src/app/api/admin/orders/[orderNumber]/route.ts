@@ -79,7 +79,11 @@ export async function PATCH(
   try {
     order = await (prisma as any).order.findUnique({
       where: { orderNumber },
-      include: { orderItems: true, user: true },
+      include: {
+        orderItems: true,
+        user: true,
+        brandOrders: { include: { brand: { select: { name: true } } } },
+      },
     });
     if (!order) {
       return NextResponse.json({ error: "Order not found." }, { status: 404 });
@@ -89,7 +93,11 @@ export async function PATCH(
     order = await (prisma as any).order.update({
       where: { orderNumber },
       data: update,
-      include: { orderItems: true, user: true },
+      include: {
+        orderItems: true,
+        user: true,
+        brandOrders: { include: { brand: { select: { name: true } } } },
+      },
     });
     order = serializeOrder(order);
 

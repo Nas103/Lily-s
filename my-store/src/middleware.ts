@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionToken, verifyToken } from "@/lib/auth";
 
-const PROTECTED_PREFIXES = ["/profile", "/admin"];
+const PROTECTED_PREFIXES = ["/profile", "/admin", "/brand"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -22,6 +22,9 @@ export async function middleware(req: NextRequest) {
           return NextResponse.redirect(new URL("/", req.url));
         }
       }
+      // /brand requires only a valid session: regular users must be able to
+      // reach the signup form. API routes re-read the real role from the
+      // database, and the page renders state per GET /api/brand/me.
       return NextResponse.next();
     }
   }
@@ -32,5 +35,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/admin/:path*"],
+  matcher: ["/profile/:path*", "/admin/:path*", "/brand/:path*"],
 };

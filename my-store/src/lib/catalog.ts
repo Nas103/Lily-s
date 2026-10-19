@@ -10,8 +10,27 @@ import { effectivePrice, loadProductOverrides } from "@/lib/productOverrides";
  * data files + database products) and layers admin overrides on top, so any
  * product the client can see resolves to its authoritative USD price. Used to
  * validate cart prices before charging, so a tampered client can't underpay.
+ *
+ * `price` is the FINAL chargeable unit price (post-discount), matching what
+ * the storefront renders via effectivePrice(price, discountPercent).
+ * `brandId` attributes the item to its owning brand for the marketplace
+ * split (null = house catalog item).
  */
-export type CatalogPrice = { id: string; name: string; price: number };
+export type CatalogPrice = {
+  id: string;
+  name: string;
+  price: number;
+  brandId: string | null;
+  discountPercent: number | null;
+};
+
+type CatalogRow = {
+  id: string;
+  name: string;
+  price: number;
+  brandId: string | null;
+  discountPercent: number | null;
+};
 
 function toPrice(value: unknown): number | null {
   if (value === null || value === undefined) return null;
@@ -65,7 +84,7 @@ async function loadMobileCatalog(): Promise<
  */
 export const loadCatalog = cache(
   async (): Promise<Map<string, CatalogPrice>> => {
-    const map = new Map<string, CatalogPrice>();
+    const map = new Map<string, CatalogRow>();
 
     const mobile = await loadMobileCatalog();
     for (const product of [...staticProducts, ...mobile] as any[]) {
@@ -76,37 +95,72 @@ export const loadCatalog = cache(
         id: product.id,
         name: product.name ?? "",
         price,
+        brandId: null,
+        discountPercent: toPrice(product.discountPercent),
       });
     }
 
     if (prisma) {
       try {
+        // Only purchasable rows: ACTIVE products from the house catalog or an
+        // APPROVED brand — mirrors /api/products so a delisted product can't
+        // sneak through checkout.
         const rows = (await (prisma as any).product.findMany({
-          select: { id: true, name: true, price: true },
-        })) as { id: string; name: string | null; price: unknown }[];
+          where: {
+            status: "ACTIVE",
+            AND: [
+              { OR: [{ brandId: null }, { brand: { status: "APPROVED" } }] },
+            ],
+          },
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            discountPercent: true,
+            brandId: true,
+          },
+        })) as {
+          id: string;
+          name: string | null;
+          price: unknown;
+          discountPercent: unknown;
+          brandId: string | null;
+        }[];
         for (const row of rows) {
           const price = toPrice(row.price);
           if (price === null) continue;
-          map.set(row.id, { id: row.id, name: row.name ?? "", price });
+          map.set(row.id, {
+            id: row.id,
+            name: row.name ?? "",
+            price,
+            brandId: row.brandId ?? null,
+            discountPercent: toPrice(row.discountPercent),
+          });
         }
       } catch (error) {
         console.warn("[catalog] product table query failed:", error);
       }
     }
 
+    // Layer admin overrides (raw name/price/discount), then apply the final
+    // discount for every row so the charged price matches the storefront.
     const overrides = await loadProductOverrides();
-    for (const [id, override] of overrides) {
-      const existing = map.get(id);
-      const basePrice = override.price ?? existing?.price;
-      if (basePrice === null || basePrice === undefined) continue;
-      map.set(id, {
-        id,
-        name: override.name ?? existing?.name ?? "",
-        // Apply the admin discount so the charged price matches the storefront.
-        price: effectivePrice(basePrice, override.discountPercent),
-      });
+    for (const [id, row] of map) {
+      const override = overrides.get(id);
+      if (override) {
+        row.name = override.name ?? row.name;
+        row.price = override.price ?? row.price;
+        row.discountPercent = override.discountPercent ?? row.discountPercent;
+      }
+    }
+    for (const row of map.values()) {
+      row.price = effectivePrice(row.price, row.discountPercent);
     }
 
-    return map;
+    const result = new Map<string, CatalogPrice>();
+    for (const row of map.values()) {
+      result.set(row.id, row);
+    }
+    return result;
   }
 );

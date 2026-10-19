@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Loader2, ArrowLeft, Check } from "lucide-react";
+import { Loader2, ArrowLeft, Check, Send } from "lucide-react";
 import Image from "next/image";
 import { useCurrency } from "@/hooks/useCurrency";
+import { useAuth } from "@/stores/authStore";
 
 type OrderItem = {
   id: string;
@@ -15,6 +16,15 @@ type OrderItem = {
   price: number;
   size?: string | null;
   color?: string | null;
+  brandId?: string | null;
+};
+
+type BrandOrder = {
+  id: string;
+  brandId: string;
+  brandName: string | null;
+  status: string;
+  trackingNumber: string | null;
 };
 
 type Order = {
@@ -36,6 +46,15 @@ type Order = {
   shippingPostcode?: string | null;
   shippingCountry?: string | null;
   orderItems: OrderItem[];
+  brandOrders?: BrandOrder[];
+};
+
+const BRAND_STATUS_COLORS: Record<string, string> = {
+  PENDING: "border-zinc-200 text-zinc-600 bg-zinc-50",
+  PROCESSING: "border-amber-200 text-amber-700 bg-amber-50",
+  SHIPPED: "border-blue-200 text-blue-700 bg-blue-50",
+  DELIVERED: "border-emerald-200 text-emerald-700 bg-emerald-50",
+  CANCELLED: "border-red-200 text-red-700 bg-red-50",
 };
 
 const STEPS = ["PENDING", "PAID", "PROCESSING", "SHIPPED", "DELIVERED"];
@@ -160,6 +179,50 @@ export default function OrderDetailPage() {
               </p>
             )}
 
+            {(order.brandOrders?.length ?? 0) > 0 ? (
+              <section className="mt-8 rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+                  Fulfilled by our brands
+                </p>
+                <div className="mt-4 space-y-3">
+                  {order.brandOrders!.map((bo) => (
+                    <div
+                      key={bo.id}
+                      className="rounded-2xl border border-zinc-100 bg-zinc-50 px-4 py-3"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-medium text-zinc-900">
+                            {bo.brandName ?? "Brand"}
+                          </p>
+                          {bo.trackingNumber ? (
+                            <p className="text-xs text-zinc-500">
+                              Tracking:{" "}
+                              <span className="font-semibold">{bo.trackingNumber}</span>
+                            </p>
+                          ) : (
+                            <p className="text-xs text-zinc-500">Not shipped yet</p>
+                          )}
+                        </div>
+                        <span
+                          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${
+                            BRAND_STATUS_COLORS[bo.status] ?? BRAND_STATUS_COLORS.PENDING
+                          }`}
+                        >
+                          {bo.status}
+                        </span>
+                      </div>
+                      <BrandThread
+                        brandId={bo.brandId}
+                        brandName={bo.brandName}
+                        orderId={order.id}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
             <section className="mt-10 space-y-4 rounded-3xl border border-zinc-100 bg-white p-6 shadow-sm">
               {order.orderItems.map((item) => (
                 <div key={item.id} className="flex items-center gap-4">
@@ -180,6 +243,12 @@ export default function OrderDetailPage() {
                       Qty {item.quantity}
                       {item.size ? ` · Size ${item.size}` : ""}
                       {item.color ? ` · ${item.color}` : ""}
+                      {item.brandId
+                        ? ` · ${
+                            order.brandOrders?.find((bo) => bo.brandId === item.brandId)
+                              ?.brandName ?? "Brand"
+                          }`
+                        : ""}
                     </p>
                   </div>
                   <p className="text-sm font-semibold text-zinc-900">
@@ -221,6 +290,162 @@ export default function OrderDetailPage() {
           </>
         )}
       </main>
+    </div>
+  );
+}
+
+type ThreadMessage = {
+  id: string;
+  body: string;
+  fromUserId: string;
+  fromRole: string;
+  createdAt: string;
+  fromName: string | null;
+};
+
+function BrandThread({
+  brandId,
+  brandName,
+  orderId,
+}: {
+  brandId: string;
+  brandName: string | null;
+  orderId: string;
+}) {
+  const user = useAuth((state) => state.user);
+  const [messages, setMessages] = useState<ThreadMessage[] | null>(null);
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/messages?brandId=${encodeURIComponent(brandId)}&orderId=${encodeURIComponent(orderId)}`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) {
+        setMessages([]);
+        return;
+      }
+      const data = await res.json();
+      setMessages(data.messages ?? []);
+    } catch {
+      setMessages([]);
+    }
+  }, [brandId, orderId]);
+
+  useEffect(() => {
+    if (open) void load();
+  }, [open, load]);
+
+  const send = async () => {
+    const body = draft.trim();
+    if (!body || sending) return;
+    setSending(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brandId, orderId, body }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? "Unable to send.");
+        return;
+      }
+      setDraft("");
+      await load();
+    } catch {
+      setError("Unable to reach the server.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const label = (message: ThreadMessage) => {
+    if (message.fromUserId === user?.id) return "You";
+    if (message.fromRole === "BRAND") return brandName ?? "Brand";
+    if (message.fromRole === "ADMIN") return "Marketplace team";
+    return message.fromName ?? "Customer";
+  };
+
+  return (
+    <div className="mt-3 border-t border-zinc-200 pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 hover:text-zinc-900"
+      >
+        {open ? "Hide messages" : `Message ${brandName ?? "the brand"}`}
+      </button>
+
+      {open ? (
+        <div className="mt-3">
+          {messages === null ? (
+            <p className="text-xs text-zinc-500">Loading messages…</p>
+          ) : messages.length === 0 ? (
+            <p className="text-xs text-zinc-500">
+              No messages yet. Ask {brandName ?? "the brand"} a question about this
+              order.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
+                    message.fromUserId === user?.id
+                      ? "ml-auto bg-black text-white"
+                      : "bg-white text-zinc-800 border border-zinc-200"
+                  }`}
+                >
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] opacity-60">
+                    {label(message)}
+                  </p>
+                  <p className="mt-1 whitespace-pre-wrap break-words">{message.body}</p>
+                  <p className="mt-1 text-[10px] opacity-50">
+                    {new Date(message.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {error ? (
+            <p className="mt-2 text-xs text-red-500" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <div className="mt-3 flex items-center gap-2">
+            <input
+              className="flex-1 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 placeholder:text-zinc-400"
+              placeholder={`Message ${brandName ?? "the brand"}…`}
+              maxLength={1000}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void send();
+                }
+              }}
+            />
+            <button
+              type="button"
+              disabled={sending || !draft.trim()}
+              onClick={() => void send()}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white disabled:opacity-50"
+              aria-label="Send message"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

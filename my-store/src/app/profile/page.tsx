@@ -15,7 +15,7 @@ import { PaymentMethodList } from "./components/PaymentMethodList";
 import { OrderHistory } from "./components/OrderHistory";
 import { ProfileSettings } from "./settings/ProfileSettings";
 import { BRAND } from "@/lib/brand";
-import FluxLines from "@/components/FluxLines";
+import Lightfall from "@/components/Lightfall";
 
 type SettingsSection = 
   | "profile" 
@@ -90,23 +90,32 @@ export default function ProfilePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
-      <div className="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
-        <FluxLines
-          colors={["#ffffff","#ffffff","#ffffff"]}
-          glow={2}
-          rimWidth={0.2}
-          lineWidth={1}
-          flowDirection="down"
+      <div
+        className="pointer-events-none absolute inset-0 z-0 min-h-full"
+        aria-hidden="true"
+      >
+        <Lightfall
+          className="h-full min-h-screen"
+          colors={["#ffffff", "#e4e4e7", "#cbd5e1"]}
+          backgroundColor="#94a3b8"
+          speed={0.35}
+          streakCount={3}
+          streakWidth={0.9}
+          streakLength={1.1}
+          glow={1.15}
+          density={0.65}
+          twinkle={0.35}
+          zoom={3}
+          backgroundGlow={0.18}
+          headGlow={0.7}
+          depth={0.45}
+          bloom={0.4}
+          opacity={1}
           mouseInteraction
-          clickSwirl
-          speed={0.5}
-          scale={1.6}
-          turbulence={1}
-          fluidity={0.1}
-          sharpness={2.5}
-          shimmer={1.5}
-          mouseStrength={1}
-          mouseRadius={0.35}
+          mouseStrength={0.5}
+          mouseRadius={0.45}
+          lens={0.55}
+          holdToWarp
           intro
           lightMode={false}
         />

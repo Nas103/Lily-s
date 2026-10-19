@@ -5,6 +5,7 @@ import { requireAuth } from "@/lib/auth-middleware";
 import { sanitizeInput } from "@/lib/security";
 import { generateOrderNumber } from "@/lib/orders";
 import { loadCatalog } from "@/lib/catalog";
+import { createBrandOrders } from "@/lib/marketplace";
 
 type CheckoutItem = {
   id?: string;
@@ -71,6 +72,7 @@ export async function POST(request: NextRequest) {
     imageUrl?: string;
     quantity: number;
     price: number;
+    brandId: string | null;
   }[] = [];
 
   let totalAmount = 0;
@@ -106,6 +108,7 @@ export async function POST(request: NextRequest) {
       imageUrl: item.imageUrl,
       quantity: item.quantity,
       price,
+      brandId: entry.brandId ?? null,
     });
     totalAmount += price * item.quantity;
   }
@@ -125,7 +128,7 @@ export async function POST(request: NextRequest) {
   // something to reconcile against.
   try {
     if (prisma) {
-      await (prisma as any).order.create({
+      const order = await (prisma as any).order.create({
         data: {
           orderNumber,
           userId: user.id,
@@ -159,10 +162,13 @@ export async function POST(request: NextRequest) {
               imageUrl: item.imageUrl,
               quantity: item.quantity,
               price: item.price,
+              brandId: item.brandId,
             })),
           },
         },
       });
+      // Split fulfilment per owning brand (house items excluded).
+      await createBrandOrders(order.id, resolvedItems);
     }
   } catch (persistError) {
     console.error("stripe checkout: failed to persist order", persistError);

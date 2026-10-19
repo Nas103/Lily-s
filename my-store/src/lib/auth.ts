@@ -4,7 +4,7 @@ import * as jose from "jose";
 export type AuthPayload = {
   userId: string;
   email: string;
-  role?: "USER" | "ADMIN";
+  role?: "USER" | "ADMIN" | "BRAND";
 };
 
 const COOKIE_NAME = process.env.AUTH_COOKIE_NAME || "lily_session";
