@@ -60,6 +60,7 @@ export function Header() {
     {
       href: "/brand",
       label: user?.role === "BRAND" ? "Brand dashboard" : "Apply for your brand",
+      featured: true,
     },
   ];
   const moreLinks = [...accountLinks, ...serviceLinks, ...brandLinks];
@@ -284,7 +285,7 @@ function Dropdown({
   align = "left",
 }: {
   label: string;
-  items: { href: string; label: string }[];
+  items: { href: string; label: string; featured?: boolean }[];
   align?: "left" | "right";
 }) {
   const [open, setOpen] = useState(false);
@@ -314,7 +315,11 @@ function Dropdown({
               <Link
                 key={item.href}
                 href={item.href}
-                className="truncate rounded-xl px-3 py-2 text-sm text-zinc-600 transition hover:bg-zinc-50 hover:text-black"
+                className={
+                  item.featured
+                    ? "col-span-2 truncate rounded-xl px-3 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50"
+                    : "truncate rounded-xl px-3 py-2 text-sm text-zinc-600 transition hover:bg-zinc-50 hover:text-black"
+                }
               >
                 {item.label}
               </Link>
