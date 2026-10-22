@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { BRAND } from "@/lib/brand";
 import { catalogProducts, CATEGORY_META } from "@/data/catalog";
-import { openrouter, OPENROUTER_MODEL, isOpenRouterConfigured } from "@/lib/openrouter";
+import { openrouter, createChatCompletion, isOpenRouterConfigured } from "@/lib/openrouter";
 
 type ChatMessage = {
   role: "user" | "assistant" | "system";
@@ -34,6 +34,7 @@ const SYSTEM_PROMPT =
   `BRAND: ${BRAND.name} (${BRAND.description}). ${BRAND.tagline}. ` +
   "We sell curated fashion and lifestyle collections across Men, Women, Featured, Perfumes, Lifestyle, Running, BoxRaw, and Electronics.\n\n" +
   "WHAT YOU DO:\n" +
+  "• Before replying, quietly reason about the shopper's goal, occasion, budget, the weather or setting, and which catalog items actually fit. Use that reasoning to choose your answer, but never reveal your private working steps — give only the finished, polished recommendation.\n" +
   "• Freely hold natural, flowing conversations — greet people, ask what they're looking for, and keep the dialogue going.\n" +
   "• Give ideas, styling suggestions, outfit pairings, gifting ideas, and thoughtful recommendations.\n" +
   "• Answer anything about what NaSO offers: product names, categories, prices, materials, sizes, colors, and how to find items.\n" +
@@ -167,40 +168,20 @@ export async function POST(request: NextRequest) {
       };
 
       let answer = "";
-      let lastError: unknown = null;
 
-      for (let attempt = 0; attempt < 4; attempt++) {
-        try {
-          const completion = await openrouter.chat.completions.create({
-            model: OPENROUTER_MODEL,
-            messages: [systemPrompt, ...messages],
-            temperature: 0.8,
-            max_tokens: 600,
-          });
-
-          const raw = completion.choices[0]?.message?.content ?? "";
-          const cleaned = stripMarkdown(raw);
-          if (cleaned) {
-            answer = cleaned;
-            break;
-          }
-        } catch (aiError: unknown) {
-          lastError = aiError;
-          const { status, message } = describeError(aiError);
-          console.warn(
-            `[ai-chat] OpenRouter attempt ${attempt + 1} failed:`,
-            message
-          );
-          // Don't retry client errors (bad request, no credit, model not found)
-          if (status && status >= 400 && status < 500 && status !== 429) {
-            break;
-          }
-          await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
-        }
-      }
-
-      if (!answer) {
-        console.error("[ai-chat] OpenRouter failed after retries:", lastError);
+      try {
+        const completion = await createChatCompletion({
+          messages: [systemPrompt, ...messages],
+          temperature: 0.8,
+          max_tokens: 800,
+        });
+        answer = stripMarkdown(completion.content);
+        console.info(`[ai-chat] answered with ${completion.model}`);
+      } catch (aiError: unknown) {
+        console.warn(
+          "[ai-chat] OpenRouter failed:",
+          describeError(aiError).message
+        );
         answer = getHelpfulResponse(userMessage);
       }
 

@@ -9,7 +9,7 @@ import {
   type CatalogProduct,
 } from "@/data/catalog";
 import { BRAND } from "@/lib/brand";
-import { openrouter, isOpenRouterConfigured, OPENROUTER_MODEL } from "@/lib/openrouter";
+import { openrouter, createChatCompletion, isOpenRouterConfigured } from "@/lib/openrouter";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 24;
@@ -275,17 +275,16 @@ Candidates: ${JSON.stringify(summary)}
 Recommend up to ${limit} products.`;
 
   try {
-    const completion = await openrouter.chat.completions.create({
-      model: OPENROUTER_MODEL,
+    const completion = await createChatCompletion({
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       temperature: 0.4,
-      max_tokens: 300,
+      max_tokens: 600,
     });
 
-    const text = completion.choices[0]?.message?.content || "";
+    const text = completion.content;
     let ids: string[] = [];
 
     try {
