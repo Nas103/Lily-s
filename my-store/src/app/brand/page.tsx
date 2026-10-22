@@ -228,7 +228,7 @@ function BrandSignupForm({
         <label className={labelClass} htmlFor="brand-doc">Verification document URL</label>
         <input id="brand-doc" className={inputClass} value={verificationDocUrl} onChange={(e) => setVerificationDocUrl(e.target.value)} placeholder="Link to business registration or ID document" maxLength={500} />
         <p className="text-xs text-zinc-500">
-          Submission is optional here, but your brand stays in review until an approved document is on file.
+          Required for approval — add a link now, or from this dashboard after you apply.
         </p>
       </div>
       {formError ? (
@@ -321,9 +321,18 @@ function BrandStatusPanel({
         </div>
 
         {brand.status === "PENDING" ? (
-          <p className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Your application is queued for review. You can finish payouts setup now — selling starts once you are approved.
-          </p>
+          brand.verificationStatus === "UNSUBMITTED" ? (
+            <p className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <strong className="font-semibold">Action needed:</strong> we cannot approve your
+              application until a verification document is on file. Add one in the Verification
+              section below — you can connect payouts in the meantime.
+            </p>
+          ) : (
+            <p className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              Your application is queued for review. You can finish payouts setup now — selling
+              starts once you are approved.
+            </p>
+          )
         ) : null}
         {brand.status === "APPROVED" ? (
           <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
@@ -370,19 +379,45 @@ function BrandStatusPanel({
         {brand.verificationStatus === "APPROVED" ? (
           <p className="mt-3 text-sm text-emerald-700">Identity documents verified.</p>
         ) : (
-          <form onSubmit={submitVerification} className="mt-4 space-y-4">
-            <input
-              className={inputClass}
-              value={docUrl}
-              onChange={(e) => setDocUrl(e.target.value)}
-              placeholder="Link to business registration or ID document"
-              maxLength={500}
-              required
-            />
-            <button type="submit" disabled={savingDoc} className={secondaryButton}>
-              {savingDoc ? "Submitting…" : brand.verificationStatus === "REJECTED" ? "Resubmit document" : "Submit for review"}
-            </button>
-          </form>
+          <>
+            {brand.verificationStatus === "UNSUBMITTED" ? (
+              <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                No document on file yet. Approval is blocked until you submit a business
+                registration or ID document.
+              </p>
+            ) : null}
+            {brand.verificationStatus === "PENDING" ? (
+              <p className="mt-3 text-sm text-zinc-600">
+                Document received — our team is reviewing it. You can replace it if you uploaded the
+                wrong file.
+              </p>
+            ) : null}
+            {brand.verificationStatus === "REJECTED" ? (
+              <p className="mt-3 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-800">
+                Your last document was rejected. Upload a clearer or updated document to be reviewed
+                again.
+              </p>
+            ) : null}
+            <form onSubmit={submitVerification} className="mt-4 space-y-4">
+              <input
+                className={inputClass}
+                value={docUrl}
+                onChange={(e) => setDocUrl(e.target.value)}
+                placeholder="Link to business registration or ID document"
+                maxLength={500}
+                required
+              />
+              <button type="submit" disabled={savingDoc} className={secondaryButton}>
+                {savingDoc
+                  ? "Submitting…"
+                  : brand.verificationStatus === "UNSUBMITTED"
+                  ? "Submit document"
+                  : brand.verificationStatus === "REJECTED"
+                  ? "Resubmit document"
+                  : "Update document"}
+              </button>
+            </form>
+          </>
         )}
       </div>
 

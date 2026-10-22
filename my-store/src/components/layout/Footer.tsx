@@ -35,6 +35,7 @@ const columns: { title: string; items: { label: string; href: string }[] }[] = [
       { label: "Stylist", href: "/assistant" },
       { label: "Track order", href: "/track-order" },
       { label: "Support", href: "/support" },
+      { label: "Sell with us", href: "/brand" },
       { label: "Sign in", href: "/login" },
     ],
   },

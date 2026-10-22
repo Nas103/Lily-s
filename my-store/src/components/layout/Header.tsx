@@ -32,6 +32,7 @@ const serviceLinks = [
   { href: "/assistant", label: "Stylist" },
   { href: "/track-order", label: "Track order" },
   { href: "/support", label: "Support" },
+  { href: "/brand", label: "Sell with us" },
 ];
 
 const moreLinks = [...accountLinks, ...serviceLinks];

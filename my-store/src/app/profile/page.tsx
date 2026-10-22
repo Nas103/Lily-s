@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useAuth } from "@/stores/authStore";
 import { 
   User, CreditCard, MapPin, ShoppingBag, 
@@ -233,6 +234,23 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="rounded-2xl border border-zinc-900 bg-zinc-950 p-8">
+                <h3 className="text-lg font-semibold text-zinc-100">
+                  {user.role === "BRAND" ? "Brand dashboard" : `Sell on ${BRAND.name}`}
+                </h3>
+                <p className="mt-2 text-sm text-zinc-300">
+                  {user.role === "BRAND"
+                    ? "Manage your products, orders, payouts and verification documents."
+                    : "Apply for a brand account to sell alongside our house catalogue with your own products and payouts."}
+                </p>
+                <Link
+                  href="/brand"
+                  className="mt-4 inline-flex rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-900 transition hover:bg-zinc-200"
+                >
+                  {user.role === "BRAND" ? "Open dashboard" : "Start application"}
+                </Link>
               </div>
             </div>
           )}
