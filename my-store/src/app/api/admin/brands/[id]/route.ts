@@ -57,7 +57,7 @@ export async function PATCH(
 
   switch (action) {
     case "approve": {
-      if (!brand.verificationDocUrl) {
+      if (!brand.verificationDocUrl && !brand.verificationDocName) {
         return NextResponse.json(
           {
             error:
@@ -81,7 +81,10 @@ export async function PATCH(
       }
       data.status = "REJECTED";
       data.rejectionReason = reason;
-      if (brand.verificationDocUrl && brand.verificationStatus !== "APPROVED") {
+      if (
+        (brand.verificationDocUrl || brand.verificationDocName) &&
+        brand.verificationStatus !== "APPROVED"
+      ) {
         data.verificationStatus = "REJECTED";
       }
       break;

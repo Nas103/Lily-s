@@ -19,6 +19,10 @@ const SELECT = {
   status: true,
   verificationStatus: true,
   verificationDocUrl: true,
+  verificationDocName: true,
+  verificationDocMimeType: true,
+  verificationDocSize: true,
+  verificationDocUploadedAt: true,
   businessName: true,
   rejectionReason: true,
   stripeAccountId: true,
@@ -43,13 +47,13 @@ export async function GET(request: NextRequest) {
   }
   if (!prisma) return NextResponse.json({ brand: null });
   try {
-    const row = await (prisma as any).brand.findUnique({
+    // Never select verificationDocData here: the dashboard only needs metadata,
+    // and pulling the file bytes on every page load would be wasteful.
+    const brand = await (prisma as any).brand.findUnique({
       where: { userId: user.id },
+      select: SELECT,
     });
-    if (!row) return NextResponse.json({ brand: null });
-    const brand = Object.fromEntries(
-      Object.entries(row).filter(([key]) => key in SELECT)
-    );
+    if (!brand) return NextResponse.json({ brand: null });
     return NextResponse.json({ brand });
   } catch (error: any) {
     return await handleApiError(error, "brand/me.get", "Unable to load the brand profile.", 500);

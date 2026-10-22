@@ -132,6 +132,13 @@ model Brand {
   status              BrandStatus        @default(PENDING)
   verificationStatus  VerificationStatus @default(UNSUBMITTED)
   verificationDocUrl  String?
+  // Uploaded verification document (stored in the DB so it survives deploys;
+  // admins download it through /api/admin/brands/[id]/verification-document).
+  verificationDocName        String?
+  verificationDocMimeType    String?
+  verificationDocSize        Int?
+  verificationDocData        Bytes?
+  verificationDocUploadedAt  DateTime?
   businessName        String?
   taxId               String?
   rejectionReason     String?

@@ -1,8 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
+import {
+  MAX_VERIFICATION_DOC_BYTES,
+  VERIFICATION_DOC_ACCEPT,
+  formatBytes,
+} from "@/lib/verificationDoc";
 
 type Brand = {
   id: string;
@@ -16,6 +21,10 @@ type Brand = {
   status: "PENDING" | "APPROVED" | "SUSPENDED" | "REJECTED";
   verificationStatus: "UNSUBMITTED" | "PENDING" | "APPROVED" | "REJECTED";
   verificationDocUrl: string | null;
+  verificationDocName: string | null;
+  verificationDocMimeType: string | null;
+  verificationDocSize: number | null;
+  verificationDocUploadedAt: string | null;
   businessName: string | null;
   rejectionReason: string | null;
   stripeAccountId: string | null;
@@ -151,7 +160,6 @@ function BrandSignupForm({
   const [businessName, setBusinessName] = useState("");
   const [website, setWebsite] = useState("");
   const [description, setDescription] = useState("");
-  const [verificationDocUrl, setVerificationDocUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(error);
 
@@ -170,7 +178,6 @@ function BrandSignupForm({
           businessName: businessName || undefined,
           website: website || undefined,
           description: description || undefined,
-          verificationDocUrl: verificationDocUrl || undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -224,13 +231,10 @@ function BrandSignupForm({
         <label className={labelClass} htmlFor="brand-description">About your brand</label>
         <textarea id="brand-description" className={`${inputClass} min-h-28`} value={description} onChange={(e) => setDescription(e.target.value)} maxLength={2000} placeholder="What you sell, where you ship from…" />
       </div>
-      <div className="space-y-1">
-        <label className={labelClass} htmlFor="brand-doc">Verification document URL</label>
-        <input id="brand-doc" className={inputClass} value={verificationDocUrl} onChange={(e) => setVerificationDocUrl(e.target.value)} placeholder="Link to business registration or ID document" maxLength={500} />
-        <p className="text-xs text-zinc-500">
-          Required for approval — add a link now, or from this dashboard after you apply.
-        </p>
-      </div>
+      <p className="rounded-2xl bg-zinc-50 px-4 py-3 text-xs text-zinc-600">
+        After you apply, upload your business registration or ID document in the
+        Verification section — approval requires it.
+      </p>
       {formError ? (
         <p className="text-xs text-red-500" role="alert">{formError}</p>
       ) : null}
@@ -250,31 +254,61 @@ function BrandStatusPanel({
   notice: string | null;
   onBrandUpdated: (brand: Brand) => void;
 }) {
-  const [docUrl, setDocUrl] = useState(brand.verificationDocUrl ?? "");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docError, setDocError] = useState<string | null>(null);
   const [savingDoc, setSavingDoc] = useState(false);
   const [startingPayouts, setStartingPayouts] = useState(false);
   const [panelError, setPanelError] = useState<string | null>(null);
   const [panelNotice, setPanelNotice] = useState<string | null>(notice);
 
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    setDocError(null);
+    if (!file) {
+      setDocFile(null);
+      return;
+    }
+    if (file.size > MAX_VERIFICATION_DOC_BYTES) {
+      setDocError(
+        `File is too large (${formatBytes(file.size)}). Maximum is ${formatBytes(
+          MAX_VERIFICATION_DOC_BYTES
+        )}.`
+      );
+      event.target.value = "";
+      setDocFile(null);
+      return;
+    }
+    setDocFile(file);
+  }
+
   async function submitVerification(event: React.FormEvent) {
     event.preventDefault();
+    if (!docFile) {
+      setDocError("Choose a document to upload.");
+      return;
+    }
     setSavingDoc(true);
     setPanelError(null);
+    setDocError(null);
     try {
-      const res = await fetch("/api/brand/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verificationDocUrl: docUrl }),
+      const formData = new FormData();
+      formData.append("file", docFile);
+      const res = await fetch("/api/brand/verification-document", {
+        method: "POST",
+        body: formData,
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setPanelError(data.error ?? "Unable to submit the document.");
+        setDocError(data.error ?? "Unable to upload the document.");
         return;
       }
       onBrandUpdated(data.brand);
-      setPanelNotice("Verification document submitted — our team will review it shortly.");
+      setDocFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setPanelNotice("Document uploaded — our team will review it shortly.");
     } catch {
-      setPanelError("Unable to reach the server. Please try again.");
+      setDocError("Unable to reach the server. Please try again.");
     } finally {
       setSavingDoc(false);
     }
@@ -376,13 +410,39 @@ function BrandStatusPanel({
 
       <div className="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm">
         <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">Verification</h3>
+
+        {brand.verificationDocName ? (
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-600">
+            <span className="font-medium text-zinc-900">{brand.verificationDocName}</span>
+            {brand.verificationDocSize ? <span>{formatBytes(brand.verificationDocSize)}</span> : null}
+            {brand.verificationDocUploadedAt ? (
+              <span>uploaded {new Date(brand.verificationDocUploadedAt).toLocaleDateString()}</span>
+            ) : null}
+            <a href="/api/brand/verification-document" className="text-blue-600 underline" download>
+              Download
+            </a>
+          </div>
+        ) : brand.verificationDocUrl ? (
+          <p className="mt-3 text-sm text-zinc-600">
+            Linked document:{" "}
+            <a
+              href={brand.verificationDocUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              view document
+            </a>
+          </p>
+        ) : null}
+
         {brand.verificationStatus === "APPROVED" ? (
           <p className="mt-3 text-sm text-emerald-700">Identity documents verified.</p>
         ) : (
           <>
             {brand.verificationStatus === "UNSUBMITTED" ? (
               <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                No document on file yet. Approval is blocked until you submit a business
+                No document on file yet. Approval is blocked until you upload a business
                 registration or ID document.
               </p>
             ) : null}
@@ -399,22 +459,34 @@ function BrandStatusPanel({
               </p>
             ) : null}
             <form onSubmit={submitVerification} className="mt-4 space-y-4">
-              <input
-                className={inputClass}
-                value={docUrl}
-                onChange={(e) => setDocUrl(e.target.value)}
-                placeholder="Link to business registration or ID document"
-                maxLength={500}
-                required
-              />
-              <button type="submit" disabled={savingDoc} className={secondaryButton}>
+              <div className="space-y-2">
+                <label className={labelClass} htmlFor="brand-doc-file">
+                  {brand.verificationDocName ? "Replace document" : "Upload document"}
+                </label>
+                <input
+                  id="brand-doc-file"
+                  ref={fileInputRef}
+                  type="file"
+                  accept={VERIFICATION_DOC_ACCEPT}
+                  onChange={handleFileChange}
+                  className="w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-900 file:mr-4 file:rounded-full file:border-0 file:bg-black file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-[0.3em] file:text-white"
+                />
+                <p className="text-xs text-zinc-500">
+                  PDF, PNG, JPEG or WebP up to {formatBytes(MAX_VERIFICATION_DOC_BYTES)}.
+                  {docFile ? ` Selected: ${docFile.name} (${formatBytes(docFile.size)}).` : ""}
+                </p>
+              </div>
+              {docError ? (
+                <p className="text-xs text-red-500" role="alert">{docError}</p>
+              ) : null}
+              <button type="submit" disabled={savingDoc || !docFile} className={secondaryButton}>
                 {savingDoc
-                  ? "Submitting…"
-                  : brand.verificationStatus === "UNSUBMITTED"
-                  ? "Submit document"
+                  ? "Uploading…"
+                  : !brand.verificationDocName
+                  ? "Upload document"
                   : brand.verificationStatus === "REJECTED"
                   ? "Resubmit document"
-                  : "Update document"}
+                  : "Replace document"}
               </button>
             </form>
           </>

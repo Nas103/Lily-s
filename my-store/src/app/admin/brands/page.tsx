@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/stores/authStore";
+import { formatBytes } from "@/lib/verificationDoc";
 
 type AdminBrand = {
   id: string;
@@ -11,6 +12,11 @@ type AdminBrand = {
   status: "PENDING" | "APPROVED" | "SUSPENDED" | "REJECTED";
   verificationStatus: "UNSUBMITTED" | "PENDING" | "APPROVED" | "REJECTED";
   verificationDocUrl: string | null;
+  verificationDocName: string | null;
+  verificationDocMimeType: string | null;
+  verificationDocSize: number | null;
+  verificationDocUploadedAt: string | null;
+  hasVerificationDoc: boolean;
   contactEmail: string;
   country: string | null;
   businessName: string | null;
@@ -148,7 +154,7 @@ export default function AdminBrandsPage() {
   const act = async (brand: AdminBrand, action: string) => {
     if (!user || !isAdmin()) return;
 
-    if (action === "approve" && !brand.verificationDocUrl) {
+    if (action === "approve" && !brand.hasVerificationDoc && !brand.verificationDocUrl) {
       alert(
         "This brand has no verification document on file. Ask them to submit one before approving."
       );
@@ -234,7 +240,21 @@ export default function AdminBrandsPage() {
                 </p>
                 <p className="text-xs text-zinc-500">
                   ID verification: <span className="font-medium">{brand.verificationStatus}</span>
-                  {brand.verificationDocUrl ? (
+                  {brand.hasVerificationDoc ? (
+                    <>
+                      {" · "}
+                      <a
+                        href={`/api/admin/brands/${brand.id}/verification-document`}
+                        className="text-blue-600 underline"
+                      >
+                        download {brand.verificationDocName}
+                        {brand.verificationDocSize ? ` (${formatBytes(brand.verificationDocSize)})` : ""}
+                      </a>
+                      {brand.verificationDocUploadedAt
+                        ? ` · uploaded ${new Date(brand.verificationDocUploadedAt).toLocaleDateString()}`
+                        : ""}
+                    </>
+                  ) : brand.verificationDocUrl ? (
                     <>
                       {" · "}
                       <a
@@ -243,7 +263,7 @@ export default function AdminBrandsPage() {
                         rel="noopener noreferrer"
                         className="text-blue-600 underline"
                       >
-                        view document
+                        view external document
                       </a>
                     </>
                   ) : (

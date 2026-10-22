@@ -24,6 +24,10 @@ export async function GET(request: NextRequest) {
       status: true,
       verificationStatus: true,
       verificationDocUrl: true,
+      verificationDocName: true,
+      verificationDocMimeType: true,
+      verificationDocSize: true,
+      verificationDocUploadedAt: true,
       contactEmail: true,
       contactPhone: true,
       country: true,
@@ -42,5 +46,10 @@ export async function GET(request: NextRequest) {
     orderBy: { createdAt: "desc" },
   });
 
-  return NextResponse.json(brands);
+  return NextResponse.json(
+    brands.map((brand: Record<string, unknown>) => ({
+      ...brand,
+      hasVerificationDoc: Boolean(brand.verificationDocName),
+    }))
+  );
 }
