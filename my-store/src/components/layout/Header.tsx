@@ -32,10 +32,7 @@ const serviceLinks = [
   { href: "/assistant", label: "Stylist" },
   { href: "/track-order", label: "Track order" },
   { href: "/support", label: "Support" },
-  { href: "/brand", label: "Sell with us" },
 ];
-
-const moreLinks = [...accountLinks, ...serviceLinks];
 
 const emptySubscribe = () => () => {};
 
@@ -59,6 +56,13 @@ export function Header() {
   const cartCount = useCart((state) =>
     state.items.reduce((sum, item) => sum + item.quantity, 0)
   );
+  const brandLinks = [
+    {
+      href: "/brand",
+      label: user?.role === "BRAND" ? "Brand dashboard" : "Apply for your brand",
+    },
+  ];
+  const moreLinks = [...accountLinks, ...serviceLinks, ...brandLinks];
   const [lastCartCount, setLastCartCount] = useState(cartCount);
   const [cartBump, setCartBump] = useState(false);
 
@@ -228,7 +232,7 @@ export function Header() {
           <nav className="mx-auto max-w-6xl space-y-6 px-6 py-6">
             <MenuGroup title="Shop" items={shopLinks} onNavigate={() => setMobileMenuOpen(false)} />
             <MenuGroup title="Account" items={accountLinks} onNavigate={() => setMobileMenuOpen(false)} />
-            <MenuGroup title="Services" items={serviceLinks} onNavigate={() => setMobileMenuOpen(false)} />
+            <MenuGroup title="Services" items={[...serviceLinks, ...brandLinks]} onNavigate={() => setMobileMenuOpen(false)} />
             {hasMounted && isAdmin() && (
               <MenuGroup
                 title="Admin"

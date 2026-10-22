@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { FooterAuthLink } from "./FooterAuthLink";
 
 const columns: { title: string; items: { label: string; href: string }[] }[] = [
   {
@@ -36,7 +37,6 @@ const columns: { title: string; items: { label: string; href: string }[] }[] = [
       { label: "Track order", href: "/track-order" },
       { label: "Support", href: "/support" },
       { label: "Sell with us", href: "/brand" },
-      { label: "Sign in", href: "/login" },
     ],
   },
 ];
@@ -59,6 +59,7 @@ export function Footer() {
                     </Link>
                   </li>
                 ))}
+                {column.title === "Service" ? <FooterAuthLink /> : null}
               </ul>
             </div>
           ))}
