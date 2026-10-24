@@ -1,186 +1,79 @@
 import { NextRequest, NextResponse } from "next/server";
 import { applySecurityMiddleware } from "@/lib/middleware";
 import { BRAND } from "@/lib/brand";
-import { catalogProducts } from "@/data/catalog";
 import { openrouter, createChatCompletion, isOpenRouterConfigured } from "@/lib/openrouter";
 import { prisma } from "@/lib/prisma";
-import { loadProductOverrides } from "@/lib/productOverrides";
-import { products as staticProducts } from "@/data/products";
+import { getAllKnowledgeEntries, searchKnowledge } from "@/lib/ai-knowledge/store";
+import { syncKnowledgeLibrary } from "@/lib/ai-knowledge/sync";
 
 type ChatMessage = {
   role: "user" | "assistant" | "system";
   content: string;
 };
 
-type CatalogProductLike = {
-  id: string;
-  name: string;
-  slug?: string;
-  description?: string;
-  category?: string | { name?: string; slug?: string };
-  subCategory?: string | null;
-  gender?: string | null;
-  price: number | string;
-  sizes?: string[] | null;
-  colors?: string[] | null;
-  brand?: string | null;
-  discountPercent?: number | string | null;
-  soldOut?: boolean;
-  soldOutSizes?: string[] | null;
-  soldOutColors?: string[] | null;
-};
+let cachedKnowledgeContext: { text: string; at: number } | null = null;
 
-const normalizePrice = (price: number | string | null | undefined): number => {
-  if (price === null || price === undefined) return 0;
-  const n = typeof price === "number" ? price : parseFloat(String(price));
-  return Number.isFinite(n) ? n : 0;
-};
-
-const normalizeArray = (arr?: string[] | null): string[] =>
-  Array.isArray(arr) ? arr.filter(Boolean).map((v) => String(v)) : [];
-
-async function buildLiveCatalogContext(): Promise<string> {
-  const overrides = await loadProductOverrides();
-
-  let mobileProducts: CatalogProductLike[] = [];
-  try {
-    const [
-      { womenProducts },
-      { menProducts },
-      { lifestyleProducts },
-      { runningProducts },
-      { boxrawProducts },
-      { electronicsProducts },
-      { perfumesProducts },
-      { featuredProducts },
-    ] = await Promise.all([
-      import("../../../../mobile-app/src/data/womenProducts"),
-      import("../../../../mobile-app/src/data/menProducts"),
-      import("../../../../mobile-app/src/data/lifestyleProducts"),
-      import("../../../../mobile-app/src/data/runningProducts"),
-      import("../../../../mobile-app/src/data/boxrawProducts"),
-      import("../../../../mobile-app/src/data/electronicsProducts"),
-      import("../../../../mobile-app/src/data/perfumesProducts"),
-      import("../../../../mobile-app/src/data/featuredProducts"),
-    ]);
-    mobileProducts = [
-      ...(womenProducts || []),
-      ...(menProducts || []),
-      ...(lifestyleProducts || []),
-      ...(runningProducts || []),
-      ...(boxrawProducts || []),
-      ...(electronicsProducts || []),
-      ...(perfumesProducts || []),
-      ...(featuredProducts || []),
-    ] as CatalogProductLike[];
-  } catch (error) {
-    console.warn("[ai-chat] failed to load mobile catalog", error);
+async function buildKnowledgeContext(query: string): Promise<string> {
+  const now = Date.now();
+  if (!query && cachedKnowledgeContext && now - cachedKnowledgeContext.at < 60_000) {
+    return cachedKnowledgeContext.text;
   }
-
-  const merged = new Map<string, CatalogProductLike>();
-  for (const product of [
-    ...(staticProducts as CatalogProductLike[]),
-    ...mobileProducts,
-    ...(catalogProducts as CatalogProductLike[]),
-  ]) {
-    if (!product?.id) continue;
-    merged.set(String(product.id), { ...product });
-  }
-
-  if (prisma) {
+  let entries = query ? await searchKnowledge(query, 100) : await getAllKnowledgeEntries();
+  if (!entries.length) {
     try {
-      const rows = await (prisma as any).product.findMany({
-        where: {
-          status: "ACTIVE",
-          AND: [{ OR: [{ brandId: null }, { brand: { status: "APPROVED" } }] }],
-        },
-        include: { category: true, brand: true },
-      });
-      for (const row of rows as any[]) {
-        merged.set(String(row.id), {
-          id: String(row.id),
-          name: row.name,
-          slug: row.slug,
-          description: row.description,
-          category: row.category?.name || row.category?.slug || null,
-          subCategory: row.subCategory || null,
-          gender: row.gender || null,
-          price: row.price,
-          sizes: Array.isArray(row.sizes) ? row.sizes : [],
-          colors: Array.isArray(row.colors) ? row.colors : [],
-          brand: row.brand?.name || null,
-          discountPercent: row.discountPercent || null,
-        });
-      }
-    } catch (error) {
-      console.warn("[ai-chat] failed to load DB products", error);
-    }
+      await syncKnowledgeLibrary("ai-chat-auto");
+      entries = query ? await searchKnowledge(query, 100) : await getAllKnowledgeEntries();
+    } catch {}
   }
-
   const lines: string[] = [];
-  for (const [id, product] of merged) {
-    const ov = overrides.get(id);
-    const basePrice = normalizePrice(ov?.price ?? product.price);
-    const discount = normalizePrice(ov?.discountPercent ?? product.discountPercent);
-    const price = discount > 0 ? basePrice * (1 - discount / 100) : basePrice;
-    const name = ov?.name ?? product.name;
-    const category =
-      typeof product.category === "string"
-        ? product.category
-        : product.category?.name || product.category?.slug || "";
-    const subCategory = (product.subCategory as string) || "";
-    const gender = (product.gender as string) || "";
-    const sizes = normalizeArray(ov?.soldOutSizes ? undefined : product.sizes);
-    const colors = normalizeArray(product.colors);
-    const soldOutSizes = normalizeArray(ov?.soldOutSizes as any);
-    const soldOutColors = normalizeArray(ov?.soldOutColors as any);
-
-    const bits = [`${name} $${price.toFixed(2)}`];
-    if (gender) bits.push(`(${gender})`);
-    if (category) bits.push(`[${category}${subCategory ? "/" + subCategory : ""}]`);
-    if (product.brand) bits.push(`{${product.brand}}`);
-    lines.push(`- ${bits.join(" ")}`);
-    if (sizes.length || colors.length) {
-      const parts: string[] = [];
-      if (sizes.length) parts.push(`sizes: ${sizes.join(", ")}`);
-      if (colors.length) parts.push(`colors: ${colors.join(", ")}`);
-      if (soldOutSizes.length) parts.push(`sold out sizes: ${soldOutSizes.join(", ")}`);
-      if (soldOutColors.length) parts.push(`sold out colors: ${soldOutColors.join(", ")}`);
-      lines.push(`  ${parts.join(" | ")}`);
+  for (const entry of entries) {
+    const meta = entry.metadata || {};
+    let content = entry.content || "";
+    if (entry.sourceType === "product") {
+      const slug = entry.slug || (entry.productId ? `/product/${entry.productId}` : null);
+      if (slug && !content.includes("URL:")) {
+        content = content.replace(new RegExp(`Product: ${entry.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`), `Product: ${entry.title}\nURL: ${slug.startsWith("/") ? slug : "/product/" + slug}`);
+      }
     }
+    lines.push(`=== ${entry.sourceType.toUpperCase()}: ${entry.title} ===`);
+    lines.push(content);
+    if (meta.sizes?.length) lines.push(`SIZES:${meta.sizes.join("|")}`);
+    if (meta.colors?.length) lines.push(`COLORS:${meta.colors.join("|")}`);
+    if (meta.price) lines.push(`PRICE:${meta.price}`);
+    lines.push("");
   }
-
-  return `LIVE CATALOG (${merged.size} products, synced from catalog + DB + admin overrides):\n${lines.join("\n")}`;
+  const text = `AI KNOWLEDGE LIBRARY (${entries.length} entries, separate training library synced automatically from products/brands/categories/policies/admin/brand changes):\n\n${lines.join("\n")}`;
+  if (!query) cachedKnowledgeContext = { text, at: now };
+  return text;
 }
 
-function buildSystemPrompt(catalogContext: string) {
+function buildSystemPrompt(knowledgeContext: string) {
   return (
     `You are ${BRAND.name}'s AI shopping assistant — a warm, knowledgeable personal stylist and product expert for the ${BRAND.name} online store.\n\n` +
     `BRAND: ${BRAND.name} (${BRAND.description}). ${BRAND.tagline}. ` +
     "We sell curated fashion and lifestyle collections across Men, Women, Featured, Perfumes, Lifestyle, Running, BoxRaw, and Electronics.\n\n" +
     "WHAT YOU DO:\n" +
-    "• Before replying, quietly reason about the shopper's goal, occasion, budget, the weather or setting, and which catalog items actually fit. Use that reasoning to choose your answer, but never reveal your private working steps — give only the finished, polished recommendation.\n" +
+    "• Use your own reasoning and free thinking with the KNOWLEDGE LIBRARY below as your training/data source. Do not give generic template answers — analyze specific products, sizes, colors, prices from the library.\n" +
     "• Freely hold natural, flowing conversations — greet people, ask what they're looking for, and keep the dialogue going.\n" +
-    "• Give ideas, styling suggestions, outfit pairings, gifting ideas, and thoughtful recommendations.\n" +
-    "• Answer anything about what NaSO offers: product names, categories, prices, sizes, colors, materials, and how to find items.\n" +
-    "• Always use the LIVE CATALOG below. It includes all products from the storefront including brand products, with exact prices, sizes, colors, and sold-out variants. This data is updated in real-time when admins or brands update products.\n" +
-    "• Quote only real prices from the CATALOG below, in USD.\n" +
-    "• Guide customers to the right page, e.g. \"take a look at /running\" or \"view it at /product/<slug>\".\n\n" +
+    "• Give ideas, styling suggestions, outfit pairings, gifting ideas, and thoughtful recommendations based on actual products in the library.\n" +
+    "• Answer anything about NaSO: product names, categories, prices, sizes, colors, brands, materials, and how to find items.\n" +
+    "• When recommending products as answers to clients, ALWAYS turn the product name into a clickable link within the chat by appending the product URL path in parentheses immediately after the product name. Example: Nike Air Max (/product/nike-air-max).\n" +
+    "• Quote only real prices from the library, in USD.\n" +
+    "• Guide customers to the right page.\n\n" +
     "RULES:\n" +
-    "• Never invent products, prices, stock levels, sizes, or policies that are not in the catalog below.\n" +
-    "• If something is not in the catalog, say so and suggest the closest alternatives from the catalog.\n" +
+    "• Never invent products, prices, stock levels, sizes, or policies not in the library.\n" +
+    "• If something is not in the library, say so and suggest the closest alternatives from the library.\n" +
     "• You do not process payments or handle orders; direct users to checkout or Support for that.\n" +
     "• Be warm, concise, and helpful. Use short paragraphs.\n\n" +
     "FORMATTING (VERY IMPORTANT):\n" +
-    "• Reply in plain, natural conversational text ONLY. Never use Markdown.\n" +
-    "• Do NOT use asterisks, # or headings, backticks, or [text](link) syntax.\n" +
-    "• Do NOT wrap product names in symbols. Write them normally.\n" +
-    "• To list a few options, put each on its own line starting with a simple hyphen.\n" +
-    "• Never output raw URLs. If you must point somewhere, say it in words.\n\n" +
+    "• Reply in plain, natural conversational text ONLY. Never use Markdown link syntax [text](url).\n" +
+    "• DO put product names as links by writing: Product Name (/product/slug) with the path in parentheses.\n" +
+    "• Do NOT use asterisks, # or headings, backticks.\n" +
+    "• To list options, put each on its own line starting with a simple hyphen.\n\n" +
     "SHIPPING & POLICIES:\n" +
     "• Standard shipping 5–7 business days; Express 2–3 business days; free shipping over $75.\n" +
     "• 30-day returns on unworn items with tags attached.\n\n" +
-    catalogContext
+    knowledgeContext
   );
 }
 
@@ -289,10 +182,10 @@ export async function POST(request: NextRequest) {
     userMessage = lastMessage?.content || "";
 
     if (openrouter && isOpenRouterConfigured()) {
-      const catalogContext = await buildLiveCatalogContext();
+      const knowledgeContext = await buildKnowledgeContext(userMessage);
       const systemPrompt: ChatMessage = {
         role: "system",
-        content: buildSystemPrompt(catalogContext),
+        content: buildSystemPrompt(knowledgeContext),
       };
 
       let answer = "";
@@ -300,8 +193,8 @@ export async function POST(request: NextRequest) {
       try {
         const completion = await createChatCompletion({
           messages: [systemPrompt, ...messages],
-          temperature: 0.8,
-          max_tokens: 900,
+          temperature: 0.85,
+          max_tokens: 1000,
         });
         answer = stripMarkdown(completion.content);
         console.info(`[ai-chat] answered with ${completion.model}`);
