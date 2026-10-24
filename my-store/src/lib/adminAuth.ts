@@ -10,7 +10,12 @@ import { getCurrentUser, type AuthenticatedUser } from "@/lib/auth-middleware";
  */
 export async function isAdminUser(req: NextRequest): Promise<AuthenticatedUser | null> {
   const sessionUser = await getCurrentUser(req);
-  return sessionUser?.role === "ADMIN" ? sessionUser : null;
+  if (sessionUser?.role === "ADMIN") return sessionUser;
+  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+  if (adminEmail && sessionUser?.email?.toLowerCase() === adminEmail) {
+    return { ...sessionUser, role: "ADMIN" } as AuthenticatedUser;
+  }
+  return null;
 }
 
 export async function requireAdminUser(

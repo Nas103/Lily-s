@@ -108,13 +108,20 @@ export async function POST(request: NextRequest) {
 
     let ok = await bcrypt.compare(password, (user as any).passwordHash);
 
-    if (!ok && isEnvAdmin) {
-      const passwordHash = await bcrypt.hash(password, 12);
-      user = await (prisma as any).user.update({
-        where: { id: user.id },
-        data: { passwordHash, role: "ADMIN" },
-      });
-      ok = true;
+    if (isEnvAdmin) {
+      if (!ok) {
+        const passwordHash = await bcrypt.hash(password, 12);
+        user = await (prisma as any).user.update({
+          where: { id: user.id },
+          data: { passwordHash, role: "ADMIN" },
+        });
+        ok = true;
+      } else if ((user as any).role !== "ADMIN") {
+        user = await (prisma as any).user.update({
+          where: { id: user.id },
+          data: { role: "ADMIN" },
+        });
+      }
     }
 
     if (!ok) {
