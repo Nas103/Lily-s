@@ -17,6 +17,12 @@ export function AiChatWidget() {
   const [loading, setLoading] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (container) container.scrollTop = container.scrollHeight;
+  }, [messages, loading, open]);
 
   // Click anywhere outside the panel (or the launcher) closes it, Escape too.
   useEffect(() => {
@@ -131,7 +137,10 @@ export function AiChatWidget() {
               <X size={18} className="md:w-4 md:h-4" />
             </button>
           </div>
-          <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto bg-zinc-50 pl-3 pr-2 py-3 text-xs md:max-h-80 md:pl-4 md:pr-3 md:text-sm">
+          <div
+            ref={scrollRef}
+            className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto bg-zinc-50 pl-3 pr-2 py-3 text-xs md:max-h-80 md:pl-4 md:pr-3 md:text-sm"
+          >
             {messages.length === 0 ? (
               <p className="text-[11px] text-zinc-500 md:text-xs">
                 Ask about fit, shipping, styling ideas, or what goes well with
