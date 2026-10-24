@@ -70,13 +70,14 @@ export function LoginForm() {
         nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
           ? nextParam
           : null;
-      if (user.role === "ADMIN") {
-        router.push(safeNext ?? "/admin/users");
-      } else if (user.role === "BRAND") {
-        router.push(safeNext ?? "/brand");
-      } else {
-        router.push(safeNext ?? "/");
-      }
+      const destination =
+        user.role === "ADMIN"
+          ? safeNext ?? "/admin/users"
+          : user.role === "BRAND"
+          ? safeNext ?? "/brand"
+          : safeNext ?? "/";
+      router.refresh();
+      router.replace(destination);
     } catch (err) {
       // Network errors or other client-side errors
       console.error("[LoginForm] Error:", err);

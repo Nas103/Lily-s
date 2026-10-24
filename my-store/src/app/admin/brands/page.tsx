@@ -72,6 +72,9 @@ export default function AdminBrandsPage() {
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [busyPayoutId, setBusyPayoutId] = useState<string | null>(null);
+  const [rejectModal, setRejectModal] = useState<{ brand: AdminBrand; reason: string } | null>(null);
+  const [suspendModal, setSuspendModal] = useState<{ brand: AdminBrand; reason: string } | null>(null);
+  const [releaseModal, setReleaseModal] = useState<AdminPayout | null>(null);
 
   useEffect(() => {
     if (user && !isAdmin()) {
@@ -123,16 +126,14 @@ export default function AdminBrandsPage() {
 
   const releasePayout = async (payout: AdminPayout) => {
     if (!user || !isAdmin()) return;
-    if (
-      !confirm(
-        `Release ${payout.currency} ${Number(payout.amount).toFixed(2)} to ${
-          payout.brandName ?? "brand"
-        }${payout.orderNumber ? ` (order ${payout.orderNumber})` : ""}?`
-      )
-    ) {
-      return;
-    }
+    setReleaseModal(payout);
+  };
+
+  const confirmReleasePayout = async () => {
+    const payout = releaseModal;
+    if (!payout || !user || !isAdmin()) return;
     setBusyPayoutId(payout.id);
+    setReleaseModal(null);
     try {
       const res = await fetch(`/api/admin/payouts/${payout.id}`, {
         method: "PATCH",
@@ -160,19 +161,13 @@ export default function AdminBrandsPage() {
       );
       return;
     }
-    let reason: string | undefined;
     if (action === "reject") {
-      const input = window.prompt("Reason for rejecting this brand:");
-      if (input === null) return;
-      reason = input.trim();
-      if (!reason) {
-        alert("A rejection reason is required.");
-        return;
-      }
-    } else if (action === "suspend") {
-      const input = window.prompt("Suspension reason (optional):");
-      if (input === null) return;
-      reason = input.trim() || undefined;
+      setRejectModal({ brand, reason: "" });
+      return;
+    }
+    if (action === "suspend") {
+      setSuspendModal({ brand, reason: "" });
+      return;
     }
 
     setBusyId(brand.id);
@@ -180,7 +175,59 @@ export default function AdminBrandsPage() {
       const res = await fetch(`/api/admin/brands/${brand.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, reason }),
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(data.error || "Action failed.");
+        return;
+      }
+      await fetchBrands();
+    } catch {
+      alert("Unable to reach the server. Please try again.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmReject = async () => {
+    if (!rejectModal || !user || !isAdmin()) return;
+    const reason = rejectModal.reason.trim();
+    if (!reason) {
+      alert("A rejection reason is required.");
+      return;
+    }
+    setBusyId(rejectModal.brand.id);
+    setRejectModal(null);
+    try {
+      const res = await fetch(`/api/admin/brands/${rejectModal.brand.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reject", reason }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(data.error || "Action failed.");
+        return;
+      }
+      await fetchBrands();
+    } catch {
+      alert("Unable to reach the server. Please try again.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmSuspend = async () => {
+    if (!suspendModal || !user || !isAdmin()) return;
+    const reason = suspendModal.reason.trim() || undefined;
+    setBusyId(suspendModal.brand.id);
+    setSuspendModal(null);
+    try {
+      const res = await fetch(`/api/admin/brands/${suspendModal.brand.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "suspend", reason }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -412,6 +459,103 @@ export default function AdminBrandsPage() {
           ) : null}
         </div>
       </div>
+
+      {rejectModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-zinc-900">Reject brand</h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              Provide a reason for rejecting {rejectModal.brand.name}.
+            </p>
+            <textarea
+              value={rejectModal.reason}
+              onChange={(e) => setRejectModal({ ...rejectModal, reason: e.target.value })}
+              className="mt-4 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900"
+              rows={4}
+              placeholder="Reason..."
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setRejectModal(null)}
+                className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-900"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void confirmReject()}
+                className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-red-700"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {suspendModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-zinc-900">Suspend brand</h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              Suspension reason (optional).
+            </p>
+            <textarea
+              value={suspendModal.reason}
+              onChange={(e) => setSuspendModal({ ...suspendModal, reason: e.target.value })}
+              className="mt-4 w-full rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-900"
+              rows={4}
+              placeholder="Reason (optional)..."
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setSuspendModal(null)}
+                className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-900"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void confirmSuspend()}
+                className="rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-amber-700"
+              >
+                Suspend
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {releaseModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold text-zinc-900">Release payout</h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              Release {releaseModal.currency} {Number(releaseModal.amount).toFixed(2)} to{" "}
+              {releaseModal.brandName ?? "brand"}
+              {releaseModal.orderNumber ? ` (order ${releaseModal.orderNumber})` : ""}?
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setReleaseModal(null)}
+                className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600 hover:text-zinc-900"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void confirmReleasePayout()}
+                className="rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white hover:bg-emerald-700"
+              >
+                Release
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
