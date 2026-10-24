@@ -17,7 +17,7 @@ import {
   type AdminRange,
   type AdminStats,
   type NamedCount,
-} from "@/lib/adminStats";
+} from "@/lib/adminStatsShared";
 import {
   AnimatedNumber,
   BarChart,
