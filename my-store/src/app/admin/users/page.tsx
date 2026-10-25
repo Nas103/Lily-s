@@ -82,7 +82,7 @@ export default function AdminUsersPage() {
       }
 
       setUsers((prev) => prev.filter((u) => u.id !== id));
-    } catch (error) {
+    } catch {
       alert("Unable to delete user. Please try again.");
     }
   };
@@ -95,16 +95,16 @@ export default function AdminUsersPage() {
   }, [user]);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16 text-zinc-900">
-      <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+    <div className="mx-auto max-w-4xl text-white">
+      <p className="text-xs uppercase tracking-[0.35em] text-white/40">
         Internal tool
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
         User administration
       </h1>
-      <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-500">
-          Admin dashboard. Logged in as <span className="font-medium text-zinc-900">{user?.email}</span>
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <p className="text-sm text-white/50">
+          Admin dashboard. Logged in as <span className="font-medium text-white">{user?.email}</span>
         </p>
         <button
           type="button"
@@ -112,7 +112,7 @@ export default function AdminUsersPage() {
             logout();
             router.push("/");
           }}
-          className="rounded-full border border-zinc-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-600 hover:border-zinc-900 hover:text-zinc-900"
+          className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 transition hover:border-white/30 hover:text-white"
         >
           Logout
         </button>
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
         {users.map((user) => (
           <div
             key={user.id}
-            className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm"
+            className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900"
           >
             <div>
               <p className="font-medium text-zinc-900">
@@ -163,7 +163,7 @@ export default function AdminUsersPage() {
         ))}
 
         {users.length === 0 && !loading ? (
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-white/40">
             No users loaded yet. Authenticate above to view accounts.
           </p>
         ) : null}

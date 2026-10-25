@@ -125,13 +125,13 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
+        <p className="text-xs uppercase tracking-[0.35em] text-white/40">
           Fulfillment
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-3xl font-semibold tracking-tight text-white">
           Orders
         </h1>
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-white/50">
           Update statuses, add tracking numbers, cancel orders, and email customers.
         </p>
       </div>
@@ -159,11 +159,11 @@ export default function AdminOrdersPage() {
         <button
           type="button"
           onClick={() => void load()}
-          className="rounded-full border border-zinc-300 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900"
+          className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 transition hover:border-white/30 hover:text-white"
         >
           Refresh
         </button>
-        <span className="text-xs text-zinc-500">
+        <span className="text-xs text-white/50">
           {filtered.length} of {orders.length}
         </span>
       </div>
@@ -175,7 +175,7 @@ export default function AdminOrdersPage() {
       ) : null}
 
       {loading ? (
-        <p className="py-16 text-center text-sm text-zinc-500">Loading orders…</p>
+        <p className="py-16 text-center text-sm text-white/40">Loading orders…</p>
       ) : (
         <div className="space-y-4">
           {filtered.map((order) => (

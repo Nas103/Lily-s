@@ -114,15 +114,15 @@ export default function AdminMessagesPage() {
   };
 
   return (
-    <div className="text-zinc-900">
-      <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Internal tool</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
+    <div className="text-white">
+      <p className="text-xs uppercase tracking-[0.35em] text-white/40">Internal tool</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
         Messages
       </h1>
-      <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-500">
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <p className="text-sm text-white/50">
           Client, brand and platform threads across the marketplace. Logged in as{" "}
-          <span className="font-medium text-zinc-900">{user?.email}</span>
+          <span className="font-medium text-white">{user?.email}</span>
         </p>
         <button
           type="button"
@@ -130,7 +130,7 @@ export default function AdminMessagesPage() {
             logout();
             router.push("/");
           }}
-          className="rounded-full border border-zinc-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-600 hover:border-zinc-900 hover:text-zinc-900"
+          className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 transition hover:border-white/30 hover:text-white"
         >
           Logout
         </button>
@@ -146,7 +146,7 @@ export default function AdminMessagesPage() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm"
+            className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm text-zinc-900"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
@@ -181,9 +181,9 @@ export default function AdminMessagesPage() {
         ))}
 
         {messages.length === 0 && !loading ? (
-          <p className="text-xs text-zinc-500">No marketplace messages yet.</p>
+          <p className="text-xs text-white/40">No marketplace messages yet.</p>
         ) : null}
-        {loading ? <p className="text-xs text-zinc-500">Loading…</p> : null}
+        {loading ? <p className="text-xs text-white/40">Loading…</p> : null}
       </div>
     </div>
   );
