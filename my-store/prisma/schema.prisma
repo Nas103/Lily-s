@@ -158,6 +158,9 @@ model Brand {
   brandOrders BrandOrder[]
   payouts     Payout[]
   messages    BrandMessage[]
+  customPages      BrandCustomPage[]
+  customProducts   BrandCustomProduct[]
+  customSubmissions BrandPageSubmission[]
 
   @@index([status])
 }
@@ -427,4 +430,118 @@ model KnowledgeSyncLog {
   entries   Int      @default(0)
   details   Json?
   createdAt DateTime @default(now())
+}
+
+enum BrandPageStatus {
+  DRAFT
+  SUBMITTED
+  CHANGES_REQUESTED
+  APPROVED
+  REJECTED
+}
+
+enum BrandCustomProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+model BrandCustomPage {
+  id           String          @id @default(uuid())
+  brandId      String
+  brand        Brand           @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  pageName     String
+  slug         String
+  subheadings  Json?
+  heroImageUrl String?
+  description  String?         @db.Text
+  guidelines   String?         @db.Text
+  styleConfig  Json?
+  allowedCategories Json?
+  allowedGenders     Json?
+  allowedSubcats     Json?
+  status       BrandPageStatus @default(DRAFT)
+  submittedAt  DateTime?
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  rejectionReason String?     @db.Text
+  adminNotes   String?         @db.Text
+  aiReview     Json?
+  products     BrandCustomProduct[]
+  submissions  BrandPageSubmission[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([brandId, slug])
+  @@index([brandId])
+  @@index([status])
+}
+
+model BrandCustomProduct {
+  id          String                    @id @default(uuid())
+  brandId     String
+  brand       Brand                     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  pageId      String
+  page        BrandCustomPage          @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String                   @db.Text
+  price       Decimal                 @db.Decimal(10, 2)
+  currency    String                  @default("USD")
+  category    String
+  subCategory String?
+  gender      String?
+  tags        String[]                @default([])
+  sizes       String[]                @default([])
+  colors      String[]                @default([])
+  colorImages Json?
+  info        Json?
+  highlights  String[]                @default([])
+  images      BrandProductImage[]
+  status      BrandCustomProductStatus @default(DRAFT)
+  aiReview    Json?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  @@index([brandId])
+  @@index([pageId])
+  @@index([status])
+}
+
+model BrandProductImage {
+  id         String             @id @default(uuid())
+  productId  String
+  product    BrandCustomProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String
+  mimeType   String
+  sizeBytes  Int
+  data       Bytes
+  width      Int?
+  height     Int?
+  sortOrder  Int                @default(0)
+  createdAt  DateTime           @default(now())
+
+  @@index([productId])
+}
+
+model BrandPageSubmission {
+  id            String          @id @default(uuid())
+  pageId        String
+  page          BrandCustomPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  brandId       String
+  brand         Brand           @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  snapshot      Json
+  aiFindings    Json?
+  status        BrandPageStatus @default(SUBMITTED)
+  adminId       String?
+  adminNotes    String?         @db.Text
+  internalNotes String?         @db.Text
+  reviewedAt    DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([brandId])
+  @@index([pageId])
+  @@index([status])
 }

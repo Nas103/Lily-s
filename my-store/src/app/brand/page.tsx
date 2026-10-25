@@ -8,6 +8,7 @@ import {
   VERIFICATION_DOC_ACCEPT,
   formatBytes,
 } from "@/lib/verificationDoc";
+import { MAX_BRAND_IMAGE_BYTES, ALLOWED_BRAND_IMAGE_MIMES } from "@/lib/brand-custom";
 
 type Brand = {
   id: string;
@@ -120,6 +121,9 @@ export default function BrandDashboardPage() {
           <p className="text-sm text-zinc-600">
             Verified brands sell alongside our house catalogue with their own products, orders and payouts.
           </p>
+          <div className="mt-4 flex justify-center gap-3">
+            <a href="#custom-pages" className="rounded-full border border-zinc-200 px-5 py-2 text-xs uppercase tracking-[0.3em]">Custom Pages</a>
+          </div>
         </div>
 
         {brand === undefined ? (
@@ -131,11 +135,14 @@ export default function BrandDashboardPage() {
         {brand === undefined ? null : brand === null ? (
           <BrandSignupForm user={user} error={pageError} onCreated={handleCreated} />
         ) : (
-          <BrandStatusPanel
-            brand={brand}
-            notice={notice}
-            onBrandUpdated={setBrand}
-          />
+          <div className="mt-12 space-y-8">
+            <BrandStatusPanel
+              brand={brand}
+              notice={notice}
+              onBrandUpdated={setBrand}
+            />
+            <BrandCustomPagesSection brand={brand} />
+          </div>
         )}
       </main>
     </div>
@@ -1507,5 +1514,89 @@ function ProductForm({
         </button>
       </div>
     </form>
+  );
+}
+
+function BrandCustomPagesSection({ brand }: { brand: Brand }) {
+  const [pages, setPages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [pageName, setPageName] = useState(brand.name + " Edit");
+  const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/brand/custom-pages", { cache: "no-store" });
+      const data = await res.json();
+      setPages(data.pages || []);
+    } catch {
+      setPages([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  async function createPage() {
+    setCreating(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const res = await fetch("/api/brand/custom-pages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pageName }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to create");
+        return;
+      }
+      setNotice("Page created");
+      await load();
+    } catch {
+      setError("Failed to create");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  return (
+    <section id="custom-pages" className="rounded-3xl border border-zinc-100 bg-white p-8 shadow-sm space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Custom pages</p>
+          <h2 className="mt-2 text-xl font-semibold tracking-tight">Build your own product page template</h2>
+          <p className="mt-1 text-sm text-zinc-600">Create a branded page, add products with sizes/prices/images from your device, submit for admin approval.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <input className={inputClass + " w-64"} value={pageName} onChange={(e) => setPageName(e.target.value)} />
+          <button onClick={createPage} disabled={creating} className={primaryButton + " w-auto px-6"}>{creating ? "Creating…" : "Create new page template"}</button>
+        </div>
+      </div>
+      {notice ? <p className="text-xs text-emerald-600">{notice}</p> : null}
+      {error ? <p className="text-xs text-red-500">{error}</p> : null}
+      {loading ? <div className="text-sm text-zinc-500">Loading…</div> : null}
+      <div className="grid gap-4">
+        {pages.map((p) => (
+          <div key={p.id} className="rounded-2xl border border-zinc-100 p-6 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium">{p.pageName}</p>
+              <p className="text-xs text-zinc-500">/{p.slug} • {p.products?.length || 0} products • {p.status}</p>
+            </div>
+            <div className="flex gap-2">
+              <a href={`/brand/custom-pages/${p.id}`} className={secondaryButton + " w-auto px-6"}>Open builder</a>
+              {p.status === "APPROVED" ? <a href={`/brand-page/${brand.slug}/${p.slug}`} target="_blank" className={secondaryButton + " w-auto px-6"}>View live</a> : null}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-zinc-500">Max image size {Math.round(MAX_BRAND_IMAGE_BYTES/1024/1024)}MB. Allowed: JPG, PNG, WebP. Images stored securely and reviewed on submission.</p>
+    </section>
   );
 }

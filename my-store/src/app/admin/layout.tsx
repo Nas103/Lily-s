@@ -1,14 +1,20 @@
-import { AdminHeader } from "@/components/admin/AdminHeader";
+import { ReactNode } from "react";
+import Link from "next/link";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <AdminHeader />
-      <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
+    <div>
+      <nav className="border-b bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-3 flex flex-wrap items-center gap-4 text-sm">
+          <Link href="/admin" className="font-medium">Admin</Link>
+          <Link href="/admin/brands">Brands</Link>
+          <Link href="/admin/brand-custom-pages">Custom Pages</Link>
+          <Link href="/admin/products">Products</Link>
+          <Link href="/admin/orders">Orders</Link>
+          <Link href="/admin/users">Users</Link>
+        </div>
+      </nav>
+      {children}
     </div>
   );
 }
