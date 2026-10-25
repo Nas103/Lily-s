@@ -18,16 +18,17 @@ type ProductDetailModalProps = {
   onClose: () => void;
 };
 
-const DEFAULT_COLORS = ["Onyx", "Sand", "Oat", "Shadow", "Fog"];
-
 export function ProductDetailModal({ product, onClose }: ProductDetailModalProps) {
   const { formatPrice, convertPrice } = useCurrency();
   
-  const colors = product?.colors ?? DEFAULT_COLORS;
+  // A missing variant list means there is no choice to make. Never create
+  // placeholder choices, because they could be added to the cart as if they
+  // were real product variants.
+  const colors = product?.colors ?? [];
   
   // All hooks must be called before any early returns
-  const [activeSize, setActiveSize] = useState<string | undefined>(product?.sizes?.[0]);
-  const [activeColor, setActiveColor] = useState<string | undefined>(colors[0]);
+  const [activeSize, setActiveSize] = useState<string | undefined>();
+  const [activeColor, setActiveColor] = useState<string | undefined>();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const trackView = useRecommendationStore((state) => state.trackView);
 
@@ -35,14 +36,11 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
   useEffect(() => {
     if (!product) return;
 
-    const nextSize = product.sizes?.find((s) => !(product.soldOutSizes ?? []).includes(s)) ?? product.sizes?.[0];
-    const nextColor = (product.colors ?? DEFAULT_COLORS).find(
-      (c) => !(product.soldOutColors ?? []).includes(c)
-    ) ?? (product.colors ?? DEFAULT_COLORS)[0];
-
     setTimeout(() => {
-      setActiveSize(nextSize);
-      setActiveColor(nextColor);
+      // Require a deliberate choice before an item with variants can be
+      // added to the cart or sent to checkout.
+      setActiveSize(undefined);
+      setActiveColor(undefined);
       setSelectedImageIndex(0);
     }, 0);
   }, [product?.id]);
@@ -84,6 +82,9 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
     : null;
 
   const sizes = product.sizes; // Only use sizes if they exist (not for perfumes)
+  const selectionIncomplete =
+    (Boolean(sizes?.length) && !activeSize) ||
+    (colors.length > 0 && !activeColor);
 
   // Get images for the currently selected color
   const getCurrentColorImages = (): string[] => {
@@ -247,12 +248,13 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                   </div>
                 </div>
               ) : null}
+              {colors.length > 0 ? (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-700">
                   Color
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {colors.slice(0, 5).map((color) => {
+                  {colors.map((color) => {
                     const unavailable = isColorSoldOut(color);
                     return (
                       <button
@@ -275,6 +277,7 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                   })}
                 </div>
               </div>
+              ) : null}
             </div>
 
             <div className="mt-4 flex flex-col gap-3 pb-2 md:pb-0">
@@ -284,27 +287,35 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
                   unavailable
                 </p>
               ) : null}
-              <div className="flex gap-2 md:flex-col">
-                <AddToCartButton
-                  id={product.id}
-                  name={product.name}
-                  price={saleUsd}
-                  imageUrl={mainImageUrl}
-                  size={activeSize}
-                  color={activeColor}
-                  disabled={variantSoldOut}
-                  showToast={true}
-                />
-                <QuickBuyButton
-                  id={product.id}
-                  name={product.name}
-                  price={saleUsd}
-                  imageUrl={mainImageUrl}
-                  size={activeSize}
-                  color={activeColor}
-                  disabled={variantSoldOut}
-                />
-              </div>
+              {selectionIncomplete ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-600">
+                  Select {sizes?.length ? "a size" : ""}
+                  {sizes?.length && colors.length ? " and " : ""}
+                  {colors.length ? "a color" : ""} to continue
+                </p>
+              ) : (
+                <div className="flex gap-2 md:flex-col">
+                  <AddToCartButton
+                    id={product.id}
+                    name={product.name}
+                    price={saleUsd}
+                    imageUrl={mainImageUrl}
+                    size={activeSize}
+                    color={activeColor}
+                    disabled={variantSoldOut}
+                    showToast={true}
+                  />
+                  <QuickBuyButton
+                    id={product.id}
+                    name={product.name}
+                    price={saleUsd}
+                    imageUrl={mainImageUrl}
+                    size={activeSize}
+                    color={activeColor}
+                    disabled={variantSoldOut}
+                  />
+                </div>
+              )}
               <AddToWishlistButton
                 id={product.id}
                 name={product.name}
@@ -320,4 +331,3 @@ export function ProductDetailModal({ product, onClose }: ProductDetailModalProps
     </div>
   );
 }
-

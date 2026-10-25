@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function AssistantPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-black">
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-black">
         <FluxLines
           colors={["#4a2e0a", "#f5b301", "#fff7e6"]}
           glow={2}
@@ -31,7 +31,9 @@ export default function AssistantPage() {
           lightMode={false}
         />
       </div>
-      <AssistantClient />
+      <div className="relative z-10">
+        <AssistantClient />
+      </div>
     </div>
   );
 }

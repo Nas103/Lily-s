@@ -25,6 +25,18 @@ async function buildKnowledgeContext(query: string): Promise<string> {
       entries = query ? await searchKnowledge(query, 100) : await getAllKnowledgeEntries();
     } catch {}
   }
+
+  // Queries such as "gift ideas under R1000" often do not contain a product
+  // name or catalog tag, so a keyword search can return only policy entries
+  // (or nothing). Never send the model an empty catalog and ask it to make a
+  // recommendation: that is how plausible-but-nonexistent products appear.
+  if (!entries.some((entry) => entry.sourceType === "product")) {
+    const allEntries = await getAllKnowledgeEntries();
+    const catalogEntries = allEntries.filter((entry) => entry.sourceType === "product");
+    entries = [...entries, ...catalogEntries].filter(
+      (entry, index, list) => list.findIndex((candidate) => candidate.id === entry.id) === index
+    );
+  }
   const lines: string[] = [];
   for (const entry of entries) {
     const meta = entry.metadata || {};
@@ -42,7 +54,7 @@ async function buildKnowledgeContext(query: string): Promise<string> {
     if (meta.price) lines.push(`PRICE:${meta.price}`);
     lines.push("");
   }
-  const text = `AI KNOWLEDGE LIBRARY (${entries.length} entries, separate training library synced automatically from products/brands/categories/policies/admin/brand changes):\n\n${lines.join("\n")}`;
+  const text = `LIVE STORE DATA (${entries.length} records). Product records below are the complete allowed catalog for this reply; they are not examples and must not be supplemented with outside knowledge:\n\n${lines.join("\n")}`;
   if (!query) cachedKnowledgeContext = { text, at: now };
   return text;
 }
@@ -53,16 +65,16 @@ function buildSystemPrompt(knowledgeContext: string) {
     `BRAND: ${BRAND.name} (${BRAND.description}). ${BRAND.tagline}. ` +
     "We sell curated fashion and lifestyle collections across Men, Women, Featured, Perfumes, Lifestyle, Running, BoxRaw, and Electronics.\n\n" +
     "WHAT YOU DO:\n" +
-    "• Use your own reasoning and free thinking with the KNOWLEDGE LIBRARY below as your training/data source. Do not give generic template answers — analyze specific products, sizes, colors, prices from the library.\n" +
+    "• Treat the LIVE STORE DATA below as the sole source of truth for every product recommendation. It is not background training material.\n" +
     "• Freely hold natural, flowing conversations — greet people, ask what they're looking for, and keep the dialogue going.\n" +
-    "• Give ideas, styling suggestions, outfit pairings, gifting ideas, and thoughtful recommendations based on actual products in the library.\n" +
+    "• Give ideas, styling suggestions, outfit pairings, gifting ideas, and thoughtful recommendations based only on actual product records in the LIVE STORE DATA.\n" +
     "• Answer anything about NaSO: product names, categories, prices, sizes, colors, brands, materials, and how to find items.\n" +
     "• When recommending products as answers to clients, ALWAYS turn the product name into a clickable link within the chat by appending the product URL path in parentheses immediately after the product name. Example: Nike Air Max (/product/nike-air-max).\n" +
     "• Quote only real prices from the library, in USD.\n" +
     "• Guide customers to the right page.\n\n" +
     "RULES:\n" +
-    "• Never invent products, prices, stock levels, sizes, or policies not in the library.\n" +
-    "• If something is not in the library, say so and suggest the closest alternatives from the library.\n" +
+    "• Never name, imply, compare, or recommend a product unless its exact product record appears in the LIVE STORE DATA for this reply. Never use product knowledge from the conversation, your training, or another retailer.\n" +
+    "• If there is no matching product record, say that no matching item is currently listed and offer to help the shopper browse a listed category. Do not fill the gap with an example product.\n" +
     "• You do not process payments or handle orders; direct users to checkout or Support for that.\n" +
     "• Be warm, concise, and helpful. Use short paragraphs.\n\n" +
     "FORMATTING (VERY IMPORTANT):\n" +
@@ -193,7 +205,8 @@ export async function POST(request: NextRequest) {
       try {
         const completion = await createChatCompletion({
           messages: [systemPrompt, ...messages],
-          temperature: 0.85,
+          // Catalog answers need consistency, not creative invention.
+          temperature: 0.2,
           max_tokens: 1000,
         });
         answer = stripMarkdown(completion.content);

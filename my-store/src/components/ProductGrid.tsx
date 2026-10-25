@@ -25,11 +25,11 @@ export function ProductGrid({ products }: ProductGridProps) {
         ))}
       </div>
       <ProductDetailModal
+        key={selected?.id ?? "no-product"}
         product={selected}
         onClose={() => setSelected(null)}
       />
     </>
   );
 }
-
 

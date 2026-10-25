@@ -222,23 +222,56 @@ export function ProductCard({
             ) : null}
           </p>
           <div className="flex gap-2">
-            <AddToCartButton
-              id={id}
-              name={name}
-              price={saleUsd}
-              imageUrl={imageUrl}
-              variant="minimal"
-              disabled={soldOut}
-              showToast={!hasVariants}
-              onAdded={hasVariants ? undefined : handleAddedWithoutVariants}
-            />
-            <QuickBuyButton
-              id={id}
-              name={name}
-              price={saleUsd}
-              imageUrl={imageUrl}
-              disabled={soldOut}
-            />
+            {hasVariants ? (
+              <>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onPreview?.();
+                  }}
+                  disabled={soldOut}
+                  className={`inline-flex items-center justify-center rounded-full border border-zinc-200 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-600 transition hover:border-zinc-900 hover:text-zinc-900 ${
+                    soldOut ? "cursor-not-allowed opacity-40" : ""
+                  }`}
+                >
+                  Select
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onPreview?.();
+                  }}
+                  disabled={soldOut}
+                  className={`inline-flex flex-1 items-center justify-center rounded-full border border-zinc-900 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900 transition hover:bg-zinc-900 hover:text-white md:flex-none md:px-3 md:py-2 md:text-[10px] ${
+                    soldOut ? "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-zinc-900" : ""
+                  }`}
+                >
+                  Bag
+                </button>
+              </>
+            ) : (
+              <>
+                <AddToCartButton
+                  id={id}
+                  name={name}
+                  price={saleUsd}
+                  imageUrl={imageUrl}
+                  variant="minimal"
+                  disabled={soldOut}
+                  showToast
+                  onAdded={handleAddedWithoutVariants}
+                />
+                <QuickBuyButton
+                  id={id}
+                  name={name}
+                  price={saleUsd}
+                  imageUrl={imageUrl}
+                  disabled={soldOut}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
