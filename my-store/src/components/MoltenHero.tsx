@@ -162,7 +162,7 @@ export function MoltenHero() {
           className="pointer-events-auto mt-10 flex flex-wrap items-center justify-center gap-3"
         >
           <Link
-            href="/women"
+            href="/featured"
             className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600 px-7 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-950 shadow-[0_10px_40px_-10px_rgba(245,179,1,0.7)] transition hover:scale-[1.03]"
           >
             Shop the edit
