@@ -104,13 +104,13 @@ export default function AdminProductsPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="text-xs uppercase tracking-[0.35em] text-white/40">
+        <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
           Catalog
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
           Products
         </h1>
-        <p className="text-sm text-white/50">
+        <p className="text-sm text-zinc-600">
           Edit names and prices, apply a percentage discount, or mark sizes and
           colors sold out. Prices are stored in USD — shoppers automatically see
           them converted into their own currency.
@@ -136,7 +136,7 @@ export default function AdminProductsPage() {
             </option>
           ))}
         </select>
-        <span className="text-xs text-white/50">
+        <span className="text-xs text-zinc-500">
           {filtered.length} of {products.length}
         </span>
       </div>
@@ -148,7 +148,7 @@ export default function AdminProductsPage() {
       ) : null}
 
       {loading ? (
-        <p className="py-16 text-center text-sm text-white/40">Loading products…</p>
+        <p className="py-16 text-center text-sm text-zinc-500">Loading products…</p>
       ) : (
         <div className="space-y-3">
           {filtered.map((product) => (

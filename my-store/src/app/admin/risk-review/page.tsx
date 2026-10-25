@@ -21,14 +21,14 @@ export default async function RiskReviewPage() {
   const summary = await getSummary();
 
   return (
-    <div className="mx-auto max-w-3xl text-white">
-      <p className="text-xs uppercase tracking-[0.35em] text-white/40">
+    <div className="mx-auto max-w-3xl px-6 py-16 text-zinc-900">
+      <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">
         Internal tool
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-        Fraud &amp; risk overview
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
+        Fraud & risk overview
       </h1>
-      <p className="mt-2 text-sm text-white/50">
+      <p className="mt-2 text-sm text-zinc-500">
         Powered by Claude. Intended for staff only – do not expose this page to
         shoppers.
       </p>

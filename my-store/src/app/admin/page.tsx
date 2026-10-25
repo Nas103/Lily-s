@@ -8,7 +8,7 @@ export default async function AdminOverviewPage() {
   const stats = await getAdminStats(30);
   return (
     <div className="relative">
-      <div className="pointer-events-none fixed inset-0 z-0 bg-zinc-950 lg:left-[260px]">
+      <div className="pointer-events-none fixed inset-0 z-0 bg-zinc-950">
         <CrystalizedBall
           preset="plasma"
           color="#F25BD0"

@@ -243,15 +243,15 @@ export default function AdminBrandsPage() {
   };
 
   return (
-    <div className="text-white">
-      <p className="text-xs uppercase tracking-[0.35em] text-white/40">Internal tool</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+    <div className="text-zinc-900">
+      <p className="text-xs uppercase tracking-[0.35em] text-zinc-500">Internal tool</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
         Brand review
       </h1>
-      <div className="mt-4 flex items-center justify-between gap-4">
-        <p className="text-sm text-white/50">
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-sm text-zinc-500">
           Verify and control marketplace sellers. Logged in as{" "}
-          <span className="font-medium text-white">{user?.email}</span>
+          <span className="font-medium text-zinc-900">{user?.email}</span>
         </p>
         <button
           type="button"
@@ -259,7 +259,7 @@ export default function AdminBrandsPage() {
             logout();
             router.push("/");
           }}
-          className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 transition hover:border-white/30 hover:text-white"
+          className="rounded-full border border-zinc-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-600 hover:border-zinc-900 hover:text-zinc-900"
         >
           Logout
         </button>
@@ -275,7 +275,7 @@ export default function AdminBrandsPage() {
         {brands.map((brand) => (
           <div
             key={brand.id}
-            className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm text-zinc-900"
+            className="rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
@@ -378,14 +378,14 @@ export default function AdminBrandsPage() {
         ))}
 
         {brands.length === 0 && !loading ? (
-          <p className="text-xs text-white/40">No brands registered yet.</p>
+          <p className="text-xs text-zinc-500">No brands registered yet.</p>
         ) : null}
-        {loading ? <p className="text-xs text-white/40">Loading…</p> : null}
+        {loading ? <p className="text-xs text-zinc-500">Loading…</p> : null}
       </div>
 
       <div className="mt-12">
-        <h2 className="text-xl font-semibold tracking-tight text-white">Payouts</h2>
-        <p className="mt-1 text-sm text-white/50">
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-900">Payouts</h2>
+        <p className="mt-1 text-sm text-zinc-500">
           Brand settlements. Release pushes the brand&apos;s net share to their Stripe
           account once the dispute window has passed.
         </p>
@@ -402,7 +402,7 @@ export default function AdminBrandsPage() {
             return (
               <div
                 key={payout.id}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm text-zinc-900"
+                className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-zinc-200 bg-white px-5 py-4 text-sm"
               >
                 <div>
                   <p className="font-medium text-zinc-900">
@@ -452,7 +452,7 @@ export default function AdminBrandsPage() {
             );
           })}
           {payouts.length === 0 ? (
-            <p className="text-xs text-white/40">
+            <p className="text-xs text-zinc-500">
               No settlements yet — payouts are created when brands mark orders
               delivered.
             </p>
